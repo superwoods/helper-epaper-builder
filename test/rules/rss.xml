@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+    <channel>
+        <title>
+            <![CDATA[ 手机新华网 ]]>
+        </title>
+        <description>
+            <![CDATA[手机新华网2016 m.news.cn]]>
+        </description>
+        <link>
+            <![CDATA[http://m.xinhuanet.com/index.htm]]>
+        </link>
+        <generator>
+            <![CDATA[ m.xinhuanet.com ]]>
+        </generator>
+
+        <div data-helper="603888, 默认, 20">
+            <item data-item="true">
+                <title>
+                    <![CDATA[{{title}}]]>
+                </title>
+                <link>
+                    {{href}}
+                </link>
+                <description>
+                    <![CDATA[{{pic}}]]>
+                    <![{{abs}}]]>
+                    <![{{content}}]]>
+                </description>
+                <author>
+                    {{author}}
+                </author>
+                <pubDate>
+                    {{pub-time:YYYY-MM-DD hh:ss:mm,en}}
+                </pubDate>
+                <source url="{{source-url}}">
+                    <![CDATA[{{source}}]]>
+                </source>
+            </item>
+        </div>
+    </channel>
+</rss>

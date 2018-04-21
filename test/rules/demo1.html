@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>helper</title>
+
+</head>
+
+<body>
+    <div data-helper="">
+        <div>{{发布时间:yyyy/MM/dd}}</div>
+        <div>{{发布时间:yyyy-MM-dd}}</div>
+    </div>
+
+
+
+    <div data-helper="603888, 普通, 210">
+        <div class="test1">{{引题}}</div>
+        <h2 class="test2">{{副题}}</h2>
+        <div class="test3">{{作者}}</div>
+        <div>{{编辑}}</div>
+        <div>{{责任编辑}}</div>
+        <div>{{正文}}</div>
+        <div>{{来源}}</div>
+        <div>{{关键字}}</div>
+        <div>{{音频稿件地址}}</div>
+        <p>{{摘要}} <a href="#">[详细]</a></p>
+    </div>
+
+    <div data-helper="444444, 默认"> {{标题无链接}} </div>
+
+    <div data-helper="2222, 图片"> 自定义img标签
+        <img src="#" width="1111">
+        <img src="#" height="2222">
+        <img data-src="#" height="3333" width="4444">
+        <img data-original="#" height="555" width="6666">
+        <img src="#">
+    </div>
+
+    <h2>删除冗余注释 `/* 节点:603888, 头条, 图片 */`</h2>
+    <div data-helper="444444, 头条">
+        /* 节点:444444, 头条, 图片 */
+        {{图片}}
+    </div>
+
+    <h2>不会编译带有 CMS `&lt;url&gt;` 标签的 `a`</h2>
+    <div data-helper="66666">
+        <a href="#">
+            {{title}}
+        </a>
+        <url><a href="#"></url>
+            {{title}}
+        </a>
+    </div>
+
+
+</body>
+
+</html>

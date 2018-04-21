@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>helper</title>
+</head>
+
+<body>
+    <div>
+        - "/"间隔符 年/月/日:
+        <span data-cms="发布时间">2017/01/10</span>
+        - "/"间隔符 月/日:
+        <span data-cms="发布时间">01/18</span>
+        - "-"间隔符 月/日:
+        <span data-cms="发布时间">01-18</span>
+        - 年/月/日 时:分:
+        <span data-cms="发布时间">2017/01/10 00:00</span>
+        - 年-月-日 时:分:秒:
+        <span data-cms="发布时间">2017-01-10 00:23:12</span>
+        - 年-月-日 时:分:秒 星期:
+        <span data-cms="发布时间">2017-01-10 00:23:12 星期一</span>
+        - 年-月-日 时:分:秒 简写星期:
+        <span data-cms="发布时间">2017年01月10 00:23:12 周一</span>
+        - 年-月-日 时:分:秒 简写星期 简写月（英文）:
+        <span data-cms="发布时间">2017年01月10 00:23:12 周一 简写月</span>
+        - 年-月-日 时:分:秒 简写星期 简写月（德文）:
+        <span data-cms="发布时间">2017年01月10 00:23:12 周一 简写月 德文</span>
+        - 年-月-日 时:分:秒 简写星期 简写月（法文）:
+        <span data-cms="发布时间">2017年01月10 00:23:12 周一 简写月 法文</span>
+        - 年-月-日 时:分:秒 简写星期 简写月（中文）:
+        <span data-cms="发布时间">2017年01月10 00:23:12 周一 简写月 中文</span>
+    </div>
+
+    <div data-helper="111, 默认">
+        <div>{{发布时间: yyyy-MM-dd hh:mm:ss week 简写月 简写星期}}</div>
+        <div>{{发布时间: yyyy-MM-dd hh:mm:ss 星期 简写月 简写星期 法文}}</div>
+        <div>{{发布时间: yyyy/MM/dd}}</div>
+        <div>{{发布时间: MM-dd hh:mm}}</div>
+        <div>{{pub-time: week MM月 yyyy年 dd日 hh:mm 德文}}</div>
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+﻿<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0,user-scalable=no" name="viewport"  />
+<meta name="renderer" content="webkit" />
+<meta content="telephone=no" name="format-detection" />
+<meta content="email=no" name="format-detection" />
+<meta name="msapplication-tap-highlight" content="no" />
+<title>清明</title>
+<link rel="stylesheet" href="http://www.xinhuanet.com/global/public/css/common.css" />
+<link rel="stylesheet" href="http://www.newsres.cn/politics/2017qm/list.css" />
+</head>
+<body>
+<!-- 顶部导航 -->
+<div class="xbanner"></div>
+<div class="pageTitle">
+	<h2>祭·扫</h2>
+</div>
+<div class="content"> 
+	<!--webbot bot="AdvTitleList" nodeid="11152003" type="0" spanmode="0" dayspan="0" attr="" comstring="&lt;ul class=#enpquot#pic-list clearfix#enpquot#&gt;
+&lt;Repeat Begin=1 End=100&gt;&lt;Article&gt;&lt;li&gt;
+&lt;Url&gt;&lt;a href=ArticleUrlPh &gt;&lt;/Url&gt;&lt;Picture needcode=1 border=0&gt;PictureUrlPh&lt;/Picture&gt;&lt;/a&gt;
+&lt;p&gt;&lt;Url&gt;&lt;a href=ArticleUrlPh &gt;&lt;/Url&gt;&lt;Title length=#enpquot#0#enpquot#&gt;TitlePh&lt;/Title&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;&lt;/Article&gt;&lt;/Repeat&gt;
+&lt;/ul&gt;" TAG="BODY" PREVIEW="[高级标题列表]" artattr="0" isshowcode="0" titlekeyword="" keyword="" tagstring="00" starttime="" endtime="" id="__enpspecial_cca5062f4e874020b6d8e480f080c1bc" startspan --><!--webbot bot="AdvTitleList" endspan i-checksum="0" -->
+	<div class="pic-list-more">More</div>
+</div>
+<div class="footer"> 
+	<script src="http://www.xinhuanet.com/global/public/pcFooter.js"></script> 
+</div>
+<script src="http://www.xinhuanet.com/global/lib/jq/jquery1.12.4/jquery1.12.4.min.js"></script> 
+<script src="http://www.newsres.cn/english/20170322/js/ejmenu.js"></script> 
+<script src="http://www.newsres.cn/english/20170322/js/xyWaterfall.js"></script> 
+<script>
+$(document).ready(function($) {
+    // 加载更多
+    var xyWaterfall = new XHW.XyWaterfall('.pic-list', {
+        nid: '11151510', // json ID (！必选)
+        //attr: '63', //文档类型
+        //item: '.thumb-item', // 列表项 (可选，默认为'li')
+        moreBtn: '.pic-list-more', // 更多按钮 (！必选)
+        pageSize: 10, // 每页条数 (可选，默认为10)
+        xyPageNum: 1, // 用翔宇显示页数(！必选)
+        render: function(item,index,list) {
+            // 根据加载的json数据渲染模板
+			/*if(item.allPics==null){
+				return '<li><p><a href="item.LinkUrl">'+item.Title+'</a></p></li>';
+				}else{
+					return '<li><a href="'+item.LinkUrl+'"><img src="'+item.allPics+'" border="0"/></a><p><a href="item.LinkUrl">'+item.Title+'</a></p></li>';
+			}*/
+			
+			return '<li><p><a href="item.LinkUrl" target="_blank">'+item.Title+'</a></p><span></span></li>';
+            
+        }
+    });
+});
+
+</script>
+</body>
+</html>
