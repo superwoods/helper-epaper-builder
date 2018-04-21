@@ -1,0 +1,34 @@
+{
+    "name": "helper",
+    "version": "0.25.9",
+    "description": "helper on the nodejs server side ☁️",
+    "main": "app.js",
+    "dependencies": {
+        "archiver": "^1.3.0",
+        "body-parser": "~1.16.0",
+        "cookie-parser": "~1.4.3",
+        "dateformat": "^2.0.0",
+        "debug": "~2.6.0",
+        "express": "~4.14.1",
+        "html": "^1.0.0",
+        "jquery": "^3.1.1",
+        "jsdom": "^9.11.0",
+        "morgan": "~1.7.0",
+        "multer": "^1.3.0"
+    },
+    "scripts": {
+        "server": "node ./bin/www",
+        "prestart": "rm -rf file-cms-template & rm -rf file-upload && mkdir -p file-cms-template & mkdir -p file-upload",
+        "start": "PORT=9999 npm run server & wait\n# ============= dev server =============\n# 10.200.1.38:9999"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/xinhuaRadioLAB/helper.git"
+    },
+    "author": "SuperMoo",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/xinhuaRadioLAB/helper/issues"
+    },
+    "homepage": "https://github.com/xinhuaRadioLAB/helper#readme"
+}
