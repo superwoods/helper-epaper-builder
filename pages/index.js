@@ -1,7 +1,7 @@
 'use strict';
 const footer = require('./footer');
 const index = (err) => {
-    global.HELP_CMS.uploadOrgFileType = null;
+    // global.HELP_CMS.uploadOrgFileType = null;
     return `
 <!DOCTYPE html>
 <html>

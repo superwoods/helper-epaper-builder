@@ -1,7 +1,6 @@
 'use strict';
 
 const packageJSON = require('../package');
-
 module.exports = (className, addDom) => `
 <div class="footer ${ className ? className : ''}">
     <a id="jump-helper-tool" href="https://xinhuaradiolab.github.io/helper/tool/" target="_blank" class="readme-red-btn" >[CMS数据信息格式工具]</a> 
