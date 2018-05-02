@@ -1,25 +1,31 @@
 mainHeight = 18000px
+colorBlue = #0b4a80
 
 body
+    font-family: "微软雅黑";
+    // background: #f7f7f7;
+    color: #333;
+    min-width 1200px
     padding: 0
     margin: 0
-    // background: #000000
+    
+.heb
+    &-bg-iframe
+        width: 100%
+        height mainHeight
+        margin: 0 auto
 
-.bg-iframe
-    width: 100%
-    height mainHeight
+    &-box
+        position: absolute
+        z-index: 999
+        margin: 0 auto
+        top: 0
+        left 0
+        width: 100%
+        // height mainHeight
+        // background-color: rgba(#000000, 0.3)
 
-.heb-box
-    position: absolute
-    z-index: 999
-    margin: 0 auto
-    top: 0
-    left 0
-    width: 100%
-    height mainHeight
-    // background-color: rgba(#000000, 0.3)
-
-    &-in
+    &-box-in
         position: absolute
         margin: 0 auto
         width: 1200px
@@ -29,15 +35,63 @@ body
         // height 300px
         // background-color: rgba(#000000, 0.3)
 
-        .main-box
-            width: 951px
-            padding: 0 49px;
-            position: absolute
-            right 0
-            top: 0
-            // background-color: rgba(#000000, 0.3)
-            // height 400px
+    &-main-box
+        width: 951px
+        padding: 0 49px
+        position: absolute
+        right 0
+        top: 0
+        // background-color: rgba(#000000, 0.3)
+        // height 400px
 
-            .main
-                background-color: rgba(#000000, 0.3)
-                height 800px
+    &-main
+        background-color: rgba(#ffffff, 0.6)
+        // height 5503px
+
+        .title-box
+            font-size: 32px
+            font-weight: 700
+            line-height: 45px
+            padding-bottom: 30px
+            text-align: center
+            display: flex
+            justify-content: center
+            flex-wrap: wrap
+            cursor: default
+        .i
+            // font-size: 32px
+            // font-weight: 700
+            // line-height: 45px
+            // text-align: center
+            // background: none
+            // border: none
+            outline: none
+            // margin: 0
+            // padding: 0
+            // padding: 0 3px
+            text-align: left
+            cursor: text
+
+            &:hover
+                border-bottom: 1px solid colorBlue
+                color: colorBlue
+
+        .title
+        .i
+        .year
+        .month
+        .day
+        .stage
+        .add-title
+            display: flex
+            justify-content: center
+
+        .add-title
+            min-width: 0.5em
+            text-align: left
+            // &:hover
+            //     border-bottom: 1px solid colorBlue
+            //     color: colorBlue
+
+.bb
+    border-bottom: colorBlue 5px solid

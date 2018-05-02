@@ -13,11 +13,27 @@ html
 
         .heb-box
             .heb-box-in
-                .main-box
-                    .main main
+                .heb-main-box
+                    .heb-main
+                        .title-box
+                            .title 《今日雄安》
+                            .year
+                                .i(contenteditable="true") 2018
+                                | 年
+                            .month
+                                .i(contenteditable="true") 12
+                                | 月
+                            .day
+                                .i(contenteditable="true") 18
+                                | 日
+                            .stage
+                                | 第
+                                .i(contenteditable="true") 22
+                                | 期
+                            .i(contenteditable="true").add-title
 
 
-        iframe(src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm", frameborder="0").bg-iframe
+        iframe(src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm", frameborder="0").heb-bg-iframe
 
         //- script(src='bundle/helper-grabber-loader.js')
         script(src='bundle/index.js')
