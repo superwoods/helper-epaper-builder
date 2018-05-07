@@ -58,8 +58,8 @@
     },
     "scripts": {
         "server": "node ./bin/www",
-        "prestart": "rm -rf file-cms-template & rm -rf file-upload && mkdir -p file-cms-template & mkdir -p file-upload",
-        "start": "PORT=9999 npm run server & wait\n# ============= dev server =============\n# 10.200.1.38:9999",
+        "prestart": "rm -rf file-upload && mkdir -p file-upload",
+        "start": "PORT=9997 npm run server & wait\n# ============= server =============\n# localhost:9997\n# 10.200.1.38:9997",
         "dev": "gulp"
     }
 }

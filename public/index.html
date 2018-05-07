@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
     <title>HEB</title>
-    <script src="http://www.xiongan.gov.cn/bundle/jq.js"></script>
-    <script src="http://www.xiongan.gov.cn/bundle/browser.min.js"></script>
+    <script src="bundle/browser.min.js"></script>
     <link rel="stylesheet" href="bundle/index.css">
   </head>
   <body>
@@ -28,11 +27,18 @@
               </div>
               <div class="i add-title" contenteditable="true"></div>
             </div>
+            <hr>
+            <form action="/upload" method="post" enctype="multipart/form-data">
+              <h2>多图上传</h2>
+              <input type="file" name="pic">
+              <input type="file" name="pic">
+              <input type="submit" value="提交">
+            </form>
           </div>
         </div>
       </div>
     </div>
-    <iframe class="heb-bg-iframe" src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm" frameborder="0"></iframe>
+    <script src="bundle/jquery.min.js"></script>
     <script src="bundle/index.js"></script>
   </body>
 </html>

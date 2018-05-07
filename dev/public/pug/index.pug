@@ -1,12 +1,11 @@
 doctype html
 html
     head
-        meta(http-equiv='Content-Type', content='text/html; charset=utf-8')
+        meta(charset="utf-8")
+
         title HEB
 
-
-        script(src='http://www.xiongan.gov.cn/bundle/jq.js')
-        script(src='http://www.xiongan.gov.cn/bundle/browser.min.js')
+        script(src='bundle/browser.min.js')
         link(rel='stylesheet', href='bundle/index.css')
 
     body
@@ -31,9 +30,20 @@ html
                                 .i(contenteditable="true") 22
                                 | 期
                             .i(contenteditable="true").add-title
+                        
+                        hr
+                        
+                        form(action='/upload', method='post', enctype='multipart/form-data')
+                            h2 多图上传
+                            input(type='file', name='pic')
+                            input(type='file', name='pic')
+                            input(type='submit', value='提交')
 
 
-        iframe(src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm", frameborder="0").heb-bg-iframe
 
+
+        //- iframe(src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm", frameborder="0").heb-bg-iframe
+        
+        script(src='bundle/jquery.min.js')
         //- script(src='bundle/helper-grabber-loader.js')
         script(src='bundle/index.js')
