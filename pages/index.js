@@ -1,33 +1,36 @@
 // const footer = require('./footer');
-const domFn = (file) => `
-<a href="/${file.path}" target="_black">/${file.path}</a>
-
-`;
-
-const renderDom = (files) => {
-    let reslut = '';
-    const hasSrc = files.length > 0;
-    if (hasSrc) {
-        files.map((file, i) => {
-            result += domFn(file);
-        });
-    } else {
-        reslut = `has not img! len: ${files.length}`;
-    }
-    return reslut;
-};
-
 const index = (files) => {
+    // console.log('page/index.js', files);
+
+
+    const renderDom = (files) => {
+        let result = '';
+        const hasSrc = files.length > 0;
+        if (hasSrc) {
+            const domFn = (file) => {
+                const path = file.path.replace('public/', '');
+                return `
+                    <a href="/${path}" target="_black">/${path}</a>
+                `;
+            };
+            files.map((file, i) => {
+                result += domFn(file);
+            });
+        } else {
+            result = `has not img! len: ${files.length}`;
+        }
+        return result;
+    };
+
     // console.log('pages/index.js: ', err);
     // global.HELP_CMS.uploadOrgFileType = null;
     return `
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta charset="utf-8">
     <title>HEB</title>
-    <script src="http://www.xiongan.gov.cn/bundle/jq.js"></script>
-    <script src="http://www.xiongan.gov.cn/bundle/browser.min.js"></script>
+    <script src="bundle/browser.min.js"></script>
     <link rel="stylesheet" href="bundle/index.css">
   </head>
   <body>
@@ -53,7 +56,7 @@ const index = (files) => {
             </div>
             <hr>
             
-            <form action="/upload" method="post" enctype="multipart/form-data">
+            <form action="/upload-multi" method="post" enctype="multipart/form-data">
               <h2>多图上传</h2>
               
               form pages/index.js !!!<br>
@@ -70,11 +73,11 @@ const index = (files) => {
         </div>
       </div>
     </div>
-    <iframe class="heb-bg-iframe" src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm" frameborder="0"></iframe>
+
+    <script src="bundle/jquery.min.js"></script>
     <script src="bundle/index.js"></script>
   </body>
-</html>
-`;
+</html>`;
 };
 
 module.exports = index;

@@ -7,11 +7,11 @@ const fs = require('fs');
 const multer = require('multer');
 const libIndex = require('./lib/index');
 const pagesIndex = require('./pages/index');
-const pagesReadme = require('./pages/readme');
+// const pagesReadme = require('./pages/readme');
 
 global.HELP_CMS = {
     filetypes: /jpg|jpeg|png|gif/,
-    upload: 'upload',
+    upload: 'public/upload',
     // download: 'file-cms-template',
 };
 
@@ -80,7 +80,7 @@ const upload = multer({
 });
 
 // upload
-app.post('/upload', upload.array('pic', 2), function (req, res, next) {
+app.post('/upload-multi', upload.array('pic', 2), function (req, res, next) {
 
     const files = req.files;
     // const replaceSrc = req.body['replace-src'];
@@ -126,7 +126,7 @@ app.post('/upload', upload.array('pic', 2), function (req, res, next) {
 // });
 
 // readme
-pagesReadme();
+// pagesReadme();
 
 app.get('/', function (req, res, next) {
     res.send(pagesIndex());
