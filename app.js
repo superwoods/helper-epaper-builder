@@ -54,7 +54,7 @@ const storage = multer.diskStorage({
 
 const checkFileType = (file) => {
     const orgType = path.extname(file.originalname).toLowerCase();
-    global.HELP_CMS.uploadOrgFileType = orgType;
+    // global.HELP_CMS.uploadOrgFileType = orgType;
     const mimetype = global.HELP_CMS.filetypes.test(file.mimetype);
     const extname = global.HELP_CMS.filetypes.test(orgType);
     const isType = mimetype && extname;
@@ -88,7 +88,10 @@ app.post('/upload-multi', upload.array('pic', 2), function (req, res, next) {
     // let fileOriginalName = file.originalname;
     console.log('upload files:', files);
 
-    res.send(pagesIndex(files));
+    // res.send(pagesIndex(files));
+    res.json({
+        files: files
+    });
 
     // 验证上传的数据类型
     // if (file === undefined) {

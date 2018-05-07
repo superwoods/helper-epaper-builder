@@ -1,8 +1,6 @@
 // const footer = require('./footer');
 const index = (files) => {
     // console.log('page/index.js', files);
-
-
     const renderDom = (files) => {
         let result = '';
         const hasSrc = files.length > 0;
@@ -10,7 +8,9 @@ const index = (files) => {
             const domFn = (file) => {
                 const path = file.path.replace('public/', '');
                 return `
-                    <a href="/${path}" target="_black">/${path}</a>
+                    <a href="/${path}" target="_black">
+                        <img src="/${path}" width="951" />
+                    </a>
                 `;
             };
             files.map((file, i) => {
@@ -54,20 +54,14 @@ const index = (files) => {
               </div>
               <div class="i add-title" contenteditable="true"></div>
             </div>
-            <hr>
-            
-            <form action="/upload-multi" method="post" enctype="multipart/form-data">
-              <h2>多图上传</h2>
-              
-              form pages/index.js !!!<br>
 
+            <form action="/upload-multi" method="post" enctype="multipart/form-data">
               <input type="file" name="pic">
               <input type="file" name="pic">
               <input type="submit" value="提交">
             </form>
 
-            
-            ${files ? renderDom(files) : 'err: no files!'}
+            ${files ? renderDom(files) : 'upload pics'}
 
           </div>
         </div>
