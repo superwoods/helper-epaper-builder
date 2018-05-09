@@ -9,4 +9,4 @@ const uploadBoxFn = () => {
     `;
 };
 window.uploadBox = uploadBoxFn();
-$('.heb-pic').html(uploadBox);
+$('.heb-pic').after(uploadBox);

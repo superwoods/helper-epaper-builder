@@ -1,27 +1,4 @@
-// const footer = require('./footer');
-const index = (files) => {
-    // console.log('page/index.js', files);
-    const renderDom = (files) => {
-        let result = '';
-        const hasSrc = files.length > 0;
-        if (hasSrc) {
-            const domFn = (file) => {
-                const path = file.path.replace('public/', '');
-                return `
-                    <a href="/${path}" target="_black">
-                        <img src="/${path}" width="951" />
-                    </a>
-                `;
-            };
-            files.map((file, i) => {
-                result += domFn(file);
-            });
-        } else {
-            result = `has not img! len: ${files.length}`;
-        }
-        return result;
-    };
-
+const index = () => {
     return `
 <!DOCTYPE html>
 <html>
@@ -32,6 +9,7 @@ const index = (files) => {
     <link rel="stylesheet" href="bundle/index.css">
   </head>
   <body>
+
     <div class="heb-box">
       <div class="heb-box-in">
         <div class="heb-main-box">
@@ -48,6 +26,7 @@ const index = (files) => {
 
     <script src="bundle/jquery.min.js"></script>
     <script src="bundle/index.js"></script>
+    
   </body>
 </html>`;
 };

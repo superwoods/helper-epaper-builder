@@ -4,7 +4,6 @@ console.log('index.js');
 $(() => {
     window.hebContentDom = '';
     window.imgIndex = 0;
-    window.imgObj = {};
 
     const $window = $(window);
     const $html = $('html');

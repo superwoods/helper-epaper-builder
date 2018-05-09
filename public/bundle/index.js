@@ -6,7 +6,6 @@ console.log('index.js');
 $(function () {
     window.hebContentDom = '';
     window.imgIndex = 0;
-    window.imgObj = {};
 
     var $window = $(window);
     var $html = $('html');
@@ -18,7 +17,7 @@ $(function () {
         return '\n        <div class="upload-box">\n            <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">\n                <input class="btn" type="file" name="pic" multiple="multiple">\n                <input class="btn btn-primary" type="button" value="\u4E0A\u4F20\u6587\u4EF6" id="form-submit">\n            </form>\n        </div>\n    ';
     };
     window.uploadBox = uploadBoxFn();
-    $('.heb-pic').html(uploadBox);
+    $('.heb-pic').after(uploadBox);
     ;
     var iframeBg = function iframeBg() {
         if (isDev === false) {
@@ -46,52 +45,119 @@ $(function () {
             success: function success(data) {
                 var renderData = function renderData(data) {
                     console.log('ajax:', data);
+                    var $hebPic = $('.heb-pic');
                     var files = data.files;
-                    var clearfix = '<span style="clear:both; width:100%; height:0; display:block;overflow:hidden"></span>';
+                    var len = data.length;
+                    var results = {};
+                    // const clearfix = '<span style="clear:both; width:100%; height:0; display:block;overflow:hidden"></span>';
 
-                    var filter = function filter(src, imgIndex) {
+                    var filter = function filter(_ref) {
+                        var e = _ref.e,
+                            imgIndex = _ref.imgIndex;
+
+                        var originalname = e.originalname;
+                        var originalnameArray = originalname.split(/\.|-/);
+                        var index = originalnameArray[0];
+
+                        console.log(originalnameArray, originalnameArray.length);
+
                         var img = new Image();
+                        var className = 'heb-img-' + index;
+                        var src = e.path.replace('public', '');
+
                         img.src = src;
                         img.onload = function () {
-                            var className = 'heb-img-' + imgIndex;
-                            var $p = $('.' + className);
-                            var width = img.naturalWidth * 951 / 1654;
-                            var height = img.naturalHeight * 1345 / 2339;
-
-                            if (width < 951) {
-                                width--;
-                                if (imgObj.hasOwnProperty(imgIndex - 1) === false) {
-                                    imgObj[imgIndex] = { left: true };
-                                    $p.css({
-                                        float: 'left'
-                                    });
-                                } else {
-                                    if (imgObj[imgIndex - 1].left === true) {
-                                        $p.css({
-                                            float: 'left'
-                                        });
-                                    }
-                                }
-                                $p.width(width).height(height);
+                            var result = {
+                                hasChild: false,
+                                className: className,
+                                originalname: originalname,
+                                width: Math.round(img.naturalWidth * 951 / 1654),
+                                height: Math.round(img.naturalHeight * 1345 / 2339),
+                                src: src
+                            };
+                            if (originalnameArray.length < 3) {
+                                results[index] = result;
                             } else {
-                                $p.after(clearfix);
-                                $p.width(width);
+                                if (results.hasOwnProperty(index) === false) {
+                                    results[index] = {
+                                        hasChild: true,
+                                        length: 0
+                                    };
+                                }
+                                results[index].length++;
+                                result.className += '-' + originalnameArray[1];
+                                results[index][originalnameArray[1]] = result;
                             }
-
-                            console.log('imgObj:', imgObj);
+                            len--;
                         };
                     };
 
                     files.map(function (e, i) {
                         imgIndex++;
-                        var src = e.path.replace('public', '');
-                        var className = 'heb-img-' + imgIndex;
-                        filter(src, imgIndex);
-                        var dom = '\n            <p class="' + className + '">\n                <img src="' + src + '" width="100%" height="auto">\n            </p>\n        ';
-                        hebContentDom += dom;
-                        $('.upload-box').replaceWith('\n            ' + dom + '\n            ' + uploadBox + '\n        ');
+                        filter({ e: e, imgIndex: imgIndex });
+                        // const dom = `
+                        //     <p class="${className}">
+                        //         <img src="${src}" width="100%" height="auto">
+                        //     </p>
+                        // `;
+                        // hebContentDom += dom;
+                        // $('.upload-box').replaceWith(`
+                        //     ${dom}
+                        //     ${uploadBox}
+                        // `);
                     });
+
+                    var render = function render($target, results) {
+                        console.log('results:', results);
+                        var dom = '';
+                        for (var prop in results) {
+                            console.log(prop, results[prop]);
+                            var e = results[prop];
+                            var hasChild = e.hasChild;
+                            if (hasChild === false) {
+                                dom += '\n                    <p class="' + e.className + '">\n                        <img src="' + e.src + '" width="100%" height="auto">\n                    </p>\n                ';
+                            } else {
+                                dom += '<div class="clearfix">';
+                                for (var porp2 in results[prop]) {
+                                    if (porp2 !== 'hasChild' && porp2 !== 'length') {
+                                        var e2 = results[prop][porp2];
+                                        if (porp2.length === 4) {
+                                            if (porp2 === '1' || porp2 === '3') {
+                                                dom += '\n                                    <p class="' + e2.className + '" style="\n                                        width:' + e2.width + 'px;\n                                        height:' + e2.height + 'px;\n                                        float:left;\n                                    ">\n                                ';
+                                            }
+                                            dom += '<img src="' + e2.src + '" width="100%" height="auto">';
+                                            if (porp2 === '2' || porp2 === '4') {
+                                                dom += '</p>';
+                                            }
+                                        } else {
+                                            if (porp2 === '1' || porp2 === '2') {
+                                                dom += '\n                                    <p class="' + e2.className + '" style="\n                                        width:' + e2.width + 'px;\n                                        height:' + e2.height + 'px;\n                                        float:left;\n                                    ">\n                                ';
+                                            }
+                                            dom += '<img src="' + e2.src + '" width="100%" height="auto">';
+                                            if (porp2 === '1' || porp2 === '2') {
+                                                dom += '</p>';
+                                            }
+                                        }
+                                    }
+                                }
+                                dom += '</div>';
+                            }
+                        }
+                        if (dom) {
+                            $target.append(dom);
+                        }
+                    };
+
+                    var setint = setInterval(function () {
+                        if (len === 0) {
+                            console.log('setInterval:', len, len === 0);
+                            render($('.heb-pic'), results);
+                            clearInterval(setint);
+                            setint = null;
+                        }
+                    }, 1);
                 };
+
                 renderData(data);;
 
                 $('#form-submit').on('click', upload);
