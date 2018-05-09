@@ -39,31 +39,24 @@ const index = (files) => {
         <div class="heb-main-box">
           <div class="heb-main">
             <div class="title-box">
-              <div class="title">《今日雄安》</div>
-              <div class="year">
-                <div class="i" contenteditable="true">2018</div>年
-              </div>
-              <div class="month">
-                <div class="i" contenteditable="true">12</div>月
-              </div>
-              <div class="day">
-                <div class="i" contenteditable="true">18</div>日
-              </div>
-              <div class="stage">第
-                <div class="i" contenteditable="true">22</div>期
-              </div>
-              <div class="i add-title" contenteditable="true"></div>
+                <div class="title">《今日雄安》</div>
+                <div class="year">
+                    <div class="i" contenteditable="true">2018</div>年
+                </div>
+                <div class="month">
+                    <div class="i" contenteditable="true">12</div>月
+                </div>
+                <div class="day">
+                    <div class="i" contenteditable="true">18</div>日
+                </div>
+                <div class="stage">第
+                    <div class="i" contenteditable="true">22</div>期
+                </div>
+                <div class="i add-title" contenteditable="true"></div>
             </div>
-
-            <form action="/upload-multi" method="post" enctype="multipart/form-data">
-              <input type="file" name="pic">
-              <input type="file" name="pic">
-              <input type="submit" value="提交">
-            </form>
-
-            ${files ? renderDom(files) : 'upload pics'}
-
-          </div>
+            <div class="heb-pic">
+                
+            </div>
         </div>
       </div>
     </div>

@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
-const libIndex = require('./lib/index');
+// const libIndex = require('./lib/index');
 const pagesIndex = require('./pages/index');
 // const pagesReadme = require('./pages/readme');
 
@@ -43,11 +43,8 @@ const storage = multer.diskStorage({
         cb(null, uploadFolder);
     },
     filename: function (req, file, cb) {
-        let mark = req.connection.remoteAddress;
-        mark = mark.replace(/:/g, '');
-        mark = mark.replace(/ffff/g, '');
-        // console.log(mark);
-        const filename = `org-${mark}-${file.originalname}`;
+        const timestamp = Date.now();
+        const filename = `pic-${timestamp}-${file.originalname}`;
         cb(null, filename);
     }
 });
@@ -58,14 +55,12 @@ const checkFileType = (file) => {
     const mimetype = global.HELP_CMS.filetypes.test(file.mimetype);
     const extname = global.HELP_CMS.filetypes.test(orgType);
     const isType = mimetype && extname;
-
     console.log('checkFileType:', orgType, isType);
-
     return isType;
-}
+};
 
 const fileFilter = (req, file, cb) => {
-    if (checkFileType(file)) {
+    if (checkFileType(file) === true) {
         return cb(null, true);
     } else {
         return cb(null, false);
@@ -80,56 +75,14 @@ const upload = multer({
 });
 
 // upload
-app.post('/upload-multi', upload.array('pic', 2), function (req, res, next) {
-
+app.post('/upload-multi', upload.array('pic'), function (req, res, next) {
     const files = req.files;
-    // const replaceSrc = req.body['replace-src'];
-    // const donkeyData = req.body['donkey-data'];
-    // let fileOriginalName = file.originalname;
     console.log('upload files:', files);
-
-    // res.send(pagesIndex(files));
     res.json({
+        length: files.length,
         files: files
     });
-
-    // 验证上传的数据类型
-    // if (file === undefined) {
-    //     let oops = '<span class="oops">Oops!</span> error';
-    //     if (global.HELP_CMS.uploadOrgFileType === null) {
-    //         oops += '<span class="text">并不支持上传空气!</span> 🤔';
-    //     } else {
-    //         let uploadOrgFileType = global.HELP_CMS.uploadOrgFileType;
-    //         if (uploadOrgFileType.indexOf('.avi') !== -1) {
-    //             oops += `👸 <span class="text">呐呐呐！你在上传什么啊？</span> 💋`;
-    //         } else {
-    //             oops += `<span class="text">${uploadOrgFileType ? '\'' + uploadOrgFileType + '\' ' : '未知'}类型不支持上传呦! </span> 🙅`;
-    //         }
-    //         global.HELP_CMS.uploadOrgFileType = null;
-    //     }
-    //     res.send(pagesIndex(oops));
-    //     return;
-    // }
-
-    // // lib/index.js
-    // libIndex({
-    //     'res': res,
-    //     'file': file,
-    //     'replaceSrc': replaceSrc,
-    //     'donkeyData': donkeyData,
-    //     'fileOriginalName': fileOriginalName,
-    // });
 });
-
-// // download
-// app.get(`/${global.HELP_CMS.download}/:file`, function (req, res, next) {
-//     const file = req.params.file;
-//     // console.log(file);
-//     res.download(`./${global.HELP_CMS.download}/${file}`);
-// });
-
-// readme
-// pagesReadme();
 
 app.get('/', function (req, res, next) {
     res.send(pagesIndex());

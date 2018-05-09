@@ -132,17 +132,17 @@ gulp.task('browsersync', function () {
 });
 
 // pug
-gulp.task('pug', function () {
-    gulp
-        .src([
-            'dev/public/pug/index.pug'
-        ])
-        .pipe(plumber())
-        .pipe(pug({
-            pretty: true
-        }))
-        .pipe(gulp.dest('public'));
-});
+// gulp.task('pug', function () {
+//     gulp
+//         .src([
+//             'dev/public/pug/index.pug'
+//         ])
+//         .pipe(plumber())
+//         .pipe(pug({
+//             pretty: true
+//         }))
+//         .pipe(gulp.dest('public'));
+// });
 
 // js Compile
 let jsCompileTasks = [];
@@ -169,7 +169,6 @@ jsCompiles.map((item, index) => {
 
 console.log('jsCompileTasks:', jsCompileTasks);
 
-
 gulp.task('styl', function () {
     gulp
         .src(stylCompiles)
@@ -182,7 +181,7 @@ gulp.task('styl', function () {
 
 // watch
 gulp.task('autowatch', function () {
-    gulp.watch('dev/public/pug/*.pug', ['pug']);
+    // gulp.watch('dev/public/pug/*.pug', ['pug']);
     gulp.watch('dev/public/js/*.js', jsCompileTasks);
     gulp.watch('dev/public/styl/*.styl', ['styl']);
 });
@@ -191,7 +190,7 @@ gulp.task('autowatch', function () {
 // --------------------------------- config START ---------------------------------
 // 控制开启模块
 const { isPug, isJs, isStyl } = {
-    isPug: 1,
+    // isPug: 1,
     isJs: 1,
     isStyl: 1,
 };
