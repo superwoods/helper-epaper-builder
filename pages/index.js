@@ -22,8 +22,6 @@ const index = (files) => {
         return result;
     };
 
-    // console.log('pages/index.js: ', err);
-    // global.HELP_CMS.uploadOrgFileType = null;
     return `
 <!DOCTYPE html>
 <html>
@@ -39,23 +37,10 @@ const index = (files) => {
         <div class="heb-main-box">
           <div class="heb-main">
             <div class="title-box">
-                <div class="title">《今日雄安》</div>
-                <div class="year">
-                    <div class="i" contenteditable="true">2018</div>年
-                </div>
-                <div class="month">
-                    <div class="i" contenteditable="true">12</div>月
-                </div>
-                <div class="day">
-                    <div class="i" contenteditable="true">18</div>日
-                </div>
-                <div class="stage">第
-                    <div class="i" contenteditable="true">22</div>期
-                </div>
-                <div class="i add-title" contenteditable="true"></div>
+                <!-- title -->
             </div>
             <div class="heb-pic">
-                
+                <!-- form -->
             </div>
         </div>
       </div>

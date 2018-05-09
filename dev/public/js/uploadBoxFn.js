@@ -8,3 +8,5 @@ const uploadBoxFn = () => {
         </div>
     `;
 };
+window.uploadBox = uploadBoxFn();
+$('.heb-pic').html(uploadBox);

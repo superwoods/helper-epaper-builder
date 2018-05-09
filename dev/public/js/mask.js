@@ -1,4 +1,5 @@
 const mask = () => {
+    $body.append(`<div class="btn btn-primary add-mask">突出/预览</div>`);
     const $addMask = $('.add-mask');
     $addMask.on('click', (e) => {
         const $html = $('html');
