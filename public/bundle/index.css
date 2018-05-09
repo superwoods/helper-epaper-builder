@@ -1,0 +1,133 @@
+body {
+  font-family: "微软雅黑";
+  color: #333;
+  min-width: 1200px;
+  padding: 0;
+  margin: 0;
+}
+.btn {
+  position: relative;
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  white-space: nowrap;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  background-repeat: repeat-x;
+  background-position: -1px -1px;
+  background-size: 110% 110%;
+  border: 1px solid rgba(27,31,35,0.2);
+  border-radius: 0.25em;
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: #fafbfc;
+  background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
+}
+.btn-primary {
+  color: #fff;
+  background-color: #28a745;
+  background-image: linear-gradient(-180deg, #34d058 0%, #28a745 90%);
+}
+.upload-box {
+  text-align: center;
+  padding: 20px;
+  border-top: 1px #ccc solid;
+  margin: 0 auto;
+}
+.is-mask .heb-box {
+  background-color: rgba(0,0,0,0.3);
+}
+.add-mask {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 999;
+}
+.add-herf {
+  cursor: pointer;
+}
+.add-herf:hover {
+  border: 1px #f00 solid;
+}
+.heb-bg-iframe {
+  width: 100%;
+  height: 18000px;
+  margin: 0 auto;
+  position: absolute;
+  left: 50%;
+  top: 0;
+}
+.heb-box {
+  position: absolute;
+  z-index: 999;
+  margin: 0 auto;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 18000px;
+}
+.heb-box-in {
+  position: absolute;
+  margin: 0 auto;
+  width: 1200px;
+  top: 210px;
+  left: 50%;
+  margin-left: -600px;
+}
+.heb-main-box {
+  width: 951px;
+  padding: 0 49px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.heb-main {
+  background-color: #fff;
+  height: 5503px;
+}
+.heb-main .title-box {
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 45px;
+  padding-bottom: 30px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  cursor: default;
+}
+.heb-main .i {
+  outline: none;
+  text-align: left;
+  cursor: text;
+}
+.heb-main .i:hover {
+  border-bottom: 1px solid #0b4a80;
+  color: #0b4a80;
+}
+.heb-main .title,
+.heb-main .i,
+.heb-main .year,
+.heb-main .month,
+.heb-main .day,
+.heb-main .stage,
+.heb-main .add-title {
+  display: flex;
+  justify-content: center;
+}
+.heb-main .add-title {
+  min-width: 0.5em;
+  text-align: left;
+}
+.heb-pic p {
+  margin: 0;
+}
+.bb {
+  border-bottom: #0b4a80 5px solid;
+}
