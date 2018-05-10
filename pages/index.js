@@ -1,5 +1,5 @@
 const index = () => {
-    return `
+  return `
 <!DOCTYPE html>
 <html>
   <head>
@@ -20,11 +20,16 @@ const index = () => {
             <div class="heb-pic">
                 <!-- form -->
             </div>
+          </div>
         </div>
       </div>
     </div>
 
+
+    <div class="btn heb-tips hide"></div>
+
     <script src="bundle/jquery.min.js"></script>
+    <script src="bundle/clipboard.min.js"></script>
     <script src="bundle/index.js"></script>
     
   </body>

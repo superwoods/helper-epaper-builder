@@ -9,4 +9,6 @@ const uploadBoxFn = () => {
     `;
 };
 window.uploadBox = uploadBoxFn();
+
+// 写入 uploadBox
 $('.heb-pic').after(uploadBox);

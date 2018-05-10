@@ -1,27 +1,42 @@
 const titleFn = () => {
     const myDate = new Date();
+
     let { title, year, month, day, stage } = {
         title: '《今日雄安》',
         year: myDate.getFullYear(),
-        month: myDate.getMonth(),
-        day: myDate.getDate(),
-        stage: '?',
+        month: myDate.getMonth() + 1,
+        day: myDate.getDate() + 1,
+        stage: '-',
     };
-    // $('title').text(`${title} ${year}年${month}月${day}日 第${stage}期`);
+
     $('.title-box').html(`
         <div class="title">${title}</div>
         <div class="year">
-            <div class="i" contenteditable="true" class="year-i">${year}</div>年
+            <div contenteditable="true" class="i year-i">${year}</div>年
         </div>
         <div class="month">
-            <div class="i" contenteditable="true" class="month-i">${month}</div>月
+            <div contenteditable="true" class="i month-i">${month}</div>月
         </div>
         <div class="day">
-            <div class="i" contenteditable="true" class="day-i">${day}</div>日
+            <div contenteditable="true" class="i day-i">${day}</div>日
         </div>
-        <div class="stage">第<div class="i" contenteditable="true" class="stage-i">${stage}</div>期
+        <div class="stage">第<div contenteditable="true" class="i stage-i">${stage}</div>期
         </div>
         <div class="i add-title" contenteditable="true"></div>
     `);
+
+    $.ajax({
+        url: 'http://www.xiongan.gov.cn/bundle/xat-data.js',
+        dataType: "script",
+        success() {
+            const len = xatData.length;
+            const last = xatData[len - 1];
+            console.log('data', last);
+            last.Title.replace(/第(\d*)期/igm, (...opt) => {
+                $('.stage-i').text(opt[1] - 0 + 1);
+            });
+        }
+    });
+
 };
 titleFn();
