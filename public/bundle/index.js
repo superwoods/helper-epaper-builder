@@ -142,7 +142,6 @@ $(function () {
         }, 1);
     };
 
-    ;
     var uploadBoxFn = function uploadBoxFn() {
         return '\n        <div class="upload-box">\n            <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">\n                <input class="btn" type="file" name="pic" multiple="multiple">\n                <input class="btn btn-primary" type="button" value="\u4E0A\u4F20\u6587\u4EF6" id="form-submit">\n            </form>\n        </div>\n    ';
     };
@@ -150,7 +149,7 @@ $(function () {
 
     // 写入 uploadBox
     $('.heb-pic').after(uploadBox);
-    ;
+
     var iframeBg = function iframeBg() {
         if (isDev === false) {
             var winWidth = $body.width();
@@ -164,7 +163,7 @@ $(function () {
             });
         }
     };
-    iframeBg();;
+    iframeBg();
     var upload = function upload() {
         var formData = new FormData($('#form-upload-multi')[0]);
         $.ajax({
@@ -185,7 +184,7 @@ $(function () {
     };
 
     $('#form-submit').on('click', upload);
-    ;
+
     var mask = function mask() {
         $body.append('<div class="btn add-mask">\u7A81\u51FA</div>'); //btn-primary 
         var $addMask = $('.add-mask');
@@ -207,7 +206,7 @@ $(function () {
         });
         // $addMask.trigger('click');
     };
-    mask();;
+    mask();
     var titleFn = function titleFn() {
         var myDate = new Date();
 
@@ -240,22 +239,18 @@ $(function () {
             }
         });
     };
-    titleFn();;
+    titleFn();
     var copyBtn = function copyBtn() {
-        var addCopyBtn = function addCopyBtn() {
-            $body.append('\n            <div class="btn btn-primary copy-btn" id="copy-btn">\u590D\u5236</div>\n        ');
-        };
-
-        addCopyBtn();
+        $body.append('\n        <div class="btn btn-primary copy-btn" id="copy-btn">\u590D\u5236</div>\n    ');
 
         var clipboard = new ClipboardJS($('#copy-btn')[0], {
             text: function text(trigger) {
-                console.log('trigger: ', trigger);
+                // console.log('trigger: ', trigger);
                 return window.hebDom;
             }
         });
 
-        $('#copy-btn').on('click', function (e) {
+        $('#copy-btn').on('click', function () {
             clipboard.on('success', function (e) {
                 console.log('success: ', e);
                 if (e.action === 'copy') {
@@ -271,10 +266,11 @@ $(function () {
         // 解决首次加载需点击两次复制按钮才能完成复制的问题
         $('#copy-btn').trigger('click');
     };
-    copyBtn();;
+
+    copyBtn();
     var tips = function tips(text) {
         $('.heb-tips').html(text).show().delay(2000).fadeOut(function () {
             $(this).hide().stop();
         });
-    };;
+    };
 });

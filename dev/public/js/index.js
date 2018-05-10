@@ -11,12 +11,12 @@ $(() => {
 
     $html.addClass('is-xa-today-print');
 
-    @import './render-data.js';
-    @import './uploadBoxFn.js';
-    @import './iframeBg.js';
-    @import './upload.js';
-    @import './mask.js';
-    @import './title.js';
-    @import './copyBtn.js';
-    @import './tips.js';
+    @import './render-data.js'
+    @import './uploadBoxFn.js'
+    @import './iframeBg.js'
+    @import './upload.js'
+    @import './mask.js'
+    @import './title.js'
+    @import './copyBtn.js'
+    @import './tips.js'
 });
