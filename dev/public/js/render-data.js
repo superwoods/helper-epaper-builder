@@ -25,6 +25,7 @@ const renderData = (data) => {
     }) => {
         const originalname = e.originalname;
         const originalnameArray = originalname.split(/\.|-|_/);
+        // console.log('originalnameArray', originalnameArray);
         const index = originalnameArray[0];
 
         const img = new Image();
@@ -40,7 +41,9 @@ const renderData = (data) => {
                 width: Math.round(img.naturalWidth * pageWidth / naturalWidth),
                 height: Math.round(img.naturalHeight * pageHeight / naturalHeight),
                 src: src,
+                mainName: index,
             };
+
             if (originalnameArray.length < 3) {
                 results[index] = result;
             } else {
@@ -64,18 +67,14 @@ const renderData = (data) => {
         // console.log('results:', results);
         let dom = '';
         for (let prop in results) {
-
-            console.log(prop, results[prop]);
-
             const e = results[prop];
+
+            console.log(prop, e);
+
             const hasChild = e.hasChild;
+            const isPrint = /p/ig.test(e.mainName);
             if (hasChild === false) {
-                dom += `<p class="add-href ${e.className}">\n    <img src="${e.src}" width="100%" height="auto">\n</p>\n\n`;
-
-                if (prop == 1) {
-                    console.log(1111);
-
-                }
+                dom += `<p ${isPrint ? 'align="center"' : `class="add-href ${e.className}"`}>\n    <img src="${e.src}" width="100%" height="auto"${isPrint ? ' align="center"' : ''}>\n</p>\n\n`;
             } else {
                 dom += `<div style="width:${pageWidth}px;height:${pageHeight}px;position:relative;">\n`;
 

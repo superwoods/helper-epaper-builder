@@ -40,6 +40,7 @@ $(function () {
 
             var originalname = e.originalname;
             var originalnameArray = originalname.split(/\.|-|_/);
+            // console.log('originalnameArray', originalnameArray);
             var index = originalnameArray[0];
 
             var img = new Image();
@@ -54,8 +55,10 @@ $(function () {
                     originalname: originalname,
                     width: Math.round(img.naturalWidth * pageWidth / naturalWidth),
                     height: Math.round(img.naturalHeight * pageHeight / naturalHeight),
-                    src: src
+                    src: src,
+                    mainName: index
                 };
+
                 if (originalnameArray.length < 3) {
                     results[index] = result;
                 } else {
@@ -79,17 +82,14 @@ $(function () {
             // console.log('results:', results);
             var dom = '';
             for (var prop in results) {
-
-                console.log(prop, results[prop]);
-
                 var e = results[prop];
-                var hasChild = e.hasChild;
-                if (hasChild === false) {
-                    dom += '<p class="add-href ' + e.className + '">\n    <img src="' + e.src + '" width="100%" height="auto">\n</p>\n\n';
 
-                    if (prop == 1) {
-                        console.log(1111);
-                    }
+                console.log(prop, e);
+
+                var hasChild = e.hasChild;
+                var isPrint = /p/ig.test(e.mainName);
+                if (hasChild === false) {
+                    dom += '<p ' + (isPrint ? 'align="center"' : 'class="add-href ' + e.className + '"') + '>\n    <img src="' + e.src + '" width="100%" height="auto"' + (isPrint ? ' align="center"' : '') + '>\n</p>\n\n';
                 } else {
                     dom += '<div style="width:' + pageWidth + 'px;height:' + pageHeight + 'px;position:relative;">\n';
 
@@ -143,7 +143,7 @@ $(function () {
     };
 
     var uploadBoxFn = function uploadBoxFn() {
-        return '\n        <div class="upload-box">\n            <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">\n                <input class="btn" type="file" name="pic" multiple="multiple">\n                <input class="btn btn-primary" type="button" value="\u4E0A\u4F20\u6587\u4EF6" id="form-submit">\n            </form>\n        </div>\n    ';
+        return '\n        <div class="upload-box">\n            <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">\n                <input class="btn" type="file" name="pic" multiple="multiple">\n                <input class="btn btn-primary" type="button" value="\u4E0A\u4F20\u6587\u4EF6" id="form-submit">\n            </form>\n        </div>\n        <div class="heb-main-tips">\n            <h2>\u4E0A\u4F20\u8BF4\u660E\uFF1A</h2>\n            <ul>\n                <li>\u5FC5\u987B\u4F7F\u7528\u6570\u5B57\u6587\u4EF6\u540D\u4F5C\u4E3A\u56FE\u7247\u5E8F\u5217 <code>1.jpg, 2.jpg, 3.jpg...</code> </li>\n                <li>\u5FC5\u987B\u4F7F\u7528 <code>p</code> \u6807\u8BB0\u6253\u5370\u56FE <code>p1.jpg, p2.jpg, p3.jpg...</code></li>\n                <li>\u4F7F\u7528\u5206\u9694\u7B26 <code>_</code> \u5F00\u542F\u62FC\u56FE\u5E03\u5C40 (\u5148\u4E0A\u4E0B\u540E\u5DE6\u53F3) <code>1_1.jpg, 1_2.jpg...</code></li>\n            </ul>\n            <a href="https://github.com/xinhuaRadioLAB/helper-epaper-builder-doc/issues/1" target="_blank">\u4E86\u89E3\u66F4\u591A\u6216\u53CD\u9988\u95EE\u9898</a>\n        </div>\n    ';
     };
     window.uploadBox = uploadBoxFn();
 

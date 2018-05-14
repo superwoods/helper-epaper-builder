@@ -2,12 +2,16 @@ mainHeight = 18000px
 colorBlue = #0b4a80
 
 body
-    font-family: "微软雅黑";
-    // background: #f7f7f7;
+    // font-family: "微软雅黑"
+    background-color: #cccccc
     color: #333;
     min-width 1200px
     padding: 0
     margin: 0
+
+.ie
+    body
+        font-family: "微软雅黑"
 
 .clearfix
     &:after
@@ -78,6 +82,7 @@ body
     cursor pointer
 
 .heb
+
     &-bg-iframe
         width: 100%
         height mainHeight
@@ -184,6 +189,28 @@ body
         z-index 999
         color: red
         border-color: red
+
+    &-main-tips
+        border: 1px solid rgba(27,31,35,0.2);
+        border-radius: 0.25em;
+        background-color: #fafbfc;
+        width: 52%
+        margin: 30px auto 0
+        font-size: 14px
+        line-height: 24px
+        padding: 20px 40px 30px
+
+        code
+            background-color: #f0f0f0
+            padding: 0 4px
+            line-height: 20px
+            border-radius: 2px
+            color: orange
+            display: inline-flex
+        
+        a
+            color: lightblue
+
 
 .bb
     border-bottom: colorBlue 5px solid
