@@ -1,9 +1,20 @@
 body {
-  font-family: "微软雅黑";
+  background-color: #ccc;
   color: #333;
   min-width: 1200px;
   padding: 0;
   margin: 0;
+}
+.ie body {
+  font-family: "微软雅黑";
+}
+.clearfix:after {
+  content: '';
+  clear: both;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  display: inline-block;
 }
 .btn {
   position: relative;
@@ -29,6 +40,10 @@ body {
   background-color: #fafbfc;
   background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
 }
+.hide,
+.heb-hide {
+  display: none;
+}
 .btn-primary {
   color: #fff;
   background-color: #28a745;
@@ -41,19 +56,44 @@ body {
   margin: 0 auto;
 }
 .is-mask .heb-box {
-  background-color: rgba(0,0,0,0.3);
+  background-color: rgba(0,0,0,0.2);
+  box-shadow: 0 10px 60px rgba(0,0,0,0.2);
 }
-.add-mask {
+.add-mask,
+.copy-btn {
   position: fixed;
   right: 0;
   bottom: 0;
   z-index: 999;
 }
-.add-herf {
-  cursor: pointer;
+.copy-btn {
+  margin-bottom: 40px;
 }
-.add-herf:hover {
-  border: 1px #f00 solid;
+.add-href-input,
+.add-href-btn {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  top: 0;
+  left: 0;
+}
+.add-href-text {
+  min-width: 90%;
+  position: absolute;
+  z-index: 12;
+  top: 20px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  margin: 0 auto;
+  cursor: auto;
+  font-weight: 400;
+}
+.add-href-btn {
+  z-index: 11;
+  background-color: rgba(0,0,0,0.3);
+  cursor: pointer;
+  border: #0b4a80 1px solid;
 }
 .heb-bg-iframe {
   width: 100%;
@@ -89,7 +129,7 @@ body {
 }
 .heb-main {
   background-color: #fff;
-  height: 5503px;
+  padding-bottom: 80px;
 }
 .heb-main .title-box {
   font-size: 32px;
@@ -108,8 +148,8 @@ body {
   cursor: text;
 }
 .heb-main .i:hover {
-  border-bottom: 1px solid #0b4a80;
-  color: #0b4a80;
+  border-bottom: 1px solid #ffa500;
+  color: #ffa500;
 }
 .heb-main .title,
 .heb-main .i,
@@ -127,7 +167,79 @@ body {
 }
 .heb-pic p {
   margin: 0;
+  position: relative;
 }
-.bb {
-  border-bottom: #0b4a80 5px solid;
+.heb-tips {
+  width: 60%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 30px;
+  line-height: 40px;
+  padding: 40px;
+  clear: both;
+  z-index: 999;
+  color: #f00;
+  border-color: #f00;
+}
+.heb-main-tips,
+.heb-alert-tips {
+  border: 1px solid rgba(27,31,35,0.2);
+  border-radius: 0.25em;
+  background-color: #fafbfc;
+  width: 52%;
+  margin: 30px auto 0;
+  font-size: 14px;
+  line-height: 24px;
+  padding: 20px 40px 30px;
+}
+.heb-main-tips code,
+.heb-alert-tips code {
+  background-color: #f0f0f0;
+  padding: 0 4px;
+  line-height: 20px;
+  border-radius: 2px;
+  color: #ffa500;
+  display: inline-flex;
+}
+.heb-main-tips a,
+.heb-alert-tips a {
+  color: #add8e6;
+}
+.heb-alert-tips {
+  padding: 20px 40px;
+  margin-bottom: 20px;
+  color: #f00;
+  border-color: #f00;
+}
+.heb-print-tips {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.heb-print-tips li {
+  width: 46%;
+  padding: 0;
+  margin: 6px;
+  text-align: center;
+  line-height: 20px;
+  font-size: 14px;
+}
+.heb-print-tips a {
+  color: #ffa500;
+}
+.heb-print-tips a:hover {
+  color: #00f;
+}
+.heb-print-tips a img {
+  border: 1px solid rgba(27,31,35,0.2);
+}
+.heb-print-tips a img:hover {
+  border-color: #ffa500;
+  box-shadow: 0 3px 20px rgba(27,31,35,0.2);
 }

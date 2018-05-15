@@ -2,12 +2,25 @@ mainHeight = 18000px
 colorBlue = #0b4a80
 
 body
-    font-family: "微软雅黑";
-    // background: #f7f7f7;
+    // font-family: "微软雅黑"
+    background-color: #cccccc
     color: #333;
     min-width 1200px
     padding: 0
     margin: 0
+
+.ie
+    body
+        font-family: "微软雅黑"
+
+.clearfix
+    &:after
+        content: ''
+        clear both
+        width: 100%
+        height 0
+        overflow hidden
+        display: inline-block
 
 .btn
     position: relative;
@@ -35,6 +48,11 @@ body
     // &-upload
         // width: 200px
         // color: #cb2431;
+
+.hide
+.heb-hide
+    display: none
+
 .btn-primary
     color: #fff;
     background-color: #28a745;
@@ -44,26 +62,53 @@ body
     text-align: center
     padding: 20px
     border-top: 1px #cccccc solid
-    // width: 80%
     margin: 0 auto
 
 .is-mask
     .heb
         &-box
-            background-color: rgba(#000000, 0.3)
+            background-color: rgba(#000000, 0.2)
+            box-shadow: 0 10px 60px rgba(#000000, 0.2)
 
 .add-mask
+.copy-btn
     position: fixed
     right: 0
     bottom: 0
     z-index: 999
 
-.add-herf
-    cursor pointer
-    &:hover
-        border: 1px red solid
+.copy-btn
+    margin-bottom: 40px
+
+.add-href
+    &-input
+    &-btn
+        position: absolute
+        width: 100%
+        height 100%
+        z-index 10
+        top: 0
+        left: 0
+
+    &-text
+        min-width: 90%
+        position: absolute
+        z-index 12
+        top: 20px
+        left: 50%
+        transform: translate(-50%, 0)
+        margin: 0 auto
+        cursor: auto
+        font-weight: 400
+
+    &-btn
+        z-index 11
+        background-color: rgba(#000000, 0.3)
+        cursor pointer
+        border: colorBlue 1px solid
 
 .heb
+
     &-bg-iframe
         width: 100%
         height mainHeight
@@ -103,7 +148,8 @@ body
 
     &-main
         background-color: #ffffff //rgba(#ffffff, 0.6)
-        height 5503px
+        // height 5503px
+        padding-bottom: 80px
 
         .title-box
             font-size: 32px
@@ -116,22 +162,13 @@ body
             flex-wrap: wrap
             cursor: default
         .i
-            // font-size: 32px
-            // font-weight: 700
-            // line-height: 45px
-            // text-align: center
-            // background: none
-            // border: none
             outline: none
-            // margin: 0
-            // padding: 0
-            // padding: 0 3px
             text-align: left
             cursor: text
 
             &:hover
-                border-bottom: 1px solid colorBlue
-                color: colorBlue
+                border-bottom: 1px solid orange
+                color: orange
 
         .title
         .i
@@ -152,5 +189,86 @@ body
     &-pic
         p
             margin: 0
-.bb
-    border-bottom: colorBlue 5px solid
+            position relative
+            // &:hover:after
+            //     content: ''
+            //     width: 100%
+            //     height 100%
+            //     position: absolute
+            //     z-index: 2
+            //     background-color: rgba(#000000, 0.2)
+            //     top: 0
+            //     left: 0
+            //     img
+            //         border: 1px solid orange
+                    
+    &-tips
+        width: 60%
+        position: fixed
+        top: 50%
+        left 50%
+        transform: translate(-50%, -50%)
+        text-align: center
+        font-size: 30px
+        line-height: 40px
+        padding: 40px
+        clear both
+        z-index 999
+        color: red
+        border-color: red
+
+    &-main-tips
+    &-alert-tips
+        border: 1px solid rgba(27,31,35,0.2);
+        border-radius: 0.25em;
+        background-color: #fafbfc;
+        width: 52%
+        margin: 30px auto 0
+        font-size: 14px
+        line-height: 24px
+        padding: 20px 40px 30px
+
+        code
+            background-color: #f0f0f0
+            padding: 0 4px
+            line-height: 20px
+            border-radius: 2px
+            color: orange
+            display: inline-flex
+        
+        a
+            color: lightblue
+
+    &-alert-tips
+        padding: 20px 40px
+        margin-bottom: 20px
+        color: red
+        border-color: red
+
+    &-print-tips
+        display: flex
+        padding: 0
+        margin 0
+        list-style: none
+        flex-wrap: wrap
+        justify-content: space-between
+        
+        li
+            width: 46%
+            padding: 0
+            margin: 6px
+            text-align: center
+            line-height: 20px
+            font-size: 14px
+        a
+            color: orange
+            &:hover
+                color: blue
+            img
+                border: 1px solid rgba(27,31,35,0.2);
+                &:hover
+                    border-color: orange
+                    box-shadow: 0 3px 20px rgba(27,31,35,0.2);
+
+
+

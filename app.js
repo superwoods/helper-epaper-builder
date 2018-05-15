@@ -5,14 +5,11 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const multer = require('multer');
-// const libIndex = require('./lib/index');
 const pagesIndex = require('./pages/index');
-// const pagesReadme = require('./pages/readme');
 
-global.HELP_CMS = {
+global.HEB_CONFIG = {
     filetypes: /jpg|jpeg|png|gif/,
     upload: 'public/upload',
-    // download: 'file-cms-template',
 };
 
 const app = express();
@@ -33,7 +30,7 @@ const createFolder = (folder) => {
     }
 };
 
-const uploadFolder = `./${global.HELP_CMS.upload}/`;
+const uploadFolder = `./${global.HEB_CONFIG.upload}/`;
 
 createFolder(uploadFolder);
 
@@ -51,9 +48,9 @@ const storage = multer.diskStorage({
 
 const checkFileType = (file) => {
     const orgType = path.extname(file.originalname).toLowerCase();
-    // global.HELP_CMS.uploadOrgFileType = orgType;
-    const mimetype = global.HELP_CMS.filetypes.test(file.mimetype);
-    const extname = global.HELP_CMS.filetypes.test(orgType);
+    // global.HEB_CONFIG.uploadOrgFileType = orgType;
+    const mimetype = global.HEB_CONFIG.filetypes.test(file.mimetype);
+    const extname = global.HEB_CONFIG.filetypes.test(orgType);
     const isType = mimetype && extname;
     console.log('checkFileType:', orgType, isType);
     return isType;
@@ -65,7 +62,7 @@ const fileFilter = (req, file, cb) => {
     } else {
         return cb(null, false);
     }
-    cb("err: File upload only supports the following filetypes :" + global.HELP_CMS.filetypes);
+    cb("err: File upload only supports the following filetypes :" + global.HEB_CONFIG.filetypes);
 };
 
 // 通过 storage 选项来对 上传行为 进行定制化

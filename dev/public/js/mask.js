@@ -1,4 +1,5 @@
 const mask = () => {
+    $body.append(`<div class="btn add-mask">突出</div>`); //btn-primary 
     const $addMask = $('.add-mask');
     $addMask.on('click', (e) => {
         const $html = $('html');
@@ -8,11 +9,11 @@ const mask = () => {
         const $e = $(e.currentTarget);
         if (isMask === true) {
             $html.removeClass(className);
-            $e.addClass(classNameBtnActive);
+            // $e.addClass(classNameBtnActive);
             $e.text('突出');
         } else {
             $html.addClass(className);
-            $e.removeClass(classNameBtnActive);
+            // $e.removeClass(classNameBtnActive);
             $e.text('预览');
         }
     });

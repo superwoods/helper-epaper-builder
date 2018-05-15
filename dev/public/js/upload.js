@@ -8,9 +8,7 @@ const upload = () => {
         contentType: false,
         processData: false,
         success: function (data) {
-            @import './render-data.js';
-
-            $('#form-submit').on('click', upload);
+            renderData(data);
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('.upload-box').append(`
