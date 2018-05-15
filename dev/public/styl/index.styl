@@ -50,6 +50,7 @@ body
         // color: #cb2431;
 
 .hide
+.heb-hide
     display: none
 
 .btn-primary
@@ -66,7 +67,8 @@ body
 .is-mask
     .heb
         &-box
-            background-color: rgba(#000000, 0.3)
+            background-color: rgba(#000000, 0.2)
+            box-shadow: 0 10px 60px rgba(#000000, 0.2)
 
 .add-mask
 .copy-btn
@@ -79,7 +81,31 @@ body
     margin-bottom: 40px
 
 .add-href
-    cursor pointer
+    &-input
+    &-btn
+        position: absolute
+        width: 100%
+        height 100%
+        z-index 10
+        top: 0
+        left: 0
+
+    &-text
+        min-width: 90%
+        position: absolute
+        z-index 12
+        top: 20px
+        left: 50%
+        transform: translate(-50%, 0)
+        margin: 0 auto
+        cursor: auto
+        font-weight: 400
+
+    &-btn
+        z-index 11
+        background-color: rgba(#000000, 0.3)
+        cursor pointer
+        border: colorBlue 1px solid
 
 .heb
 
@@ -122,7 +148,8 @@ body
 
     &-main
         background-color: #ffffff //rgba(#ffffff, 0.6)
-        height 5503px
+        // height 5503px
+        padding-bottom: 80px
 
         .title-box
             font-size: 32px
@@ -163,26 +190,26 @@ body
         p
             margin: 0
             position relative
-            &:hover:after
-                content: ''
-                width: 100%
-                height 100%
-                position: absolute
-                z-index: 2
-                background-color: rgba(#000000, 0.2)
-                top: 0
-                left: 0
-                img
-                    border: 1px solid orange
+            // &:hover:after
+            //     content: ''
+            //     width: 100%
+            //     height 100%
+            //     position: absolute
+            //     z-index: 2
+            //     background-color: rgba(#000000, 0.2)
+            //     top: 0
+            //     left: 0
+            //     img
+            //         border: 1px solid orange
                     
     &-tips
-        width: 30%
+        width: 60%
         position: fixed
         top: 50%
         left 50%
         transform: translate(-50%, -50%)
         text-align: center
-        font-size: 20px
+        font-size: 30px
         line-height: 40px
         padding: 40px
         clear both
@@ -191,6 +218,7 @@ body
         border-color: red
 
     &-main-tips
+    &-alert-tips
         border: 1px solid rgba(27,31,35,0.2);
         border-radius: 0.25em;
         background-color: #fafbfc;
@@ -211,7 +239,36 @@ body
         a
             color: lightblue
 
+    &-alert-tips
+        padding: 20px 40px
+        margin-bottom: 20px
+        color: red
+        border-color: red
 
-.bb
-    border-bottom: colorBlue 5px solid
+    &-print-tips
+        display: flex
+        padding: 0
+        margin 0
+        list-style: none
+        flex-wrap: wrap
+        justify-content: space-between
+        
+        li
+            width: 46%
+            padding: 0
+            margin: 6px
+            text-align: center
+            line-height: 20px
+            font-size: 14px
+        a
+            color: orange
+            &:hover
+                color: blue
+            img
+                border: 1px solid rgba(27,31,35,0.2);
+                &:hover
+                    border-color: orange
+                    box-shadow: 0 3px 20px rgba(27,31,35,0.2);
+
+
 

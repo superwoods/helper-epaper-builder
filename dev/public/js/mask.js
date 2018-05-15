@@ -17,6 +17,6 @@ const mask = () => {
             $e.text('预览');
         }
     });
-    // $addMask.trigger('click');
+    $addMask.trigger('click');
 };
 mask();

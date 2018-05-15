@@ -1,12 +1,12 @@
 const copyBtn = () => {
     $body.append(`
-        <div class="btn btn-primary copy-btn" id="copy-btn">复制</div>
+        <div class="btn copy-btn hide" id="finish-btn">完成</div>
+        <div class="btn btn-primary copy-btn hide" id="copy-btn">复制</div>
     `);
 
     const clipboard = new ClipboardJS($('#copy-btn')[0], {
         text: function (trigger) {
-            // console.log('trigger: ', trigger);
-            return window.hebDom;
+            return $('.heb-pic').html();
         }
     });
 

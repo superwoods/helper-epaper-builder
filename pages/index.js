@@ -14,19 +14,19 @@ const index = () => {
       <div class="heb-box-in">
         <div class="heb-main-box">
           <div class="heb-main">
-            <div class="title-box">
-                <!-- title -->
+            <div class="title-box"></div>
+            <!-- 主内容位置 START -->
+            <div class="heb-pic"></div>
+            <!-- 主内容位置 END -->
+
+            <div class="btn heb-tips hide">
+              <!-- 完成 copy 提示文字 -->
             </div>
-            <div class="heb-pic">
-                <!-- form -->
-            </div>
+
           </div>
         </div>
       </div>
     </div>
-
-
-    <div class="btn heb-tips hide"></div>
 
     <script src="bundle/jquery.min.js"></script>
     <script src="bundle/clipboard.min.js"></script>

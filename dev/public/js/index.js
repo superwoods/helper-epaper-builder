@@ -11,6 +11,7 @@ $(() => {
 
     $html.addClass('is-xa-today-print');
 
+    @import './pageSizeConfig.js'
     @import './render-data.js'
     @import './uploadBoxFn.js'
     @import './iframeBg.js'
@@ -19,4 +20,5 @@ $(() => {
     @import './title.js'
     @import './copyBtn.js'
     @import './tips.js'
+    @import './addHref.js'
 });

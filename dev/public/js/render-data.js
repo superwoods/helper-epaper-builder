@@ -2,18 +2,6 @@ const renderData = (data) => {
     console.log('ajax:', data);
     window.hebDom = '';
 
-    const {
-        pageWidth,
-        pageHeight,
-        naturalWidth,
-        naturalHeight
-    } = {
-            pageWidth: 951,
-            pageHeight: 1345,
-            naturalWidth: 1654,
-            naturalHeight: 2339,
-        };
-
     const $hebPic = $('.heb-pic');
     const files = data.files;
     let finishTimer = data.length;
@@ -25,9 +13,7 @@ const renderData = (data) => {
     }) => {
         const originalname = e.originalname;
         const originalnameArray = originalname.split(/\.|-|_/);
-        // console.log('originalnameArray', originalnameArray);
         const index = originalnameArray[0];
-
         const img = new Image();
         const className = `heb-img-${index}`;
         const src = e.path.replace('public/', window.location.href);
@@ -50,7 +36,6 @@ const renderData = (data) => {
                 if (results.hasOwnProperty(index) === false) {
                     results[index] = {};
                 }
-                // results[index].length++;
                 result.className += '-' + originalnameArray[1];
                 results[index][originalnameArray[1]] = result;
             }
@@ -66,15 +51,23 @@ const renderData = (data) => {
     const renderDom = ($target, results) => {
         // console.log('results:', results);
         let dom = '';
+        let domPrint = '';
         for (let prop in results) {
             const e = results[prop];
 
             console.log(prop, e);
 
             const hasChild = e.hasChild;
-            const isPrint = /p/ig.test(e.mainName);
             if (hasChild === false) {
-                dom += `<p ${isPrint ? 'align="center"' : `class="add-href ${e.className}"`}>\n    <img src="${e.src}" width="100%" height="auto"${isPrint ? ' align="center"' : ''}>\n</p>\n\n`;
+                const isPrint = /p/ig.test(e.mainName);
+                if (isPrint) {
+
+                    domPrint += `    <li><a href="${e.src}" target="_blank" title="${e.src}"><img width="100%" src="${e.src}"></a>${e.originalname}</li>\n`;
+
+                    dom += `<p align="center" class="heb-hide ${e.className}">\n    <img src="${e.src}" width="100%" height="auto" align="center">\n</p>\n\n`;
+                } else {
+                    dom += `<p class="add-href ${e.className}">\n    <img src="${e.src}" width="100%" height="auto">\n</p>\n\n`;
+                }
             } else {
                 dom += `<div style="width:${pageWidth}px;height:${pageHeight}px;position:relative;">\n`;
 
@@ -84,9 +77,9 @@ const renderData = (data) => {
                 };
 
                 for (let porp2 in results[prop]) {
-                    // console.log('porp2:', porp2);
+
                     const e2 = results[prop][porp2];
-                    // console.log('porp2:', left, top);
+
                     dom += `    <p class="add-href ${e2.className}" style="width:${e2.width}px;height:${e2.height}px;left:${left}px;top:${top}px;position: absolute;">\n         <img src="${e2.src}" width="100%" height="auto">\n     </p>\n`;
 
                     // 拼接定位 StART / 不支持3列
@@ -112,6 +105,16 @@ const renderData = (data) => {
             dom = $.trim(dom);
             window.hebDom += dom;
             $target.append(dom);
+            addHref();
+
+            if (domPrint) {
+                $('.heb-alert-tips').remove();
+                $('.heb-print-tips').append(domPrint);
+            } else {
+                const tips = '本次上传似乎缺少打印图，发布后的页面可能会无法正常打印！！！';
+                $target.before(`<div class="heb-alert-tips">${tips}</div>`);
+                // alert(tips);
+            }
         }
     };
 
