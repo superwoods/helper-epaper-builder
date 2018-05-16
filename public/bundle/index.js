@@ -40,9 +40,15 @@ $(function () {
             var originalname = e.originalname;
             var originalnameArray = originalname.split(/\.|-|_/);
             var index = originalnameArray[0];
+            var isPrint = /p/ig.test(index);
+            if (isPrint === false) {
+                index -= 0;
+            }
             var img = new Image();
             var className = 'heb-img-' + index;
-            var src = e.path.replace('public/', window.location.href);
+            var src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+
+            console.log('filter: ', originalnameArray, index, src);
 
             img.src = src;
             img.onload = function () {
@@ -56,18 +62,25 @@ $(function () {
                     mainName: index
                 };
 
-                if (originalnameArray.length < 3) {
+                var isChild = originalnameArray.length >= 3;
+
+                console.log('isNoChild:', isChild);
+
+                if (isChild === false) {
                     results[index] = result;
                 } else {
                     if (results.hasOwnProperty(index) === false) {
                         results[index] = {};
                     }
-                    result.className += '-' + originalnameArray[1];
-                    results[index][originalnameArray[1]] = result;
+                    var childIndex = originalnameArray[1] - 0;
+                    result.className += '-' + childIndex;
+                    results[index][childIndex] = result;
                 }
                 finishTimer--;
             };
         };
+
+        console.log('files: ', files);
 
         files.map(function (e, i) {
             imgIndex++;
@@ -75,7 +88,9 @@ $(function () {
         });
 
         var renderDom = function renderDom($target, results) {
-            // console.log('results:', results);
+
+            console.log('renderDom results:', results);
+
             var dom = '';
             var domPrint = '';
             for (var prop in results) {
