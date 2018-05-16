@@ -20,7 +20,8 @@ const renderData = (data) => {
         }
         const img = new Image();
         const className = `heb-img-${index}`;
-        const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+        // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+        const src = e.path.replace(/public/ig, window.location.href).replace(/\\/ig, '/');
 
         console.log('filter: ', originalnameArray, index, src);
 

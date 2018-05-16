@@ -46,7 +46,8 @@ $(function () {
             }
             var img = new Image();
             var className = 'heb-img-' + index;
-            var src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+            // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+            var src = e.path.replace(/public/ig, window.location.href).replace(/\\/ig, '/');
 
             console.log('filter: ', originalnameArray, index, src);
 
