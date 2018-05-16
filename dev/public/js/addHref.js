@@ -90,7 +90,10 @@ const addHref = () => {
 
         if (hasInput === false) {
             let _herfInput = herfInput();
-            const isHeader = $this.hasClass('heb-img-1');
+            const isHeader = $this.hasClass('heb-img-1-1') || $this.hasClass('heb-img-1');
+
+            console.log('isHeader:', isHeader);
+
             if (isHeader) {
                 const stageI = $.trim($('.stage-i').text());
                 _herfInput = herfInput(`http://www.xiongan.gov.cn/xiongan-today/?xats${stageI || ''}`);
