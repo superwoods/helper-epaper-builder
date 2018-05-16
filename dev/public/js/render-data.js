@@ -13,10 +13,16 @@ const renderData = (data) => {
     }) => {
         const originalname = e.originalname;
         const originalnameArray = originalname.split(/\.|-|_/);
-        const index = originalnameArray[0];
+        let index = originalnameArray[0];
+        const isPrint = /p/ig.test(index);
+        if (isPrint === false) {
+            index -= 0;
+        }
         const img = new Image();
         const className = `heb-img-${index}`;
-        const src = e.path.replace('public/', window.location.href);
+        const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+
+        console.log('filter: ', originalnameArray, index, src);
 
         img.src = src;
         img.onload = () => {
@@ -30,18 +36,25 @@ const renderData = (data) => {
                 mainName: index,
             };
 
-            if (originalnameArray.length < 3) {
+            const isChild = originalnameArray.length >= 3;
+
+            console.log('isNoChild:', isChild);
+
+            if (isChild === false) {
                 results[index] = result;
             } else {
                 if (results.hasOwnProperty(index) === false) {
                     results[index] = {};
                 }
-                result.className += '-' + originalnameArray[1];
-                results[index][originalnameArray[1]] = result;
+                const childIndex = originalnameArray[1] - 0;
+                result.className += '-' + childIndex;
+                results[index][childIndex] = result;
             }
             finishTimer--;
         };
     };
+
+    console.log('files: ', files);
 
     files.map((e, i) => {
         imgIndex++;
@@ -49,7 +62,10 @@ const renderData = (data) => {
     });
 
     const renderDom = ($target, results) => {
-        // console.log('results:', results);
+
+        console.log('renderDom results:', results);
+
+
         let dom = '';
         let domPrint = '';
         for (let prop in results) {
