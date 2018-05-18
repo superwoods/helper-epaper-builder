@@ -103,15 +103,13 @@ $(function () {
                 if (hasChild === false) {
                     var isPrint = /p/ig.test(e.mainName);
                     if (isPrint) {
-
                         domPrint += '    <li><a href="' + e.src + '" target="_blank" title="' + e.src + '"><img width="100%" src="' + e.src + '"></a>' + e.originalname + '</li>\n';
-
-                        dom += '<p align="center" class="heb-hide ' + e.className + '">\n    <img src="' + e.src + '" width="100%" height="auto" align="center">\n</p>\n\n';
+                        dom += '<p align="center" class="heb-hide ' + e.className + ' only-print">\n    <img src="' + e.src + '" width="100%" height="auto" align="center">\n</p>\n\n';
                     } else {
                         dom += '<p class="add-href ' + e.className + '">\n    <img src="' + e.src + '" width="100%" height="auto">\n</p>\n\n';
                     }
                 } else {
-                    dom += '<div style="width:' + pageWidth + 'px;height:' + pageHeight + 'px;position:relative;">\n';
+                    dom += '<div class="heb-box-div" style="width:' + pageWidth + 'px !important;max-width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">\n';
 
                     var _left$top = {
                         left: 0,
@@ -125,7 +123,7 @@ $(function () {
 
                         var e2 = results[prop][porp2];
 
-                        dom += '    <p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px;height:' + e2.height + 'px;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n         <img src="' + e2.src + '" width="100%" height="auto">\n     </p>\n';
+                        dom += '    <p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;max-width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position:absolute;">\n         <img src="' + e2.src + '" width="100%" height="auto">\n     </p>\n';
 
                         // 拼接定位 StART / 不支持3列
                         var isFullHeight = e2.height >= pageHeight - top;
