@@ -54,7 +54,7 @@
         "server": "node ./bin/www",
         "clean": "rm -rf public/upload && mkdir -p public/upload",
         "prestart": "mkdir -p public/upload",
-        "start": "PORT=9998 npm run server & wait\n# ============= server =============\n# localhost:9998\n# 10.200.1.38:9998",
+        "start": "PORT=9998 npm run server & wait\n# ============= server =============\n# localhost:9998\n# 10.200.1.38:9998 \nTIPS: run yarn dev start dev mod",
         "dev": "gulp"
     }
 }

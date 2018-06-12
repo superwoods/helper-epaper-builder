@@ -55,35 +55,42 @@ const renderData = (data) => {
         };
     };
 
-    console.log('files: ', files);
+    // console.log('files: ', files);
 
     files.map((e, i) => {
         imgIndex++;
         filter({ e, imgIndex });
     });
 
+    const dom_isPrint = (src, className) => (`<p align="center" class="heb-hide ${className}">\n    <img src="${src}" width="100%" height="auto" align="center">\n</p>\n\n`);
+
+    const dom_isNotPrint = (src, className) => (`<p class="add-href ${className}">\n    <img src="${src}" width="100%" height="auto">\n</p>\n\n`);
+
+
     const renderDom = ($target, results) => {
-
-        console.log('renderDom results:', results);
-
-
+        // console.log('renderDom results:', results);
         let dom = '';
         let domPrint = '';
+        let downloadDom = '';
         for (let prop in results) {
             const e = results[prop];
 
-            console.log(prop, e);
+            // console.log(prop, e);
 
             const hasChild = e.hasChild;
             if (hasChild === false) {
                 const isPrint = /p/ig.test(e.mainName);
                 if (isPrint) {
+                    console.log('e.src:', e.src);
 
                     domPrint += `    <li><a href="${e.src}" target="_blank" title="${e.src}"><img width="100%" src="${e.src}"></a>${e.originalname}</li>\n`;
 
-                    dom += `<p align="center" class="heb-hide ${e.className}">\n    <img src="${e.src}" width="100%" height="auto" align="center">\n</p>\n\n`;
+                    dom += dom_isPrint(e.src, e.className);
+                    downloadDom += dom_isPrint(e.src, e.className);
+
                 } else {
-                    dom += `<p class="add-href ${e.className}">\n    <img src="${e.src}" width="100%" height="auto">\n</p>\n\n`;
+                    dom += dom_isNotPrint(e.src, e.className);
+                    downloadDom += dom_isNotPrint(e.src, e.className);
                 }
             } else {
                 dom += `<div style="width:${pageWidth}px;height:${pageHeight}px;position:relative;">\n`;
@@ -96,6 +103,9 @@ const renderData = (data) => {
                 for (let porp2 in results[prop]) {
 
                     const e2 = results[prop][porp2];
+
+                    console.log('e2.src:', e2.src);
+
 
                     dom += `    <p class="add-href ${e2.className}" style="width:${e2.width}px;height:${e2.height}px;left:${left}px;top:${top}px;position: absolute;">\n         <img src="${e2.src}" width="100%" height="auto">\n     </p>\n`;
 
@@ -120,6 +130,11 @@ const renderData = (data) => {
         if (dom) {
             // 写入 dom
             dom = $.trim(dom);
+
+            // 生成下载页面
+
+
+
             window.hebDom += dom;
             $target.append(dom);
             addHref();
@@ -135,6 +150,7 @@ const renderData = (data) => {
         }
     };
 
+    // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
     let setint = setInterval(() => {
         if (finishTimer === 0) {
             renderDom($('.heb-pic'), results);

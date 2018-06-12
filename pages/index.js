@@ -9,7 +9,8 @@ const index = () => {
     <link rel="stylesheet" href="bundle/index.css">
   </head>
   <body>
-
+    <!-- pages/index.js & /app.js -->
+    
     <div class="heb-box">
       <div class="heb-box-in">
         <div class="heb-main-box">
