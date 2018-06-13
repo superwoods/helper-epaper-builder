@@ -1,4 +1,6 @@
 const titleFn = () => {
+    // console.log('mod > title.js');
+
     const myDate = new Date();
 
     let { title, year, month, day, stage } = {
@@ -31,7 +33,7 @@ const titleFn = () => {
         success() {
             const len = xatData.length;
             const last = xatData[len - 1];
-            console.log('data', last);
+            // console.log('mod > titleFn() data', last);
             last.Title.replace(/第(\d*)期/igm, (...opt) => {
                 $('.stage-i').text(opt[1] - 0 + 1);
             });

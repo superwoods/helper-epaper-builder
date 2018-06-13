@@ -1,17 +1,27 @@
 'use strict';
 
-console.log('index.js');
-// $('.heb-main').text().replace(/\n|\r| /igm, '')
-
+// console.log('mod > index.js');
 $(function () {
     window.hebContentDom = '';
     window.imgIndex = 0;
 
-    var $window = $(window);
+    // const $window = $(window);
     var $html = $('html');
     var $body = $('body');
+    var $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+
+    var localStorageSet = function localStorageSet() {
+        // console.log('mod > localStorageSet.js');
+        var $hebPic = $('.heb-pic');
+        var dom = $hebPic.html();
+        // console.log('    hebPic dom:', dom);
+        if (dom) {
+            localStorage.setItem('hebLocalData', dom);
+            return dom;
+        }
+    };
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -31,7 +41,7 @@ $(function () {
         var $hebPic = $('.heb-pic');
         var files = data.files;
         var finishTimer = data.length;
-        var results = {};
+        var renderItems = {};
 
         var filter = function filter(_ref) {
             var e = _ref.e,
@@ -47,13 +57,13 @@ $(function () {
             var img = new Image();
             var className = 'heb-img-' + index;
             // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
-            var src = e.path.replace(/public/ig, window.location.href).replace(/\\/ig, '/');
+            var src = e.path.replace(/public/ig, '').replace(/\\/ig, '/');
 
             console.log('filter: ', originalnameArray, index, src);
 
             img.src = src;
             img.onload = function () {
-                var result = {
+                var renderItem = {
                     hasChild: false,
                     className: className,
                     originalname: originalname,
@@ -68,14 +78,14 @@ $(function () {
                 console.log('isNoChild:', isChild);
 
                 if (isChild === false) {
-                    results[index] = result;
+                    renderItems[index] = renderItem;
                 } else {
-                    if (results.hasOwnProperty(index) === false) {
-                        results[index] = {};
+                    if (renderItems.hasOwnProperty(index) === false) {
+                        renderItems[index] = {};
                     }
                     var childIndex = originalnameArray[1] - 0;
-                    result.className += '-' + childIndex;
-                    results[index][childIndex] = result;
+                    renderItem.className += '-' + childIndex;
+                    renderItems[index][childIndex] = renderItem;
                 }
                 finishTimer--;
             };
@@ -96,15 +106,16 @@ $(function () {
             return '<p class="add-href ' + className + '">\n    <img src="' + src + '" width="100%" height="auto">\n</p>\n\n';
         };
 
-        var renderDom = function renderDom($target, results) {
-            // console.log('renderDom results:', results);
+        var renderDom = function renderDom(renderItems) {
+            // console.log('renderDom renderItems:', renderItems);
             var dom = '';
             var domPrint = '';
-            var downloadDom = '';
-            for (var prop in results) {
-                var e = results[prop];
+            var regPicName = [];
 
-                // console.log(prop, e);
+            for (var prop in renderItems) {
+                var e = renderItems[prop];
+                // regPicName.push(e)
+                console.log(prop, e);
 
                 var hasChild = e.hasChild;
                 if (hasChild === false) {
@@ -115,10 +126,8 @@ $(function () {
                         domPrint += '    <li><a href="' + e.src + '" target="_blank" title="' + e.src + '"><img width="100%" src="' + e.src + '"></a>' + e.originalname + '</li>\n';
 
                         dom += dom_isPrint(e.src, e.className);
-                        downloadDom += dom_isPrint(e.src, e.className);
                     } else {
                         dom += dom_isNotPrint(e.src, e.className);
-                        downloadDom += dom_isNotPrint(e.src, e.className);
                     }
                 } else {
                     dom += '<div style="width:' + pageWidth + 'px;height:' + pageHeight + 'px;position:relative;">\n';
@@ -131,9 +140,9 @@ $(function () {
                         top = _left$top.top;
 
 
-                    for (var porp2 in results[prop]) {
+                    for (var porp2 in renderItems[prop]) {
 
-                        var e2 = results[prop][porp2];
+                        var e2 = renderItems[prop][porp2];
 
                         console.log('e2.src:', e2.src);
 
@@ -157,23 +166,24 @@ $(function () {
                     dom += '</div>\n\n';
                 }
             }
+
             if (dom) {
                 // 写入 dom
                 dom = $.trim(dom);
 
                 // 生成下载页面
 
-
-                window.hebDom += dom;
-                $target.append(dom);
+                window.hebDom = dom;
+                $hebPic.html(dom);
+                localStorageSet();
                 addHref();
 
                 if (domPrint) {
                     $('.heb-alert-tips').remove();
                     $('.heb-print-tips').append(domPrint);
                 } else {
-                    var _tips = '本次上传似乎缺少打印图，发布后的页面可能会无法正常打印！！！';
-                    $target.before('<div class="heb-alert-tips">' + _tips + '</div>');
+                    var _tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
+                    $hebPic.before('<div class="heb-alert-tips">' + _tips + '</div>');
                     // alert(tips);
                 }
             }
@@ -182,7 +192,7 @@ $(function () {
         // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
         var setint = setInterval(function () {
             if (finishTimer === 0) {
-                renderDom($('.heb-pic'), results);
+                renderDom(renderItems);
                 clearInterval(setint);
                 setint = null;
             }
@@ -211,7 +221,7 @@ $(function () {
         }
     };
     iframeBg();
-    var upload = function upload() {
+    var upload = function upload(e) {
         var formData = new FormData($('#form-upload-multi')[0]);
         $.ajax({
             url: '/upload-multi',
@@ -222,6 +232,9 @@ $(function () {
             processData: false,
             success: function success(data) {
                 renderData(data);
+                if (data.length) {
+                    $('.upload-box').hide();
+                }
             },
             error: function error(jqXHR, textStatus, errorThrown) {
                 $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');
@@ -254,6 +267,8 @@ $(function () {
     };
     mask();
     var titleFn = function titleFn() {
+        // console.log('mod > title.js');
+
         var myDate = new Date();
 
         var _title$year$month$day = {
@@ -278,7 +293,7 @@ $(function () {
             success: function success() {
                 var len = xatData.length;
                 var last = xatData[len - 1];
-                console.log('data', last);
+                // console.log('mod > titleFn() data', last);
                 last.Title.replace(/第(\d*)期/igm, function () {
                     $('.stage-i').text((arguments.length <= 1 ? undefined : arguments[1]) - 0 + 1);
                 });
@@ -286,33 +301,24 @@ $(function () {
         });
     };
     titleFn();
-    var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn copy-btn hide" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u590D\u5236</div>\n    ');
 
-        var clipboard = new ClipboardJS($('#copy-btn')[0], {
-            text: function text(trigger) {
-                return $('.heb-pic').html();
-            }
-        });
+    // import './copyBtn.js'
+    var copyBtn = function copyBtn() {
+        $body.append('\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
         $('#copy-btn').on('click', function () {
-            clipboard.on('success', function (e) {
-                console.log('success: ', e);
-                if (e.action === 'copy') {
-                    tips('已复制，Ctrl+V 粘贴');
-                }
-            });
+            var dom = localStorageSet();
+            dom = downDomClean(dom);
 
-            clipboard.on('error', function (e) {
-                console.log('error: ', e);
-            });
+            console.log('downDomClean:', dom);
         });
-
-        // 解决首次加载需点击两次复制按钮才能完成复制的问题
-        $('#copy-btn').trigger('click');
     };
 
     copyBtn();
+    var downDomClean = function downDomClean(dom) {
+        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1');
+    };
+
     var tips = function tips(text) {
         $('.heb-tips').html(text).show().delay(2000).fadeOut(function () {
             $(this).hide().stop();
@@ -337,7 +343,7 @@ $(function () {
             var $addHref = _ref2.$addHref,
                 val = _ref2.val;
 
-            $addHref.find('img').wrap('<a href="' + (val || '#') + '" target="_blank"></a>');
+            $addHref.find('img').wrap('<a href="' + (val || '#') + '" target="_blank" data-tip="addHref.js wrap a!"></a>');
 
             var $a = $addHref.find('a');
             $a.on('click', function (e) {
@@ -364,6 +370,7 @@ $(function () {
                 $addHrefInput.fadeOut(function () {
                     $(this).remove();
                     copyBtnShow();
+                    localStorageSet();
                 });
             });
         };
@@ -432,9 +439,28 @@ $(function () {
             });
         });
 
+        // 防止读取本地数据后点击图片出现页面跳转
+        $('.add-href a').on('click', function (e) {
+            e.preventDefault();
+        });
+
         $('#finish-btn').on('click', function () {
             copyBtnShow();
             $('.add-href-btn').trigger('click');
         });
     };
+
+    // local
+    var localDataLoad = function localDataLoad() {
+        // console.log('mod > localDataLoad.js');
+        var $hebPic = $('.heb-pic');
+        var hebLocalData = localStorage.getItem('hebLocalData');
+        // console.log('hebLocalData: ', hebLocalData);
+        if (hebLocalData !== null) {
+            $hebPic.html(hebLocalData);
+            addHref();
+        }
+    };
+
+    localDataLoad();
 });

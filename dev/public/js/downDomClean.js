@@ -1,0 +1,1 @@
+const downDomClean = (dom) => (dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1'));

@@ -1,4 +1,4 @@
-const upload = () => {
+const upload = (e) => {
     var formData = new FormData($('#form-upload-multi')[0]);
     $.ajax({
         url: '/upload-multi',
@@ -9,6 +9,9 @@ const upload = () => {
         processData: false,
         success: function (data) {
             renderData(data);
+            if (data.length) {
+                $('.upload-box').hide();
+            }
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('.upload-box').append(`

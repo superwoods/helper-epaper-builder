@@ -21,7 +21,7 @@ const addHref = () => {
     }) => {
         $addHref
             .find('img')
-            .wrap(`<a href="${val || '#'}" target="_blank"></a>`);
+            .wrap(`<a href="${val || '#'}" target="_blank" data-tip="addHref.js wrap a!"></a>`);
 
         const $a = $addHref.find('a');
         $a.on('click', function (e) {
@@ -48,6 +48,7 @@ const addHref = () => {
             $addHrefInput.fadeOut(function () {
                 $(this).remove();
                 copyBtnShow();
+                localStorageSet();
             });
         });
     };
@@ -116,6 +117,10 @@ const addHref = () => {
         });
     });
 
+    // 防止读取本地数据后点击图片出现页面跳转
+    $('.add-href a').on('click', (e) => {
+        e.preventDefault();
+    });
 
     $('#finish-btn').on('click', () => {
         copyBtnShow();

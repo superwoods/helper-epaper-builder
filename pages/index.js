@@ -30,7 +30,7 @@ const index = () => {
     </div>
 
     <script src="bundle/jquery.min.js"></script>
-    <script src="bundle/clipboard.min.js"></script>
+    <!-- script src="bundle/clipboard.min.js"></script -->
     <script src="bundle/index.js"></script>
     
   </body>
