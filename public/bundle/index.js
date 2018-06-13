@@ -35,18 +35,15 @@ $(function () {
         naturalHeight = _pageWidth$pageHeight.naturalHeight;
 
     var renderData = function renderData(data) {
-        console.log('ajax:', data);
-        window.hebDom = '';
+        console.log('renderData ajax cb:', data);
+        // window.hebDom = '';
 
         var $hebPic = $('.heb-pic');
         var files = data.files;
         var finishTimer = data.length;
         var renderItems = {};
 
-        var filter = function filter(_ref) {
-            var e = _ref.e,
-                imgIndex = _ref.imgIndex;
-
+        var filter = function filter(e) {
             var originalname = e.originalname;
             var originalnameArray = originalname.split(/\.|-|_/);
             var index = originalnameArray[0];
@@ -95,22 +92,21 @@ $(function () {
 
         files.map(function (e, i) {
             imgIndex++;
-            filter({ e: e, imgIndex: imgIndex });
+            filter(e);
         });
 
         var dom_isPrint = function dom_isPrint(src, className) {
-            return '<p align="center" class="heb-hide ' + className + '">\n    <img src="' + src + '" width="100%" height="auto" align="center">\n</p>\n\n';
+            return '<p align="center" class="heb-hide ' + className + '">\n<img src="' + src + '" width="100%" height="auto" align="center">\n</p>';
         };
 
         var dom_isNotPrint = function dom_isNotPrint(src, className) {
-            return '<p class="add-href ' + className + '">\n    <img src="' + src + '" width="100%" height="auto">\n</p>\n\n';
+            return '<p class="add-href ' + className + '">\n<img src="' + src + '" width="100%" height="auto">\n</p>';
         };
 
         var renderDom = function renderDom(renderItems) {
             // console.log('renderDom renderItems:', renderItems);
             var dom = '';
             var domPrint = '';
-            var regPicName = [];
 
             for (var prop in renderItems) {
                 var e = renderItems[prop];
@@ -123,14 +119,14 @@ $(function () {
                     if (isPrint) {
                         console.log('e.src:', e.src);
 
-                        domPrint += '    <li><a href="' + e.src + '" target="_blank" title="' + e.src + '"><img width="100%" src="' + e.src + '"></a>' + e.originalname + '</li>\n';
+                        domPrint += '<li><a href="' + e.src + '" target="_blank" title="' + e.src + '">\n<img width="100%" src="' + e.src + '">\n</a>' + e.originalname + '</li>';
 
                         dom += dom_isPrint(e.src, e.className);
                     } else {
                         dom += dom_isNotPrint(e.src, e.className);
                     }
                 } else {
-                    dom += '<div style="width:' + pageWidth + 'px;height:' + pageHeight + 'px;position:relative;">\n';
+                    dom += '<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
 
                     var _left$top = {
                         left: 0,
@@ -146,9 +142,9 @@ $(function () {
 
                         console.log('e2.src:', e2.src);
 
-                        dom += '    <p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px;height:' + e2.height + 'px;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n         <img src="' + e2.src + '" width="100%" height="auto">\n     </p>\n';
+                        dom += '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n<img src="' + e2.src + '" width="100%" height="auto">\n</p>';
 
-                        // 拼接定位 StART / 不支持3列
+                        // 拼接定位 START / 注意！不支持3列 2018-06-13
                         var isFullHeight = e2.height >= pageHeight - top;
                         if (left == 0) {
                             if (isFullHeight) {
@@ -163,7 +159,7 @@ $(function () {
                         }
                         // 拼接定位 END
                     }
-                    dom += '</div>\n\n';
+                    dom += '</div>';
                 }
             }
 
@@ -173,7 +169,7 @@ $(function () {
 
                 // 生成下载页面
 
-                window.hebDom = dom;
+                // window.hebDom = dom;
                 $hebPic.html(dom);
                 localStorageSet();
                 addHref();
@@ -339,9 +335,9 @@ $(function () {
             return '\n    <div class="add-href-input">\n        <input class="btn add-href-text" value="' + (value ? value : '') + '" placeholder="\u8BF7\u8F93\u5165\u94FE\u63A5" type="text">\n        <div class="add-href-btn"></div>\n    </div>';
         };
 
-        var addA = function addA(_ref2) {
-            var $addHref = _ref2.$addHref,
-                val = _ref2.val;
+        var addA = function addA(_ref) {
+            var $addHref = _ref.$addHref,
+                val = _ref.val;
 
             $addHref.find('img').wrap('<a href="' + (val || '#') + '" target="_blank" data-tip="addHref.js wrap a!"></a>');
 
@@ -351,10 +347,10 @@ $(function () {
             });
         };
 
-        var addHrfBtn = function addHrfBtn(_ref3) {
-            var $addHref = _ref3.$addHref,
-                hasA = _ref3.hasA,
-                $img = _ref3.$img;
+        var addHrfBtn = function addHrfBtn(_ref2) {
+            var $addHref = _ref2.$addHref,
+                hasA = _ref2.hasA,
+                $img = _ref2.$img;
 
             var $addHrefInput = $addHref.find('.add-href-input');
             var $btn = $addHrefInput.find('.add-href-btn');
@@ -375,8 +371,8 @@ $(function () {
             });
         };
 
-        var onChange = function onChange(_ref4) {
-            var $addHref = _ref4.$addHref;
+        var onChange = function onChange(_ref3) {
+            var $addHref = _ref3.$addHref;
 
             var $text = $addHref.find('.add-href-text');
             $text.on('input', function () {

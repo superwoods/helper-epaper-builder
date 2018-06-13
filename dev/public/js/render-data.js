@@ -1,16 +1,13 @@
 const renderData = (data) => {
-    console.log('ajax:', data);
-    window.hebDom = '';
+    console.log('renderData ajax cb:', data);
+    // window.hebDom = '';
 
     const $hebPic = $('.heb-pic');
     const files = data.files;
     let finishTimer = data.length;
     let renderItems = {};
 
-    const filter = ({
-        e,
-        imgIndex,
-    }) => {
+    const filter = (e) => {
         const originalname = e.originalname;
         const originalnameArray = originalname.split(/\.|-|_/);
         let index = originalnameArray[0];
@@ -59,20 +56,17 @@ const renderData = (data) => {
 
     files.map((e, i) => {
         imgIndex++;
-        filter({ e, imgIndex });
+        filter(e);
     });
 
-    const dom_isPrint = (src, className) => (`<p align="center" class="heb-hide ${className}">\n    <img src="${src}" width="100%" height="auto" align="center">\n</p>\n\n`);
+    const dom_isPrint = (src, className) => (`<p align="center" class="heb-hide ${className}">\n<img src="${src}" width="100%" height="auto" align="center">\n</p>`);
 
-    const dom_isNotPrint = (src, className) => (`<p class="add-href ${className}">\n    <img src="${src}" width="100%" height="auto">\n</p>\n\n`);
-
+    const dom_isNotPrint = (src, className) => (`<p class="add-href ${className}">\n<img src="${src}" width="100%" height="auto">\n</p>`);
 
     const renderDom = (renderItems) => {
         // console.log('renderDom renderItems:', renderItems);
         let dom = '';
         let domPrint = '';
-        let regPicName = [];
-
 
         for (let prop in renderItems) {
             const e = renderItems[prop];
@@ -85,7 +79,7 @@ const renderData = (data) => {
                 if (isPrint) {
                     console.log('e.src:', e.src);
 
-                    domPrint += `    <li><a href="${e.src}" target="_blank" title="${e.src}"><img width="100%" src="${e.src}"></a>${e.originalname}</li>\n`;
+                    domPrint += `<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.src}">\n</a>${e.originalname}</li>`;
 
                     dom += dom_isPrint(e.src, e.className);
 
@@ -93,7 +87,7 @@ const renderData = (data) => {
                     dom += dom_isNotPrint(e.src, e.className);
                 }
             } else {
-                dom += `<div style="width:${pageWidth}px;height:${pageHeight}px;position:relative;">\n`;
+                dom += `<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
 
                 let { left, top } = {
                     left: 0,
@@ -107,9 +101,9 @@ const renderData = (data) => {
                     console.log('e2.src:', e2.src);
 
 
-                    dom += `    <p class="add-href ${e2.className}" style="width:${e2.width}px;height:${e2.height}px;left:${left}px;top:${top}px;position: absolute;">\n         <img src="${e2.src}" width="100%" height="auto">\n     </p>\n`;
+                    dom += `<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n<img src="${e2.src}" width="100%" height="auto">\n</p>`;
 
-                    // 拼接定位 StART / 不支持3列
+                    // 拼接定位 START / 注意！不支持3列 2018-06-13
                     const isFullHeight = e2.height >= (pageHeight - top);
                     if (left == 0) {
                         if (isFullHeight) {
@@ -124,7 +118,7 @@ const renderData = (data) => {
                     }
                     // 拼接定位 END
                 }
-                dom += '</div>\n\n';
+                dom += '</div>';
             }
         }
 
@@ -134,7 +128,7 @@ const renderData = (data) => {
 
             // 生成下载页面
 
-            window.hebDom = dom;
+            // window.hebDom = dom;
             $hebPic.html(dom);
             localStorageSet();
             addHref();
