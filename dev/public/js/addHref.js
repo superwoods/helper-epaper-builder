@@ -47,8 +47,6 @@ const addHref = () => {
             }
             $addHrefInput.fadeOut(function () {
                 $(this).remove();
-                copyBtnShow();
-                localStorageSet();
             });
         });
     };
@@ -123,7 +121,8 @@ const addHref = () => {
     });
 
     $('#finish-btn').on('click', () => {
-        copyBtnShow();
         $('.add-href-btn').trigger('click');
+        localStorageSet();
+        copyBtnShow();
     });
 };

@@ -11,15 +11,23 @@ $(function () {
     var $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+    if (isDev) {
+        $html.addClass('is-dev');
+    }
 
+    var downDomClean = function downDomClean(dom) {
+        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1');
+    };
     var localStorageSet = function localStorageSet() {
         // console.log('mod > localStorageSet.js');
         var $hebPic = $('.heb-pic');
         var dom = $hebPic.html();
-        // console.log('    hebPic dom:', dom);
+
         if (dom) {
             localStorage.setItem('hebLocalData', dom);
-            return dom;
+            dom = downDomClean(dom);
+            console.log('downDomClean:\n\n', dom);
+            $('#textarea-data').text(dom);
         }
     };
 
@@ -42,6 +50,7 @@ $(function () {
         var files = data.files;
         var finishTimer = data.length;
         var renderItems = {};
+        var blank = '    ';
 
         var filter = function filter(e) {
             var originalname = e.originalname;
@@ -96,17 +105,18 @@ $(function () {
         });
 
         var dom_isPrint = function dom_isPrint(src, className) {
-            return '<p align="center" class="heb-hide ' + className + '">\n<img src="' + src + '" width="100%" height="auto" align="center">\n</p>';
+            return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
         };
 
         var dom_isNotPrint = function dom_isNotPrint(src, className) {
-            return '<p class="add-href ' + className + '">\n<img src="' + src + '" width="100%" height="auto">\n</p>';
+            return '\n<p class="add-href ' + className + '">\n' + blank + '<img src="' + src + '" width="100%" height="auto">\n</p>';
         };
 
         var renderDom = function renderDom(renderItems) {
             // console.log('renderDom renderItems:', renderItems);
             var dom = '';
             var domPrint = '';
+            var domShowPrintImgs = '';
 
             for (var prop in renderItems) {
                 var e = renderItems[prop];
@@ -119,14 +129,16 @@ $(function () {
                     if (isPrint) {
                         console.log('e.src:', e.src);
 
-                        domPrint += '<li><a href="' + e.src + '" target="_blank" title="' + e.src + '">\n<img width="100%" src="' + e.src + '">\n</a>' + e.originalname + '</li>';
-
-                        dom += dom_isPrint(e.src, e.className);
+                        domShowPrintImgs += '\n<li><a href="' + e.src + '" target="_blank" title="' + e.src + '">\n<img width="100%" src="' + e.src + '">\n</a>' + e.originalname + '</li>';
+                        if (domPrint == '') {
+                            domPrint = '\n<p align="center" class="heb-hide">';
+                        }
+                        domPrint += dom_isPrint(e.src, e.className);
                     } else {
                         dom += dom_isNotPrint(e.src, e.className);
                     }
                 } else {
-                    dom += '<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
+                    dom += '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
 
                     var _left$top = {
                         left: 0,
@@ -142,7 +154,7 @@ $(function () {
 
                         console.log('e2.src:', e2.src);
 
-                        dom += '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n<img src="' + e2.src + '" width="100%" height="auto">\n</p>';
+                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<img src="' + e2.src + '" width="100%" height="auto">\n' + blank + '</p>';
 
                         // 拼接定位 START / 注意！不支持3列 2018-06-13
                         var isFullHeight = e2.height >= pageHeight - top;
@@ -159,24 +171,25 @@ $(function () {
                         }
                         // 拼接定位 END
                     }
-                    dom += '</div>';
+                    dom += '\n</div>';
                 }
             }
 
             if (dom) {
                 // 写入 dom
+                domPrint = $.trim(domPrint);
                 dom = $.trim(dom);
-
-                // 生成下载页面
+                dom = dom + '\n' + (domPrint ? domPrint + '\n</p>' : '');
 
                 // window.hebDom = dom;
                 $hebPic.html(dom);
                 localStorageSet();
+
                 addHref();
 
-                if (domPrint) {
+                if (domShowPrintImgs) {
                     $('.heb-alert-tips').remove();
-                    $('.heb-print-tips').append(domPrint);
+                    $('.heb-print-tips').append(domShowPrintImgs);
                 } else {
                     var _tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
                     $hebPic.before('<div class="heb-alert-tips">' + _tips + '</div>');
@@ -219,6 +232,9 @@ $(function () {
     iframeBg();
     var upload = function upload(e) {
         var formData = new FormData($('#form-upload-multi')[0]);
+
+        console.log('formData: ', formData);
+
         $.ajax({
             url: '/upload-multi',
             type: 'POST',
@@ -300,20 +316,18 @@ $(function () {
 
     // import './copyBtn.js'
     var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
+        $body.append('\n        <div class="btn clear-btn" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
         $('#copy-btn').on('click', function () {
-            var dom = localStorageSet();
-            dom = downDomClean(dom);
+            uploadTxt();
+        });
 
-            console.log('downDomClean:', dom);
+        $('#clear-btn').on('click', function () {
+            localStorage.clear();
         });
     };
 
     copyBtn();
-    var downDomClean = function downDomClean(dom) {
-        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1');
-    };
 
     var tips = function tips(text) {
         $('.heb-tips').html(text).show().delay(2000).fadeOut(function () {
@@ -365,8 +379,6 @@ $(function () {
                 }
                 $addHrefInput.fadeOut(function () {
                     $(this).remove();
-                    copyBtnShow();
-                    localStorageSet();
                 });
             });
         };
@@ -441,12 +453,32 @@ $(function () {
         });
 
         $('#finish-btn').on('click', function () {
-            copyBtnShow();
             $('.add-href-btn').trigger('click');
+            localStorageSet();
+            copyBtnShow();
         });
     };
 
     // local
+    var uploadTxt = function uploadTxt() {
+        var formData = new FormData($('#form-upload-txt')[0]);
+        $.ajax({
+            url: '/upload-txt',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function success(data) {
+
+                console.log('uploadTxt success data:', data);
+            },
+            error: function error(jqXHR, textStatus, errorThrown) {
+                $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');
+            }
+        });
+    };
+
     var localDataLoad = function localDataLoad() {
         // console.log('mod > localDataLoad.js');
         var $hebPic = $('.heb-pic');
@@ -454,9 +486,15 @@ $(function () {
         // console.log('hebLocalData: ', hebLocalData);
         if (hebLocalData !== null) {
             $hebPic.html(hebLocalData);
+            localStorageSet();
+            // $('.add-href').off('click');
             addHref();
         }
     };
 
     localDataLoad();
+
+    // $('#textarea-data').on('input', () => {
+    //     localStorageSet();
+    // });
 });

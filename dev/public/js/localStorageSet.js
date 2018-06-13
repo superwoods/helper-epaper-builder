@@ -1,10 +1,12 @@
 const localStorageSet = () => {
     // console.log('mod > localStorageSet.js');
     const $hebPic = $('.heb-pic');
-    const dom = $hebPic.html();
-    // console.log('    hebPic dom:', dom);
+    let dom = $hebPic.html();
+
     if (dom) {
         localStorage.setItem('hebLocalData', dom);
-        return dom;
+        dom = downDomClean(dom);
+        console.log('downDomClean:\n\n', dom);
+        $('#textarea-data').text(dom);
     }
 };

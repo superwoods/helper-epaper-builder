@@ -24,15 +24,21 @@ const index = () => {
               <!-- 完成 copy 提示文字 -->
             </div>
 
+            <!-- textarea START -->
+            <div class="upload-box2">
+              <form action="/upload-txt" method="post" enctype="multipart/form-data" id="form-upload-txt">
+                  <textarea name="txt" id="textarea-data" class="heb-textarea">
+                  </textarea>
+              </form>
+            </div>
+            <!-- textarea END -->
           </div>
         </div>
       </div>
     </div>
 
     <script src="bundle/jquery.min.js"></script>
-    <!-- script src="bundle/clipboard.min.js"></script -->
     <script src="bundle/index.js"></script>
-    
   </body>
 </html>`;
 };

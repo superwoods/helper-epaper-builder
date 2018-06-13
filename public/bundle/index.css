@@ -60,7 +60,8 @@ body {
   box-shadow: 0 10px 60px rgba(0,0,0,0.2);
 }
 .add-mask,
-.copy-btn {
+.copy-btn,
+.clear-btn {
   position: fixed;
   right: 0;
   bottom: 0;
@@ -68,6 +69,15 @@ body {
 }
 .copy-btn {
   margin-bottom: 40px;
+}
+.clear-btn {
+  top: 0;
+  bottom: auto;
+  display: none;
+  width: auto;
+}
+.is-dev .clear-btn {
+  display: block;
 }
 .add-href-input,
 .add-href-btn {
@@ -242,4 +252,42 @@ body {
 .heb-print-tips a img:hover {
   border-color: #ffa500;
   box-shadow: 0 3px 20px rgba(27,31,35,0.2);
+}
+.upload-box2 {
+  text-align: left;
+  width: 100%;
+  margin: 0 auto;
+}
+.heb-textarea {
+  display: none;
+  margin: 0 auto;
+  border: 1px solid rgba(27,31,35,0.2);
+  border-radius: 0.25em;
+  background-color: #fafbfc;
+  width: 80%;
+  min-height: 800px;
+  margin: 30px auto 0;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px;
+}
+.is-dev .heb-textarea {
+  width: 300px;
+  height: 300px;
+  min-height: 300px;
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: 0;
+}
+.is-dev .heb-box-in {
+  right: 0;
+}
+.is-dev .heb-main-box {
+  width: 951px;
+  padding: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }

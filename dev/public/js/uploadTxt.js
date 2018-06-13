@@ -1,20 +1,16 @@
-const upload = (e) => {
-    const formData = new FormData($('#form-upload-multi')[0]);
-
-    console.log('formData: ', formData);
-
+const uploadTxt = () => {
+    const formData = new FormData($('#form-upload-txt')[0]);
     $.ajax({
-        url: '/upload-multi',
+        url: '/upload-txt',
         type: 'POST',
         data: formData,
         cache: false,
         contentType: false,
         processData: false,
         success: function (data) {
-            renderData(data);
-            if (data.length) {
-                $('.upload-box').hide();
-            }
+
+            console.log('uploadTxt success data:', data);
+
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('.upload-box').append(`
@@ -23,5 +19,3 @@ const upload = (e) => {
         }
     });
 };
-
-$('#form-submit').on('click', upload);

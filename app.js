@@ -10,6 +10,7 @@ const pagesIndex = require('./pages/index');
 global.HEB_CONFIG = {
     filetypes: /jpg|jpeg|png|gif/,
     upload: 'public/upload',
+    download: 'public/download',
 };
 
 const app = express();
@@ -79,6 +80,24 @@ app.post('/upload-multi', upload.array('pic'), function (req, res, next) {
         length: files.length,
         files: files
     });
+});
+
+// upload
+app.post('/upload-txt', upload.single('txt'), function (req, res, next) {
+    // const file = req.file;
+    console.log('upload files 1:', req.file);
+    console.log('upload files 2:', req.body);
+    // res.json({
+    //     length: files.length,
+    //     files: files
+    // });
+});
+
+// download
+app.get(`/${global.HEB_CONFIG.download}/:file`, function (req, res, next) {
+    const file = req.params.file;
+    // console.log(file);
+    res.download(`./${global.HEB_CONFIG.download}/${file}`);
 });
 
 app.get('/', function (req, res, next) {

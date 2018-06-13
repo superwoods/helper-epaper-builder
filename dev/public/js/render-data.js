@@ -6,6 +6,7 @@ const renderData = (data) => {
     const files = data.files;
     let finishTimer = data.length;
     let renderItems = {};
+    const blank = '    ';
 
     const filter = (e) => {
         const originalname = e.originalname;
@@ -59,14 +60,16 @@ const renderData = (data) => {
         filter(e);
     });
 
-    const dom_isPrint = (src, className) => (`<p align="center" class="heb-hide ${className}">\n<img src="${src}" width="100%" height="auto" align="center">\n</p>`);
 
-    const dom_isNotPrint = (src, className) => (`<p class="add-href ${className}">\n<img src="${src}" width="100%" height="auto">\n</p>`);
+    const dom_isPrint = (src, className) => (`\n${blank}<img src="${src}" width="100%" height="auto" align="center" class="${className}">`);
+
+    const dom_isNotPrint = (src, className) => (`\n<p class="add-href ${className}">\n${blank}<img src="${src}" width="100%" height="auto">\n</p>`);
 
     const renderDom = (renderItems) => {
         // console.log('renderDom renderItems:', renderItems);
         let dom = '';
         let domPrint = '';
+        let domShowPrintImgs = '';
 
         for (let prop in renderItems) {
             const e = renderItems[prop];
@@ -79,15 +82,17 @@ const renderData = (data) => {
                 if (isPrint) {
                     console.log('e.src:', e.src);
 
-                    domPrint += `<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.src}">\n</a>${e.originalname}</li>`;
-
-                    dom += dom_isPrint(e.src, e.className);
+                    domShowPrintImgs += `\n<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.src}">\n</a>${e.originalname}</li>`;
+                    if (domPrint == '') {
+                        domPrint = `\n<p align="center" class="heb-hide">`;
+                    }
+                    domPrint += dom_isPrint(e.src, e.className);
 
                 } else {
                     dom += dom_isNotPrint(e.src, e.className);
                 }
             } else {
-                dom += `<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
+                dom += `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
 
                 let { left, top } = {
                     left: 0,
@@ -101,7 +106,7 @@ const renderData = (data) => {
                     console.log('e2.src:', e2.src);
 
 
-                    dom += `<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n<img src="${e2.src}" width="100%" height="auto">\n</p>`;
+                    dom += `\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<img src="${e2.src}" width="100%" height="auto">\n${blank}</p>`;
 
                     // 拼接定位 START / 注意！不支持3列 2018-06-13
                     const isFullHeight = e2.height >= (pageHeight - top);
@@ -118,24 +123,25 @@ const renderData = (data) => {
                     }
                     // 拼接定位 END
                 }
-                dom += '</div>';
+                dom += '\n</div>';
             }
         }
 
         if (dom) {
             // 写入 dom
+            domPrint = $.trim(domPrint);
             dom = $.trim(dom);
-
-            // 生成下载页面
+            dom = `${dom}\n${domPrint ? `${domPrint}\n</p>` : ''}`;
 
             // window.hebDom = dom;
             $hebPic.html(dom);
             localStorageSet();
+
             addHref();
 
-            if (domPrint) {
+            if (domShowPrintImgs) {
                 $('.heb-alert-tips').remove();
-                $('.heb-print-tips').append(domPrint);
+                $('.heb-print-tips').append(domShowPrintImgs);
             } else {
                 const tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
                 $hebPic.before(`<div class="heb-alert-tips">${tips}</div>`);

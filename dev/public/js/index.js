@@ -9,7 +9,11 @@ $(() => {
     const $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+    if (isDev) {
+        $html.addClass('is-dev');
+    }
 
+    @import './downDomClean.js'
     @import './localStorageSet.js'
 
     @import './pageSizeConfig.js'
@@ -22,12 +26,15 @@ $(() => {
 
     // import './copyBtn.js'
     @import './downBtn.js'
-    @import './downDomClean.js'
 
     @import './tips.js'
     @import './addHref.js'
 
     // local
+    @import './uploadTxt.js'
     @import './localDataLoad.js'
 
+    // $('#textarea-data').on('input', () => {
+    //     localStorageSet();
+    // });
 });
