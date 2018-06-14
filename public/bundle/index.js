@@ -9,6 +9,7 @@ $(function () {
     var $html = $('html');
     var $body = $('body');
     var $hebPic = $('.heb-pic');
+    var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
     $html.addClass('is-xa-today-print');
     if (isDev) {
@@ -16,7 +17,7 @@ $(function () {
     }
 
     var downDomClean = function downDomClean(dom) {
-        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1');
+        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>[\s\S]*?<\/span>[\s\S]*?<\/span>/gim, '');
     };
     var localStorageSet = function localStorageSet() {
         // console.log('mod > localStorageSet.js');
@@ -45,12 +46,15 @@ $(function () {
     var renderData = function renderData(data) {
         console.log('renderData ajax cb:', data);
         // window.hebDom = '';
-
         var $hebPic = $('.heb-pic');
         var files = data.files;
         var finishTimer = data.length;
         var renderItems = {};
         var blank = '    ';
+
+        var herfInput = function herfInput(on) {
+            return '<span class="add-href-input ' + (on ? 'add-href-input2' : '') + '">' + (on ? '<span class="add-href-base">http://www.xiongan.gov.cn/xiongan-today/?xats</span>' : '') + '<input class="btn add-href-text ' + (on ? 'add-href-text2' : '') + '" value="#" placeholder="\u8BF7\u8F93\u5165\u94FE\u63A5" type="text"><span class="add-href-btn"></span></span>';
+        };
 
         var filter = function filter(e) {
             var originalname = e.originalname;
@@ -107,9 +111,17 @@ $(function () {
         var dom_isPrint = function dom_isPrint(src, className) {
             return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
         };
+        // herfInput
 
-        var dom_isNotPrint = function dom_isNotPrint(src, className) {
-            return '\n<p class="add-href ' + className + '">\n' + blank + '<img src="' + src + '" width="100%" height="auto">\n</p>';
+        var dom_is_p_a_img = function dom_is_p_a_img(src, className) {
+
+            console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
+
+            var on = false;
+            if ('heb-img-1' == className || 'heb-img-1-1' == className) {
+                on = true;
+            }
+            return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
         };
 
         var renderDom = function renderDom(renderItems) {
@@ -135,7 +147,7 @@ $(function () {
                         }
                         domPrint += dom_isPrint(e.src, e.className);
                     } else {
-                        dom += dom_isNotPrint(e.src, e.className);
+                        dom += dom_is_p_a_img(e.src, e.className);
                     }
                 } else {
                     dom += '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
@@ -149,12 +161,15 @@ $(function () {
 
 
                     for (var porp2 in renderItems[prop]) {
-
                         var e2 = renderItems[prop][porp2];
-
                         console.log('e2.src:', e2.src);
 
-                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<img src="' + e2.src + '" width="100%" height="auto">\n' + blank + '</p>';
+                        var on = false;
+                        if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
+                            on = true;
+                        }
+
+                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + e2.src + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
 
                         // 拼接定位 START / 注意！不支持3列 2018-06-13
                         var isFullHeight = e2.height >= pageHeight - top;
@@ -311,6 +326,28 @@ $(function () {
                 });
             }
         });
+
+        $('.stage-i').on('input', function () {
+            var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
+            var isHeader = $hebImg1.length > 0;
+            if (isHeader) {
+                console.log('isHeader: ', isHeader);
+
+                var $a = $hebImg1.find('a');
+                var $text = $hebImg1.find('.add-href-text');
+
+                var stageI = $.trim($(this).text());
+                if (stageI == '-') {
+                    stageI = localStorage.getItem('hebSageI');
+                } else {
+                    localStorage.setItem('hebSageI', stageI);
+                }
+                var val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
+                localStorageSet();
+            }
+        });
     };
     titleFn();
 
@@ -345,106 +382,42 @@ $(function () {
             $('#finish-btn').show();
         };
 
-        var herfInput = function herfInput(value) {
-            return '\n    <div class="add-href-input">\n        <input class="btn add-href-text" value="' + (value ? value : '') + '" placeholder="\u8BF7\u8F93\u5165\u94FE\u63A5" type="text">\n        <div class="add-href-btn"></div>\n    </div>';
-        };
+        copyBtnHide();
 
-        var addA = function addA(_ref) {
-            var $addHref = _ref.$addHref,
-                val = _ref.val;
+        $('.add-href').each(function (i, e) {
+            var $e = $(e);
+            var $a = $e.find('a');
+            var $text = $e.find('.add-href-text');
+            var val = $text.val();
+            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+            if (isHeader == false) {
+                heb1Val = '';
+            }
+            $a.attr('href', heb1Val + val);
 
-            $addHref.find('img').wrap('<a href="' + (val || '#') + '" target="_blank" data-tip="addHref.js wrap a!"></a>');
-
-            var $a = $addHref.find('a');
-            $a.on('click', function (e) {
-                e.preventDefault();
-            });
-        };
-
-        var addHrfBtn = function addHrfBtn(_ref2) {
-            var $addHref = _ref2.$addHref,
-                hasA = _ref2.hasA,
-                $img = _ref2.$img;
-
-            var $addHrefInput = $addHref.find('.add-href-input');
-            var $btn = $addHrefInput.find('.add-href-btn');
-            $btn.on('click', function () {
-                if (hasA === false) {
-                    var $text = $addHrefInput.find('.add-href-text');
-                    var val = $text.val();
-                    addA({
-                        $addHref: $addHref,
-                        val: val
-                    });
-                }
-                $addHrefInput.fadeOut(function () {
-                    $(this).remove();
-                });
-            });
-        };
-
-        var onChange = function onChange(_ref3) {
-            var $addHref = _ref3.$addHref;
-
-            var $text = $addHref.find('.add-href-text');
             $text.on('input', function () {
                 var $this = $(this);
-                var val = $this.val();
-                var $a = $addHref.find('a');
-                var hasA = $a.length > 0;
-                if (hasA === false) {
-                    addA({
-                        $addHref: $addHref,
-                        val: val
-                    });
+                val = $this.val();
+                $a.attr('href', heb1Val + val);
+                $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                localStorageSet();
+            });
+
+            console.log('isHeader:', isHeader);
+            if (isHeader) {
+                var stageI = $.trim($('.stage-i').text());
+                console.log('stageI:', stageI);
+                if (stageI == '-') {
+                    stageI = localStorage.getItem('hebSageI');
                 } else {
-                    $a.attr('href', val);
+                    localStorage.setItem('hebSageI', stageI);
                 }
-                $a.on('click', function (e) {
-                    e.preventDefault();
-                });
-            });
-        };
+                val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
 
-        $('.add-href').on('click', function () {
-            copyBtnHide();
-
-            var $this = $(this);
-            var $img = $this.find('img');
-
-            var $a = $this.find('a');
-            var $addHrefInput = $this.find('.add-href-input');
-            var hasA = $a.length > 0;
-            var hasInput = $addHrefInput.length > 0;
-
-            console.log('hasA', hasA, $a.length);
-
-            if (hasInput === false) {
-                var _herfInput = herfInput();
-                var isHeader = $this.hasClass('heb-img-1-1') || $this.hasClass('heb-img-1');
-
-                console.log('isHeader:', isHeader);
-
-                if (isHeader) {
-                    var stageI = $.trim($('.stage-i').text());
-                    _herfInput = herfInput('http://www.xiongan.gov.cn/xiongan-today/?xats' + (stageI || ''));
-                }
-                if (hasA) {
-                    var href = $a.attr('href');
-                    _herfInput = herfInput(href);
-                }
-                $this.append(_herfInput);
+                localStorageSet();
             }
-
-            addHrfBtn({
-                $addHref: $this,
-                hasA: hasA,
-                $img: $img
-            });
-
-            onChange({
-                $addHref: $this
-            });
         });
 
         // 防止读取本地数据后点击图片出现页面跳转
@@ -453,7 +426,11 @@ $(function () {
         });
 
         $('#finish-btn').on('click', function () {
-            $('.add-href-btn').trigger('click');
+            // $('.add-href-btn').trigger('click');
+            $('.add-href').find('.add-href-input').fadeOut(function () {
+                $(this).remove();
+            });
+
             localStorageSet();
             copyBtnShow();
         });
@@ -470,7 +447,6 @@ $(function () {
             contentType: false,
             processData: false,
             success: function success(data) {
-
                 console.log('uploadTxt success data:', data);
             },
             error: function error(jqXHR, textStatus, errorThrown) {

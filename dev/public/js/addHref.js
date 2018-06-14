@@ -9,110 +9,42 @@ const addHref = () => {
         $('#finish-btn').show();
     };
 
-    const herfInput = (value) => (`
-    <div class="add-href-input">
-        <input class="btn add-href-text" value="${value ? value : ''}" placeholder="请输入链接" type="text">
-        <div class="add-href-btn"></div>
-    </div>`);
+    copyBtnHide();
 
-    const addA = ({
-        $addHref,
-        val
-    }) => {
-        $addHref
-            .find('img')
-            .wrap(`<a href="${val || '#'}" target="_blank" data-tip="addHref.js wrap a!"></a>`);
+    $('.add-href').each(function (i, e) {
+        const $e = $(e);
+        const $a = $e.find('a');
+        const $text = $e.find('.add-href-text');
+        let val = $text.val();
+        const isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+        if (isHeader == false) {
+            heb1Val = '';
+        }
+        $a.attr('href', heb1Val + val);
 
-        const $a = $addHref.find('a');
-        $a.on('click', function (e) {
-            e.preventDefault();
-        });
-    };
-
-    const addHrfBtn = ({
-        $addHref,
-        hasA,
-        $img,
-    }) => {
-        const $addHrefInput = $addHref.find('.add-href-input');
-        const $btn = $addHrefInput.find('.add-href-btn');
-        $btn.on('click', function () {
-            if (hasA === false) {
-                const $text = $addHrefInput.find('.add-href-text');
-                const val = $text.val();
-                addA({
-                    $addHref,
-                    val
-                });
-            }
-            $addHrefInput.fadeOut(function () {
-                $(this).remove();
-            });
-        });
-    };
-
-    const onChange = ({
-        $addHref,
-    }) => {
-        const $text = $addHref.find('.add-href-text');
         $text.on('input', function () {
             const $this = $(this);
-            const val = $this.val();
-            const $a = $addHref.find('a');
-            const hasA = $a.length > 0;
-            if (hasA === false) {
-                addA({
-                    $addHref,
-                    val
-                });
+            val = $this.val();
+            $a.attr('href', heb1Val + val);
+            $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+            localStorageSet();
+        });
+
+        console.log('isHeader:', isHeader);
+        if (isHeader) {
+            let stageI = $.trim($('.stage-i').text());
+            console.log('stageI:', stageI);
+            if (stageI == '-') {
+                stageI = localStorage.getItem('hebSageI');
             } else {
-                $a.attr('href', val);
+                localStorage.setItem('hebSageI', stageI);
             }
-            $a.on('click', function (e) {
-                e.preventDefault();
-            });
-        });
-    };
+            val = `${stageI || ''}`;
+            $a.attr('href', heb1Val + val);
+            $text.val(val);
 
-    $('.add-href').on('click', function () {
-        copyBtnHide();
-
-        const $this = $(this);
-        const $img = $this.find('img');
-
-        const $a = $this.find('a');
-        const $addHrefInput = $this.find('.add-href-input');
-        const hasA = $a.length > 0;
-        const hasInput = $addHrefInput.length > 0;
-
-        console.log('hasA', hasA, $a.length);
-
-        if (hasInput === false) {
-            let _herfInput = herfInput();
-            const isHeader = $this.hasClass('heb-img-1-1') || $this.hasClass('heb-img-1');
-
-            console.log('isHeader:', isHeader);
-
-            if (isHeader) {
-                const stageI = $.trim($('.stage-i').text());
-                _herfInput = herfInput(`http://www.xiongan.gov.cn/xiongan-today/?xats${stageI || ''}`);
-            }
-            if (hasA) {
-                const href = $a.attr('href');
-                _herfInput = herfInput(href);
-            }
-            $this.append(_herfInput);
+            localStorageSet();
         }
-
-        addHrfBtn({
-            $addHref: $this,
-            hasA,
-            $img,
-        });
-
-        onChange({
-            $addHref: $this,
-        });
     });
 
     // 防止读取本地数据后点击图片出现页面跳转
@@ -121,7 +53,13 @@ const addHref = () => {
     });
 
     $('#finish-btn').on('click', () => {
-        $('.add-href-btn').trigger('click');
+        // $('.add-href-btn').trigger('click');
+        $('.add-href')
+            .find('.add-href-input')
+            .fadeOut(function () {
+                $(this).remove();
+            });
+
         localStorageSet();
         copyBtnShow();
     });

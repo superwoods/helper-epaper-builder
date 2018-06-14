@@ -8,9 +8,7 @@ const uploadTxt = () => {
         contentType: false,
         processData: false,
         success: function (data) {
-
             console.log('uploadTxt success data:', data);
-
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('.upload-box').append(`

@@ -84,9 +84,11 @@ app.post('/upload-multi', upload.array('pic'), function (req, res, next) {
 
 // upload
 app.post('/upload-txt', upload.single('txt'), function (req, res, next) {
-    // const file = req.file;
-    console.log('upload files 1:', req.file);
-    console.log('upload files 2:', req.body);
+    let txt = req.body.txt;
+    if (txt) {
+        txt = txt.replace(/\r\n\r\n/igm, '\r\n');
+        console.log('----> upload req.body:\n', req.body, '\n----> txt:\n', txt);
+    }
     // res.json({
     //     length: files.length,
     //     files: files

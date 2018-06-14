@@ -1,12 +1,15 @@
 const renderData = (data) => {
     console.log('renderData ajax cb:', data);
     // window.hebDom = '';
-
     const $hebPic = $('.heb-pic');
     const files = data.files;
     let finishTimer = data.length;
     let renderItems = {};
     const blank = '    ';
+
+    const herfInput = (on) => {
+        return `<span class="add-href-input ${on ? 'add-href-input2' : ''}">${on ? '<span class="add-href-base">http://www.xiongan.gov.cn/xiongan-today/?xats</span>' : ''}<input class="btn add-href-text ${on ? 'add-href-text2' : ''}" value="#" placeholder="请输入链接" type="text"><span class="add-href-btn"></span></span>`;
+    };
 
     const filter = (e) => {
         const originalname = e.originalname;
@@ -60,10 +63,19 @@ const renderData = (data) => {
         filter(e);
     });
 
-
     const dom_isPrint = (src, className) => (`\n${blank}<img src="${src}" width="100%" height="auto" align="center" class="${className}">`);
+    // herfInput
 
-    const dom_isNotPrint = (src, className) => (`\n<p class="add-href ${className}">\n${blank}<img src="${src}" width="100%" height="auto">\n</p>`);
+    const dom_is_p_a_img = (src, className) => {
+
+        console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
+
+        let on = false;
+        if ('heb-img-1' == className || 'heb-img-1-1' == className) {
+            on = true;
+        }
+        return `\n<p class="add-href ${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${src}" width="100%" height="auto">\n${blank}</a>${herfInput(on)}\n</p>`;
+    };
 
     const renderDom = (renderItems) => {
         // console.log('renderDom renderItems:', renderItems);
@@ -89,7 +101,7 @@ const renderData = (data) => {
                     domPrint += dom_isPrint(e.src, e.className);
 
                 } else {
-                    dom += dom_isNotPrint(e.src, e.className);
+                    dom += dom_is_p_a_img(e.src, e.className);
                 }
             } else {
                 dom += `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
@@ -100,13 +112,15 @@ const renderData = (data) => {
                 };
 
                 for (let porp2 in renderItems[prop]) {
-
                     const e2 = renderItems[prop][porp2];
-
                     console.log('e2.src:', e2.src);
 
+                    let on = false;
+                    if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
+                        on = true;
+                    }
 
-                    dom += `\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<img src="${e2.src}" width="100%" height="auto">\n${blank}</p>`;
+                    dom += `\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<a href="#" target="_blank">\n${blank}${blank}${blank}<img src="${e2.src}" width="100%" height="auto">\n${blank}${blank}</a>\n${herfInput(on)}\n${blank}</p>`;
 
                     // 拼接定位 START / 注意！不支持3列 2018-06-13
                     const isFullHeight = e2.height >= (pageHeight - top);

@@ -40,5 +40,26 @@ const titleFn = () => {
         }
     });
 
+    $('.stage-i').on('input', function () {
+        const $hebImg1 = $('.heb-img-1-1, .heb-img-1');
+        const isHeader = $hebImg1.length > 0;
+        if (isHeader) {
+            console.log('isHeader: ', isHeader);
+
+            const $a = $hebImg1.find('a');
+            const $text = $hebImg1.find('.add-href-text');
+
+            let stageI = $.trim($(this).text());
+            if (stageI == '-') {
+                stageI = localStorage.getItem('hebSageI');
+            } else {
+                localStorage.setItem('hebSageI', stageI);
+            }
+            const val = `${stageI || ''}`;
+            $a.attr('href', heb1Val + val);
+            $text.val(val);
+            localStorageSet();
+        }
+    });
 };
 titleFn();
