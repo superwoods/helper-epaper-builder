@@ -4,6 +4,7 @@
 $(function () {
     window.hebContentDom = '';
     window.imgIndex = 0;
+    window.isDev = false;
 
     // const $window = $(window);
     var $html = $('html');
@@ -453,17 +454,15 @@ $(function () {
             contentType: false,
             processData: false,
             success: function success(data) {
-                // <div class="btn btn-primary copy-btn hide" id="copy-btn">下载</div>
                 console.log('uploadTxt success data:', data);
                 if (data.hasData == 1) {
-                    $('#copy-btn').off('click');
-                    $('#copy-btn').html('<a href="' + data.path + '" target="_blank">\u4E0B\u8F7D</a>').find('a').click();
+                    $('#copy-btn').off('click').html('<a href="' + data.path + '" target="_blank" title="\u70B9\u51FB\u4E0B\u8F7D\uFF0C\u89E3\u538B\u7F29\u540E\u653E\u5165\u56FE\u7247\u76EE\u5F55">' + data.filename + '</a > ');
                 } else {
-                    $('.upload-box').append('\n                    <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n                ');
+                    $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
                 }
             },
             error: function error(jqXHR, textStatus, errorThrown) {
-                $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');
+                $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
             }
         });
     };

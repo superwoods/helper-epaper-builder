@@ -1,15 +1,18 @@
+const pkg = require('../package.json');
+
 const index = () => {
   return `
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>HEB</title>
+    <title>${pkg.name} v${pkg.version}</title>
     <script src="bundle/browser.min.js"></script>
     <link rel="stylesheet" href="bundle/index.css">
   </head>
   <body>
-    <!-- pages/index.js & /app.js -->
+    <!-- ${pkg.name} v${pkg.version}
+      pages/index.js & /app.js -->
     
     <div class="heb-box">
       <div class="heb-box-in">
