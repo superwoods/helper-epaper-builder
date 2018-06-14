@@ -40,6 +40,9 @@ body {
   background-color: #fafbfc;
   background-image: linear-gradient(-180deg, #fafbfc 0%, #eff3f6 90%);
 }
+a {
+  color: #fff;
+}
 .hide,
 .heb-hide {
   display: none;

@@ -453,7 +453,14 @@ $(function () {
             contentType: false,
             processData: false,
             success: function success(data) {
+                // <div class="btn btn-primary copy-btn hide" id="copy-btn">下载</div>
                 console.log('uploadTxt success data:', data);
+                if (data.hasData == 1) {
+                    $('#copy-btn').off('click');
+                    $('#copy-btn').html('<a href="' + data.path + '" target="_blank">\u4E0B\u8F7D</a>').find('a').click();
+                } else {
+                    $('.upload-box').append('\n                    <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n                ');
+                }
             },
             error: function error(jqXHR, textStatus, errorThrown) {
                 $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');

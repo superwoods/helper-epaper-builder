@@ -60,6 +60,7 @@ typings/
 
 import/
 public/upload/
+public/download/
 local/
 test/
 public/test1.html
