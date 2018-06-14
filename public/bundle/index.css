@@ -88,7 +88,8 @@ body {
   top: 0;
   left: 0;
 }
-.add-href-text {
+.add-href-text,
+.add-href-base {
   min-width: 90%;
   position: absolute;
   z-index: 12;
@@ -100,9 +101,21 @@ body {
   font-weight: 400;
   display: block;
 }
+.add-href-base {
+  min-width: 80%;
+  display: inline-block;
+  color: #fff;
+  z-index: 12;
+  padding: 6px 0;
+  font-size: 16px;
+  line-height: 20px;
+}
 .add-href-text2 {
   min-width: 10%;
   display: inline-block;
+  margin-left: 72px;
+  padding-left: 2px;
+  z-index: 13;
 }
 .add-href-btn {
   z-index: 11;
@@ -277,14 +290,15 @@ body {
   padding: 10px;
 }
 .is-dev .heb-textarea {
-  width: 300px;
-  height: 300px;
-  min-height: 300px;
+  width: 260px;
+  height: 500px;
+  min-height: 500px;
   display: block;
   position: fixed;
   top: 0;
   left: 0;
   margin-top: 0;
+  z-index: 99;
 }
 .is-dev .heb-box-in {
   right: 0;

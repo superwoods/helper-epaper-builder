@@ -17,16 +17,20 @@ const addHref = () => {
         const $text = $e.find('.add-href-text');
         let val = $text.val();
         const isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+        let heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
+
         if (isHeader == false) {
             heb1Val = '';
         }
-        $a.attr('href', heb1Val + val);
+        // $a.attr('href', heb1Val + val);
 
         $text.on('input', function () {
             const $this = $(this);
             val = $this.val();
             $a.attr('href', heb1Val + val);
-            $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+            if ($this.hasClass('add-href-text2')) {
+                $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+            }
             localStorageSet();
         });
 
@@ -44,13 +48,15 @@ const addHref = () => {
             $text.val(val);
 
             localStorageSet();
+        } else {
+            $text.val($a.attr('href'));
         }
     });
 
-    // 防止读取本地数据后点击图片出现页面跳转
-    $('.add-href a').on('click', (e) => {
-        e.preventDefault();
-    });
+    // // 防止读取本地数据后点击图片出现页面跳转
+    // $('.add-href a').on('click', (e) => {
+    //     e.preventDefault();
+    // });
 
     $('#finish-btn').on('click', () => {
         // $('.add-href-btn').trigger('click');

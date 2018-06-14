@@ -7,7 +7,6 @@ $(() => {
     const $html = $('html');
     const $body = $('body');
     const $hebPic = $('.heb-pic');
-    let heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
     $html.addClass('is-xa-today-print');
     if (isDev) {

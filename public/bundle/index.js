@@ -9,7 +9,6 @@ $(function () {
     var $html = $('html');
     var $body = $('body');
     var $hebPic = $('.heb-pic');
-    var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
     $html.addClass('is-xa-today-print');
     if (isDev) {
@@ -17,7 +16,7 @@ $(function () {
     }
 
     var downDomClean = function downDomClean(dom) {
-        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>[\s\S]*?<\/span>[\s\S]*?<\/span>/gim, '');
+        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>?[\s\S]*?<\/span>(<\/span>)?/gim, '');
     };
     var localStorageSet = function localStorageSet() {
         // console.log('mod > localStorageSet.js');
@@ -295,6 +294,7 @@ $(function () {
     mask();
     var titleFn = function titleFn() {
         // console.log('mod > title.js');
+        var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
         var myDate = new Date();
 
@@ -390,16 +390,20 @@ $(function () {
             var $text = $e.find('.add-href-text');
             var val = $text.val();
             var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
+
             if (isHeader == false) {
                 heb1Val = '';
             }
-            $a.attr('href', heb1Val + val);
+            // $a.attr('href', heb1Val + val);
 
             $text.on('input', function () {
                 var $this = $(this);
                 val = $this.val();
                 $a.attr('href', heb1Val + val);
-                $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                if ($this.hasClass('add-href-text2')) {
+                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                }
                 localStorageSet();
             });
 
@@ -417,13 +421,15 @@ $(function () {
                 $text.val(val);
 
                 localStorageSet();
+            } else {
+                $text.val($a.attr('href'));
             }
         });
 
-        // 防止读取本地数据后点击图片出现页面跳转
-        $('.add-href a').on('click', function (e) {
-            e.preventDefault();
-        });
+        // // 防止读取本地数据后点击图片出现页面跳转
+        // $('.add-href a').on('click', (e) => {
+        //     e.preventDefault();
+        // });
 
         $('#finish-btn').on('click', function () {
             // $('.add-href-btn').trigger('click');

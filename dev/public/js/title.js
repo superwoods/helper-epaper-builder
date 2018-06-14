@@ -1,5 +1,6 @@
 const titleFn = () => {
     // console.log('mod > title.js');
+    let heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
     const myDate = new Date();
 

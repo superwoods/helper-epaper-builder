@@ -102,6 +102,7 @@ body
         left: 0
 
     &-text
+    &-base
         min-width: 90%
         position: absolute
         z-index 12
@@ -113,9 +114,21 @@ body
         font-weight: 400
         display block
 
+    &-base
+        min-width: 80%
+        display inline-block
+        color: #ffffff
+        z-index 12
+        padding: 6px 0;
+        font-size: 16px;
+        line-height: 20px;
+
     &-text2
         min-width: 10%
         display inline-block
+        margin-left: 72px
+        padding-left: 2px
+        z-index 13
 
     &-btn
         z-index 11
@@ -305,14 +318,15 @@ body
     padding: 10px
 
     .is-dev &
-        width: 300px
-        height 300px
+        width: 260px
+        height 500px
         min-height @height
         display: block
         position: fixed
         top: 0
         left: 0
         margin-top: 0
+        z-index 99
 
 .is-dev
     .heb-box-in
