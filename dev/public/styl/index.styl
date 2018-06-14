@@ -49,6 +49,10 @@ body
         // width: 200px
         // color: #cb2431;
 
+    a
+        // text-decoration: none
+        color #ffffff
+
 .hide
 .heb-hide
     display: none
@@ -72,6 +76,7 @@ body
 
 .add-mask
 .copy-btn
+.clear-btn
     position: fixed
     right: 0
     bottom: 0
@@ -79,6 +84,16 @@ body
 
 .copy-btn
     margin-bottom: 40px
+
+.clear-btn
+    top: 0
+    bottom: auto
+    display: none
+    width: auto
+
+    .is-dev & 
+        display: block
+
 
 .add-href
     &-input
@@ -91,6 +106,7 @@ body
         left: 0
 
     &-text
+    &-base
         min-width: 90%
         position: absolute
         z-index 12
@@ -100,6 +116,23 @@ body
         margin: 0 auto
         cursor: auto
         font-weight: 400
+        display block
+
+    &-base
+        min-width: 80%
+        display inline-block
+        color: #ffffff
+        z-index 12
+        padding: 6px 0;
+        font-size: 16px;
+        line-height: 20px;
+
+    &-text2
+        min-width: 10%
+        display inline-block
+        margin-left: 72px
+        padding-left: 2px
+        z-index 13
 
     &-btn
         z-index 11
@@ -270,5 +303,44 @@ body
                     border-color: orange
                     box-shadow: 0 3px 20px rgba(27,31,35,0.2);
 
+.upload-box2
+    text-align: left
+    width 100%
+    margin: 0 auto
+
+.heb-textarea
+    display: none
+    margin: 0 auto
+    border: 1px solid rgba(27,31,35,0.2);
+    border-radius: 0.25em;
+    background-color: #fafbfc;
+    width: 80%
+    min-height 800px
+    margin: 30px auto 0
+    font-size: 12px
+    line-height:16px
+    padding: 10px
+
+    .is-dev &
+        width: 260px
+        height 500px
+        min-height @height
+        display: block
+        position: fixed
+        top: 0
+        left: 0
+        margin-top: 0
+        z-index 99
+
+.is-dev
+    .heb-box-in
+        right: 0
+    .heb-main-box
+        width: 951px;
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+   
 
 

@@ -1,17 +1,36 @@
 'use strict';
 
-console.log('index.js');
-// $('.heb-main').text().replace(/\n|\r| /igm, '')
-
+// console.log('mod > index.js');
 $(function () {
     window.hebContentDom = '';
     window.imgIndex = 0;
+    window.isDev = false;
 
-    var $window = $(window);
+    // const $window = $(window);
     var $html = $('html');
     var $body = $('body');
+    var $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+    if (isDev) {
+        $html.addClass('is-dev');
+    }
+
+    var downDomClean = function downDomClean(dom) {
+        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>?[\s\S]*?<\/span>(<\/span>)?/gim, '');
+    };
+    var localStorageSet = function localStorageSet() {
+        // console.log('mod > localStorageSet.js');
+        var $hebPic = $('.heb-pic');
+        var dom = $hebPic.html();
+
+        if (dom) {
+            localStorage.setItem('hebLocalData', dom);
+            dom = downDomClean(dom);
+            console.log('downDomClean:\n\n', dom);
+            $('#textarea-data').text(dom);
+        }
+    };
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -25,18 +44,19 @@ $(function () {
         naturalHeight = _pageWidth$pageHeight.naturalHeight;
 
     var renderData = function renderData(data) {
-        console.log('ajax:', data);
-        window.hebDom = '';
-
+        console.log('renderData ajax cb:', data);
+        // window.hebDom = '';
         var $hebPic = $('.heb-pic');
         var files = data.files;
         var finishTimer = data.length;
-        var results = {};
+        var renderItems = {};
+        var blank = '    ';
 
-        var filter = function filter(_ref) {
-            var e = _ref.e,
-                imgIndex = _ref.imgIndex;
+        var herfInput = function herfInput(on) {
+            return '<span class="add-href-input ' + (on ? 'add-href-input2' : '') + '">' + (on ? '<span class="add-href-base">http://www.xiongan.gov.cn/xiongan-today/?xats</span>' : '') + '<input class="btn add-href-text ' + (on ? 'add-href-text2' : '') + '" value="#" placeholder="\u8BF7\u8F93\u5165\u94FE\u63A5" type="text"><span class="add-href-btn"></span></span>';
+        };
 
+        var filter = function filter(e) {
             var originalname = e.originalname;
             var originalnameArray = originalname.split(/\.|-|_/);
             var index = originalnameArray[0];
@@ -46,13 +66,14 @@ $(function () {
             }
             var img = new Image();
             var className = 'heb-img-' + index;
-            var src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+            // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+            var src = e.path.replace(/public/ig, '').replace(/\\/ig, '/');
 
             console.log('filter: ', originalnameArray, index, src);
 
             img.src = src;
             img.onload = function () {
-                var result = {
+                var renderItem = {
                     hasChild: false,
                     className: className,
                     originalname: originalname,
@@ -67,50 +88,69 @@ $(function () {
                 console.log('isNoChild:', isChild);
 
                 if (isChild === false) {
-                    results[index] = result;
+                    renderItems[index] = renderItem;
                 } else {
-                    if (results.hasOwnProperty(index) === false) {
-                        results[index] = {};
+                    if (renderItems.hasOwnProperty(index) === false) {
+                        renderItems[index] = {};
                     }
                     var childIndex = originalnameArray[1] - 0;
-                    result.className += '-' + childIndex;
-                    results[index][childIndex] = result;
+                    renderItem.className += '-' + childIndex;
+                    renderItems[index][childIndex] = renderItem;
                 }
                 finishTimer--;
             };
         };
 
-        console.log('files: ', files);
+        // console.log('files: ', files);
 
         files.map(function (e, i) {
             imgIndex++;
-            filter({ e: e, imgIndex: imgIndex });
+            filter(e);
         });
 
-        var renderDom = function renderDom($target, results) {
+        var dom_isPrint = function dom_isPrint(src, className) {
+            return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
+        };
+        // herfInput
 
-            console.log('renderDom results:', results);
+        var dom_is_p_a_img = function dom_is_p_a_img(src, className) {
 
+            console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
+
+            var on = false;
+            if ('heb-img-1' == className || 'heb-img-1-1' == className) {
+                on = true;
+            }
+            return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
+        };
+
+        var renderDom = function renderDom(renderItems) {
+            // console.log('renderDom renderItems:', renderItems);
             var dom = '';
             var domPrint = '';
-            for (var prop in results) {
-                var e = results[prop];
+            var domShowPrintImgs = '';
 
+            for (var prop in renderItems) {
+                var e = renderItems[prop];
+                // regPicName.push(e)
                 console.log(prop, e);
 
                 var hasChild = e.hasChild;
                 if (hasChild === false) {
                     var isPrint = /p/ig.test(e.mainName);
                     if (isPrint) {
+                        console.log('e.src:', e.src);
 
-                        domPrint += '    <li><a href="' + e.src + '" target="_blank" title="' + e.src + '"><img width="100%" src="' + e.src + '"></a>' + e.originalname + '</li>\n';
-
-                        dom += '<p align="center" class="heb-hide ' + e.className + '">\n    <img src="' + e.src + '" width="100%" height="auto" align="center">\n</p>\n\n';
+                        domShowPrintImgs += '\n<li><a href="' + e.src + '" target="_blank" title="' + e.src + '">\n<img width="100%" src="' + e.src + '">\n</a>' + e.originalname + '</li>';
+                        if (domPrint == '') {
+                            domPrint = '\n<p align="center" class="heb-hide">';
+                        }
+                        domPrint += dom_isPrint(e.src, e.className);
                     } else {
-                        dom += '<p class="add-href ' + e.className + '">\n    <img src="' + e.src + '" width="100%" height="auto">\n</p>\n\n';
+                        dom += dom_is_p_a_img(e.src, e.className);
                     }
                 } else {
-                    dom += '<div style="width:' + pageWidth + 'px;height:' + pageHeight + 'px;position:relative;">\n';
+                    dom += '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
 
                     var _left$top = {
                         left: 0,
@@ -120,13 +160,18 @@ $(function () {
                         top = _left$top.top;
 
 
-                    for (var porp2 in results[prop]) {
+                    for (var porp2 in renderItems[prop]) {
+                        var e2 = renderItems[prop][porp2];
+                        console.log('e2.src:', e2.src);
 
-                        var e2 = results[prop][porp2];
+                        var on = false;
+                        if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
+                            on = true;
+                        }
 
-                        dom += '    <p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px;height:' + e2.height + 'px;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n         <img src="' + e2.src + '" width="100%" height="auto">\n     </p>\n';
+                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + e2.src + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
 
-                        // 拼接定位 StART / 不支持3列
+                        // 拼接定位 START / 注意！不支持3列 2018-06-13
                         var isFullHeight = e2.height >= pageHeight - top;
                         if (left == 0) {
                             if (isFullHeight) {
@@ -141,30 +186,37 @@ $(function () {
                         }
                         // 拼接定位 END
                     }
-                    dom += '</div>\n\n';
+                    dom += '\n</div>';
                 }
             }
+
             if (dom) {
                 // 写入 dom
+                domPrint = $.trim(domPrint);
                 dom = $.trim(dom);
-                window.hebDom += dom;
-                $target.append(dom);
+                dom = dom + '\n' + (domPrint ? domPrint + '\n</p>' : '');
+
+                // window.hebDom = dom;
+                $hebPic.html(dom);
+                localStorageSet();
+
                 addHref();
 
-                if (domPrint) {
+                if (domShowPrintImgs) {
                     $('.heb-alert-tips').remove();
-                    $('.heb-print-tips').append(domPrint);
+                    $('.heb-print-tips').append(domShowPrintImgs);
                 } else {
-                    var _tips = '本次上传似乎缺少打印图，发布后的页面可能会无法正常打印！！！';
-                    $target.before('<div class="heb-alert-tips">' + _tips + '</div>');
+                    var _tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
+                    $hebPic.before('<div class="heb-alert-tips">' + _tips + '</div>');
                     // alert(tips);
                 }
             }
         };
 
+        // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
         var setint = setInterval(function () {
             if (finishTimer === 0) {
-                renderDom($('.heb-pic'), results);
+                renderDom(renderItems);
                 clearInterval(setint);
                 setint = null;
             }
@@ -193,8 +245,11 @@ $(function () {
         }
     };
     iframeBg();
-    var upload = function upload() {
+    var upload = function upload(e) {
         var formData = new FormData($('#form-upload-multi')[0]);
+
+        console.log('formData: ', formData);
+
         $.ajax({
             url: '/upload-multi',
             type: 'POST',
@@ -204,6 +259,9 @@ $(function () {
             processData: false,
             success: function success(data) {
                 renderData(data);
+                if (data.length) {
+                    $('.upload-box').hide();
+                }
             },
             error: function error(jqXHR, textStatus, errorThrown) {
                 $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');
@@ -236,6 +294,9 @@ $(function () {
     };
     mask();
     var titleFn = function titleFn() {
+        // console.log('mod > title.js');
+        var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
+
         var myDate = new Date();
 
         var _title$year$month$day = {
@@ -260,41 +321,52 @@ $(function () {
             success: function success() {
                 var len = xatData.length;
                 var last = xatData[len - 1];
-                console.log('data', last);
+                // console.log('mod > titleFn() data', last);
                 last.Title.replace(/第(\d*)期/igm, function () {
                     $('.stage-i').text((arguments.length <= 1 ? undefined : arguments[1]) - 0 + 1);
                 });
             }
         });
-    };
-    titleFn();
-    var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn copy-btn hide" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u590D\u5236</div>\n    ');
 
-        var clipboard = new ClipboardJS($('#copy-btn')[0], {
-            text: function text(trigger) {
-                return $('.heb-pic').html();
+        $('.stage-i').on('input', function () {
+            var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
+            var isHeader = $hebImg1.length > 0;
+            if (isHeader) {
+                console.log('isHeader: ', isHeader);
+
+                var $a = $hebImg1.find('a');
+                var $text = $hebImg1.find('.add-href-text');
+
+                var stageI = $.trim($(this).text());
+                if (stageI == '-') {
+                    stageI = localStorage.getItem('hebSageI');
+                } else {
+                    localStorage.setItem('hebSageI', stageI);
+                }
+                var val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
+                localStorageSet();
             }
         });
+    };
+    titleFn();
+
+    // import './copyBtn.js'
+    var copyBtn = function copyBtn() {
+        $body.append('\n        <div class="btn clear-btn" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
         $('#copy-btn').on('click', function () {
-            clipboard.on('success', function (e) {
-                console.log('success: ', e);
-                if (e.action === 'copy') {
-                    tips('已复制，Ctrl+V 粘贴');
-                }
-            });
-
-            clipboard.on('error', function (e) {
-                console.log('error: ', e);
-            });
+            uploadTxt();
         });
 
-        // 解决首次加载需点击两次复制按钮才能完成复制的问题
-        $('#copy-btn').trigger('click');
+        $('#clear-btn').on('click', function () {
+            localStorage.clear();
+        });
     };
 
     copyBtn();
+
     var tips = function tips(text) {
         $('.heb-tips').html(text).show().delay(2000).fadeOut(function () {
             $(this).hide().stop();
@@ -311,112 +383,106 @@ $(function () {
             $('#finish-btn').show();
         };
 
-        var herfInput = function herfInput(value) {
-            return '\n    <div class="add-href-input">\n        <input class="btn add-href-text" value="' + (value ? value : '') + '" placeholder="\u8BF7\u8F93\u5165\u94FE\u63A5" type="text">\n        <div class="add-href-btn"></div>\n    </div>';
-        };
+        copyBtnHide();
 
-        var addA = function addA(_ref2) {
-            var $addHref = _ref2.$addHref,
-                val = _ref2.val;
+        $('.add-href').each(function (i, e) {
+            var $e = $(e);
+            var $a = $e.find('a');
+            var $text = $e.find('.add-href-text');
+            var val = $text.val();
+            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
 
-            $addHref.find('img').wrap('<a href="' + (val || '#') + '" target="_blank"></a>');
+            if (isHeader == false) {
+                heb1Val = '';
+            }
+            // $a.attr('href', heb1Val + val);
 
-            var $a = $addHref.find('a');
-            $a.on('click', function (e) {
-                e.preventDefault();
-            });
-        };
-
-        var addHrfBtn = function addHrfBtn(_ref3) {
-            var $addHref = _ref3.$addHref,
-                hasA = _ref3.hasA,
-                $img = _ref3.$img;
-
-            var $addHrefInput = $addHref.find('.add-href-input');
-            var $btn = $addHrefInput.find('.add-href-btn');
-            $btn.on('click', function () {
-                if (hasA === false) {
-                    var $text = $addHrefInput.find('.add-href-text');
-                    var val = $text.val();
-                    addA({
-                        $addHref: $addHref,
-                        val: val
-                    });
-                }
-                $addHrefInput.fadeOut(function () {
-                    $(this).remove();
-                    copyBtnShow();
-                });
-            });
-        };
-
-        var onChange = function onChange(_ref4) {
-            var $addHref = _ref4.$addHref;
-
-            var $text = $addHref.find('.add-href-text');
             $text.on('input', function () {
                 var $this = $(this);
-                var val = $this.val();
-                var $a = $addHref.find('a');
-                var hasA = $a.length > 0;
-                if (hasA === false) {
-                    addA({
-                        $addHref: $addHref,
-                        val: val
-                    });
+                val = $this.val();
+                $a.attr('href', heb1Val + val);
+                if ($this.hasClass('add-href-text2')) {
+                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                }
+                localStorageSet();
+            });
+
+            console.log('isHeader:', isHeader);
+            if (isHeader) {
+                var stageI = $.trim($('.stage-i').text());
+                console.log('stageI:', stageI);
+                if (stageI == '-') {
+                    stageI = localStorage.getItem('hebSageI');
                 } else {
-                    $a.attr('href', val);
+                    localStorage.setItem('hebSageI', stageI);
                 }
-                $a.on('click', function (e) {
-                    e.preventDefault();
-                });
-            });
-        };
+                val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
 
-        $('.add-href').on('click', function () {
-            copyBtnHide();
-
-            var $this = $(this);
-            var $img = $this.find('img');
-
-            var $a = $this.find('a');
-            var $addHrefInput = $this.find('.add-href-input');
-            var hasA = $a.length > 0;
-            var hasInput = $addHrefInput.length > 0;
-
-            console.log('hasA', hasA, $a.length);
-
-            if (hasInput === false) {
-                var _herfInput = herfInput();
-                var isHeader = $this.hasClass('heb-img-1-1') || $this.hasClass('heb-img-1');
-
-                console.log('isHeader:', isHeader);
-
-                if (isHeader) {
-                    var stageI = $.trim($('.stage-i').text());
-                    _herfInput = herfInput('http://www.xiongan.gov.cn/xiongan-today/?xats' + (stageI || ''));
-                }
-                if (hasA) {
-                    var href = $a.attr('href');
-                    _herfInput = herfInput(href);
-                }
-                $this.append(_herfInput);
+                localStorageSet();
+            } else {
+                $text.val($a.attr('href'));
             }
-
-            addHrfBtn({
-                $addHref: $this,
-                hasA: hasA,
-                $img: $img
-            });
-
-            onChange({
-                $addHref: $this
-            });
         });
+
+        // // 防止读取本地数据后点击图片出现页面跳转
+        // $('.add-href a').on('click', (e) => {
+        //     e.preventDefault();
+        // });
 
         $('#finish-btn').on('click', function () {
+            // $('.add-href-btn').trigger('click');
+            $('.add-href').find('.add-href-input').fadeOut(function () {
+                $(this).remove();
+            });
+
+            localStorageSet();
             copyBtnShow();
-            $('.add-href-btn').trigger('click');
         });
     };
+
+    // local
+    var uploadTxt = function uploadTxt() {
+        var formData = new FormData($('#form-upload-txt')[0]);
+        $.ajax({
+            url: '/upload-txt',
+            type: 'POST',
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function success(data) {
+                console.log('uploadTxt success data:', data);
+                if (data.hasData == 1) {
+                    $('#copy-btn').off('click').html('<a href="' + data.path + '" target="_blank" title="\u70B9\u51FB\u4E0B\u8F7D\uFF0C\u89E3\u538B\u7F29\u540E\u653E\u5165\u56FE\u7247\u76EE\u5F55">' + data.filename + '</a > ');
+                } else {
+                    $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
+                }
+            },
+            error: function error(jqXHR, textStatus, errorThrown) {
+                $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
+            }
+        });
+    };
+
+    var localDataLoad = function localDataLoad() {
+        // console.log('mod > localDataLoad.js');
+        var $hebPic = $('.heb-pic');
+        var hebLocalData = localStorage.getItem('hebLocalData');
+        // console.log('hebLocalData: ', hebLocalData);
+        if (hebLocalData !== null) {
+            $hebPic.html(hebLocalData);
+            localStorageSet();
+            // $('.add-href').off('click');
+            addHref();
+        }
+    };
+
+    localDataLoad();
+
+    // $('#textarea-data').on('input', () => {
+    //     localStorageSet();
+    // });
 });

@@ -4,12 +4,15 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const archiver = require('archiver');
+const mkdirp = require('mkdirp');
 const multer = require('multer');
 const pagesIndex = require('./pages/index');
 
 global.HEB_CONFIG = {
     filetypes: /jpg|jpeg|png|gif/,
     upload: 'public/upload',
+    download: 'public/download',
 };
 
 const app = express();
@@ -74,11 +77,87 @@ const upload = multer({
 // upload
 app.post('/upload-multi', upload.array('pic'), function (req, res, next) {
     const files = req.files;
-    console.log('upload files:', files);
+    console.log('upload files:\n', files);
     res.json({
         length: files.length,
         files: files
     });
+});
+
+// upload
+app.post('/upload-txt', upload.single('txt'), function (req, res, next) {
+    let txt = req.body.txt;
+    let result = {
+        hasData: 0,
+    };
+    if (txt) {
+        txt = txt.replace(/\r\n\r\n/igm, '\r\n');
+        console.log('----> upload req.body:\n', req.body, '\n----> txt:\n', txt);
+
+        mkdirp(`${global.HEB_CONFIG.download}/`);
+
+        const date = 'index';//Date.now();
+        const zipName = `${date}.zip`;
+        const zipPath = `./${global.HEB_CONFIG.download}/${zipName}`;
+
+        // set zipPath
+        let output = fs.createWriteStream(zipPath);
+
+        var archive = archiver('zip', {
+            zlib: { level: 9 } // Sets the compression level.
+        });
+
+        // listen for all archive data to be written
+        // 'close' event is fired only when a file descriptor is involved
+        output.on('close', function () {
+            result.total = archive.pointer();
+            console.log(archive.pointer() + ' total bytes');
+            console.log('archiver has been finalized and the output file descriptor has closed.');
+        });
+
+        // This event is fired when the data source is drained no matter what was the data source.
+        // It is not part of this library but rather from the NodeJS Stream API.
+        // @see: https://nodejs.org/api/stream.html#stream_event_end
+        output.on('end', function () {
+            console.log('Data has been drained');
+        });
+
+        // good practice to catch warnings (ie stat failures and other non-blocking errors)
+        archive.on('warning', function (err) {
+            if (err.code === 'ENOENT') {
+                // log warning
+            } else {
+                // throw error
+                throw err;
+            }
+        });
+
+        // good practice to catch this error explicitly
+        archive.on('error', function (err) {
+            throw err;
+        });
+
+        // pipe archive data to the file
+        archive.pipe(output);
+
+        archive.append(txt, {
+            'name': `index.html`
+        });
+        archive.finalize();
+
+        // set result
+        result.hasData = 1;
+        result.filename = zipName;
+        result.path = '/download/' + zipName;
+    }
+    res.json(result);
+});
+
+// download
+app.get(`/download/:file`, function (req, res, next) {
+    const file = req.params.file;
+    // console.log(file);
+    res.download(`./${global.HEB_CONFIG.download}/${file}`);
 });
 
 app.get('/', function (req, res, next) {

@@ -3,10 +3,10 @@ const gulp = require('gulp');
 const cleancss = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
-const concat = require('gulp-concat');
+// const concat = require('gulp-concat');
 const jsImport = require('gulp-js-import');
-const postcss = require('gulp-postcss');
-const atImport = require('postcss-import');
+// const postcss = require('gulp-postcss');
+// const atImport = require('postcss-import');
 const header = require('gulp-header');
 const dateFormat = require('dateformat');
 const pkg = require('./package.json');
@@ -14,13 +14,13 @@ const stripDebug = require('gulp-strip-debug');
 const usemin = require('gulp-usemin');
 
 // const sass = require('gulp-sass');
-const autoprefixer = require('gulp-autoprefixer');
-const sourcemaps = require('gulp-sourcemaps');
-const imagemin = require('gulp-imagemin');
+// const autoprefixer = require('gulp-autoprefixer');
+// const sourcemaps = require('gulp-sourcemaps');
+// const imagemin = require('gulp-imagemin');
 const rename = require("gulp-rename");
-const clean = require('gulp-clean');
-const cache = require('gulp-cache');
-const pug = require('gulp-pug');
+// const clean = require('gulp-clean');
+// const cache = require('gulp-cache');
+// const pug = require('gulp-pug');
 const notify = require('gulp-notify');
 const plumber = require('gulp-plumber');
 const browsersync = require('browser-sync').create();
@@ -33,13 +33,13 @@ const {
     jsCompiles,
     stylCompiles
 } = {
-        jsCompiles: [
-            'dev/public/js/index.js',
-        ],
-        stylCompiles: [
-            'dev/public/styl/index.styl',
-        ],
-    };
+    jsCompiles: [
+        'dev/public/js/index.js',
+    ],
+    stylCompiles: [
+        'dev/public/styl/index.styl',
+    ],
+};
 
 
 colors.setTheme({
