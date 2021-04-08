@@ -1,7 +1,10 @@
 const renderData = (data) => {
     console.log('renderData ajax cb:', data);
+
     // window.hebDom = '';
+
     const $hebPic = $('.heb-pic');
+
     const files = data.files;
     let finishTimer = data.length;
     let renderItems = {};
