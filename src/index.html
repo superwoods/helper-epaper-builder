@@ -21,6 +21,36 @@
                     <div class="heb-pic"></div>
                     <!-- 主内容位置 END -->
 
+                    <img src="" id="preview-img" alt="">
+
+                    <!-- upload START -->
+                    <div class="upload-box">
+                        <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">
+                            <input class="btn" type="file" name="pic" multiple="multiple" id="fileId">
+                            <input class="btn btn-primary" type="button" value="上传文件" id="form-submit">
+                        </form>
+                    </div>
+
+                    <div class="heb-main-tips">
+                        <h2>打印图：</h2>
+                        <ul class="heb-print-tips">
+                            <!-- heb-print-tips -->
+                        </ul>
+                    </div>
+
+                    <div class="heb-main-tips">
+                        <h2>上传说明：</h2>
+                        <ul>
+                            <li>必须使用数字文件名作为图片序列 <code>1.jpg, 2.jpg, 3.jpg...</code> </li>
+                            <li>必须使用 <code>p</code> 标记打印图 <code>p1.jpg, p2.jpg, p3.jpg...</code></li>
+                            <li>使用分隔符 <code>_</code> 开启拼图布局 (先上下后左右) <code>1_1.jpg, 1_2.jpg...</code></li>
+                            <li>请使用原始图片尺寸：<code>${naturalWidth} * ${naturalHeight}px</code></li>
+                        </ul>
+                        <a href="https://github.com/xinhuaRadioLAB/helper-epaper-builder-doc/issues/1" target="_blank">了解更多或反馈问题</a>
+                    </div>
+                    <!-- upload END -->
+
+
                     <div class="btn heb-tips hide">
                         <!-- 完成 copy 提示文字 -->
                     </div>
@@ -29,7 +59,7 @@
                     <div class="upload-box2">
                         <form action="/upload-txt" method="post" enctype="multipart/form-data" id="form-upload-txt">
                             <textarea name="txt" id="textarea-data" class="heb-textarea">
-                  </textarea>
+                            </textarea>
                         </form>
                     </div>
                     <!-- textarea END -->

@@ -10,6 +10,7 @@ $(() => {
     const $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+
     if (isDev) {
         $html.addClass('is-dev');
     }
@@ -19,7 +20,9 @@ $(() => {
 
     @import './pageSizeConfig.js'
     @import './render-data.js'
-    @import './uploadBoxFn.js'
+
+    // import './uploadBoxFn.js'
+
     @import './iframeBg.js'
     @import './upload.js'
     @import './mask.js'

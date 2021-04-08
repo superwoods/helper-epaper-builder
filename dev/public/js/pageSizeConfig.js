@@ -4,8 +4,8 @@ const {
     naturalWidth,
     naturalHeight
 } = {
-        pageWidth: 951,
-        pageHeight: 1345,
-        naturalWidth: 1654,
-        naturalHeight: 2339,
-    };
+    pageWidth: 951,
+    pageHeight: 1345,
+    naturalWidth: 1654,
+    naturalHeight: 2339,
+};

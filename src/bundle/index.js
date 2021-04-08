@@ -12,6 +12,7 @@ $(function () {
     var $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
+
     if (isDev) {
         $html.addClass('is-dev');
     }
@@ -223,13 +224,7 @@ $(function () {
         }, 1);
     };
 
-    var uploadBoxFn = function uploadBoxFn() {
-        return '\n        <div class="upload-box">\n            <form action="/upload-multi" method="post" enctype="multipart/form-data" id="form-upload-multi">\n                <input class="btn" type="file" name="pic" multiple="multiple">\n                <input class="btn btn-primary" type="button" value="\u4E0A\u4F20\u6587\u4EF6" id="form-submit">\n            </form>\n        </div>\n\n        <div class="heb-main-tips">\n            <h2>\u6253\u5370\u56FE\uFF1A</h2>\n            <ul class="heb-print-tips">\n                <!-- heb-print-tips -->\n            </ul>\n        </div>\n        \n        <div class="heb-main-tips">\n            <h2>\u4E0A\u4F20\u8BF4\u660E\uFF1A</h2>\n            <ul>\n                <li>\u5FC5\u987B\u4F7F\u7528\u6570\u5B57\u6587\u4EF6\u540D\u4F5C\u4E3A\u56FE\u7247\u5E8F\u5217 <code>1.jpg, 2.jpg, 3.jpg...</code> </li>\n                <li>\u5FC5\u987B\u4F7F\u7528 <code>p</code> \u6807\u8BB0\u6253\u5370\u56FE <code>p1.jpg, p2.jpg, p3.jpg...</code></li>\n                <li>\u4F7F\u7528\u5206\u9694\u7B26 <code>_</code> \u5F00\u542F\u62FC\u56FE\u5E03\u5C40 (\u5148\u4E0A\u4E0B\u540E\u5DE6\u53F3) <code>1_1.jpg, 1_2.jpg...</code></li>\n                <li>\u8BF7\u4F7F\u7528\u539F\u59CB\u56FE\u7247\u5C3A\u5BF8\uFF1A<code>' + naturalWidth + ' * ' + naturalHeight + 'px</code></li>\n            </ul>\n            <a href="https://github.com/xinhuaRadioLAB/helper-epaper-builder-doc/issues/1" target="_blank">\u4E86\u89E3\u66F4\u591A\u6216\u53CD\u9988\u95EE\u9898</a>\n        </div>\n    ';
-    };
-    window.uploadBox = uploadBoxFn();
-
-    // 写入 uploadBox
-    $('.heb-pic').after(uploadBox);
+    // import './uploadBoxFn.js'
 
     var iframeBg = function iframeBg() {
         // if (isDev == false) {
@@ -247,27 +242,72 @@ $(function () {
 
     iframeBg();
     var upload = function upload(e) {
-        var formData = new FormData($('#form-upload-multi')[0]);
+        // const formData = new FormData($('#form-upload-multi')[0]);
 
-        console.log('formData: ', formData);
+        // console.log('formData: ', formData);
 
-        $.ajax({
-            url: '/upload-multi',
-            type: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function success(data) {
-                renderData(data);
-                if (data.length) {
-                    $('.upload-box').hide();
-                }
-            },
-            error: function error(jqXHR, textStatus, errorThrown) {
-                $('.upload-box').append('\n                <span class="tips">\u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>\n            ');
-            }
-        });
+        /**
+        var objFile = document.getElementById("fileId");
+        if (objFile.value == "") {
+            alert("不能空");
+        }
+         console.log(objFile.files[0].size); // 文件字节数
+         var files = $('#fileId').prop('files');//获取到文件列表
+         if (files.length == 0) {
+             alert('请选择文件');
+         } else {
+             var reader = new FileReader();//新建一个FileReader
+             reader.readAsText(files[0], "UTF-8");//读取文件
+             reader.onload = function (evt) { //读取完文件之后会回来这里
+                 var fileString = evt.target.result; // 读取文件内容
+                 console.log(evt);
+             };
+        } 
+        */
+
+        //获取读取我文件的File对象
+        var selectedFile = document.getElementById('fileId').files[0];
+        var name = selectedFile.name; //读取选中文件的文件名
+
+        // console.log(document.getElementById('fileId').files);
+
+        var size = selectedFile.size; //读取选中文件的大小
+        console.log("文件名:" + name + "大小:" + size);
+
+        var reader = new FileReader(); //这是核心,读取操作就是由它完成.
+        //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+        reader.onload = function (event) {
+            //当读取完成后回调这个函数,然后此时文件的内容存储到了result中,直接操作即可
+            // console.log(this.result);
+            var img = document.getElementById("preview-img");
+
+            // 图片路径设置为读取的图片    
+            img.src = event.target.result;
+
+            console.log($('#preview-img'));
+        };
+
+        reader.readAsDataURL(selectedFile);
+
+        // $.ajax({
+        //     url: '/upload-multi',
+        //     type: 'POST',
+        //     data: formData,
+        //     cache: false,
+        //     contentType: false,
+        //     processData: false,
+        //     success: function (data) {
+        //         renderData(data);
+        //         if (data.length) {
+        //             $('.upload-box').hide();
+        //         }
+        //     },
+        //     error: function (jqXHR, textStatus, errorThrown) {
+        //         $('.upload-box').append(`
+        //             <span class="tips">连接不到服务器，请检查网络！</span>
+        //         `);
+        //     }
+        // });
     };
 
     $('#form-submit').on('click', upload);
