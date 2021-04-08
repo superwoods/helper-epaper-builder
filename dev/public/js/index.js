@@ -16,7 +16,7 @@ $(() => {
     }
 
     @import './downDomClean.js'
-    @import './localStorageSet.js'
+    // import './localStorageSet.js'
 
     @import './pageSizeConfig.js'
     @import './render-data.js'
@@ -29,14 +29,14 @@ $(() => {
     @import './title.js'
 
     // import './copyBtn.js'
-    @import './downBtn.js'
+    @import './copyBtn.js'
 
     @import './tips.js'
     @import './addHref.js'
 
     // local
     @import './uploadTxt.js'
-    @import './localDataLoad.js'
+    // import './localDataLoad.js'
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();

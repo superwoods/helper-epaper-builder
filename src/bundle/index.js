@@ -20,18 +20,7 @@ $(function () {
     var downDomClean = function downDomClean(dom) {
         return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>?[\s\S]*?<\/span>(<\/span>)?/gim, '');
     };
-    var localStorageSet = function localStorageSet() {
-        // console.log('mod > localStorageSet.js');
-        var $hebPic = $('.heb-pic');
-        var dom = $hebPic.html();
-
-        if (dom) {
-            localStorage.setItem('hebLocalData', dom);
-            dom = downDomClean(dom);
-            console.log('downDomClean:\n\n', dom);
-            $('#textarea-data').text(dom);
-        }
-    };
+    // import './localStorageSet.js'
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -45,15 +34,16 @@ $(function () {
         naturalHeight = _pageWidth$pageHeight.naturalHeight;
 
     var renderData = function renderData(data) {
-        console.log('renderData ajax cb:', data);
+        console.log('renderData:', data);
 
         // window.hebDom = '';
 
         var $hebPic = $('.heb-pic');
 
         var files = data.files;
-        var finishTimer = data.length;
+        window.finishTimer = files.length;
         var renderItems = {};
+
         var blank = '    ';
 
         var herfInput = function herfInput(on) {
@@ -61,136 +51,198 @@ $(function () {
         };
 
         var filter = function filter(e) {
-            var originalname = e.originalname;
-            var originalnameArray = originalname.split(/\.|-|_/);
-            var index = originalnameArray[0];
-            var isPrint = /p/ig.test(index);
-            if (isPrint === false) {
-                index -= 0;
-            }
-            var img = new Image();
-            var className = 'heb-img-' + index;
-            // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
-            var src = e.path.replace(/public/ig, '').replace(/\\/ig, '/');
+            var originalname = e.name; //e.originalname;
 
-            console.log('filter: ', originalnameArray, index, src);
+            if (originalname) {
+                // console.log('originalname:', originalname);
+                var originalnameArray = originalname.split(/\.|-|_/);
+                // console.log('name:', originalnameArray, originalname);
 
-            img.src = src;
-            img.onload = function () {
-                var renderItem = {
-                    hasChild: false,
-                    className: className,
-                    originalname: originalname,
-                    width: Math.round(img.naturalWidth * pageWidth / naturalWidth),
-                    height: Math.round(img.naturalHeight * pageHeight / naturalHeight),
-                    src: src,
-                    mainName: index
-                };
+                var imgName = originalnameArray[0];
 
-                var isChild = originalnameArray.length >= 3;
+                var isPrint = /p/ig.test(imgName);
 
-                console.log('isNoChild:', isChild);
-
-                if (isChild === false) {
-                    renderItems[index] = renderItem;
-                } else {
-                    if (renderItems.hasOwnProperty(index) === false) {
-                        renderItems[index] = {};
-                    }
-                    var childIndex = originalnameArray[1] - 0;
-                    renderItem.className += '-' + childIndex;
-                    renderItems[index][childIndex] = renderItem;
+                if (isPrint == false) {
+                    imgName -= 0;
                 }
-                finishTimer--;
-            };
+
+                var className = 'heb-img-' + imgName;
+                // const src = e.path.replace(/public(\/|\\)/ig, window.location.href);
+
+                var reader = new FileReader(); //这是核心,读取操作就是由它完成.
+                //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+
+                var image = new Image();
+
+                reader.addEventListener("load", function (event) {
+                    // $('.heb-pic').append(`<img src="${event.target.result}" class="${imgName}">`);
+                    // $('.' + imgName).attr('src', event.target.result);
+                    // const src = event.target.result; //e.path.replace(/public/ig, '').replace(/\\/ig, '/');
+                    // console.log('filter: ', originalnameArray, imgName);
+
+                    image.src = event.target.result;
+
+                    image.onload = function () {
+                        var renderItem = {
+                            hasChild: false,
+                            className: className,
+                            originalname: originalname,
+                            width: Math.round(image.naturalWidth * pageWidth / naturalWidth),
+                            height: Math.round(image.naturalHeight * pageHeight / naturalHeight),
+                            src: e.name,
+                            srcData: event.target.result,
+                            mainName: imgName
+                        };
+
+                        var isChild = originalnameArray.length >= 3;
+
+                        console.log('isChild:', isChild);
+
+                        if (isChild == false) {
+                            renderItems[imgName] = renderItem;
+                        } else {
+                            if (renderItems.hasOwnProperty(imgName) === false) {
+                                renderItems[imgName] = {};
+                            }
+                            var childIndex = originalnameArray[1] - 0;
+                            renderItem.className += '-' + childIndex;
+                            renderItems[imgName][childIndex] = renderItem;
+                        }
+
+                        finishTimer--;
+
+                        console.log('111', finishTimer);
+                    };
+                }, false);
+
+                reader.readAsDataURL(e);
+            }
         };
 
         // console.log('files: ', files);
 
-        files.map(function (e, i) {
-            imgIndex++;
-            filter(e);
-        });
+        // files.map((e, i) => {
+        //     imgIndex++;
+        //     filter(e);
+        // });
 
-        var dom_isPrint = function dom_isPrint(src, className) {
-            return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
+        for (var key in files) {
+            if (Object.hasOwnProperty.call(files, key)) {
+                var e = files[key];
+                imgIndex++;
+                console.log('1:', imgIndex);
+                filter(e);
+            }
+        }
+
+        var dom_isPrint = function dom_isPrint(src, className, e) {
+            if (e) {
+                return '\n' + blank + '<img src="' + e.srcData + '" width="100%" height="auto" align="center" class="' + className + '">';
+            } else {
+                return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
+            }
         };
         // herfInput
 
-        var dom_is_p_a_img = function dom_is_p_a_img(src, className) {
-
-            console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
-
+        var dom_is_p_a_img = function dom_is_p_a_img(src, className, e) {
+            // console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
             var on = false;
             if ('heb-img-1' == className || 'heb-img-1-1' == className) {
                 on = true;
             }
-            return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
+            if (e) {
+                return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + e.srcData + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
+            } else {
+                return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
+            }
         };
 
         var renderDom = function renderDom(renderItems) {
-            // console.log('renderDom renderItems:', renderItems);
+            console.log('---///--> renderDom:', renderItems);
+
             var dom = '';
+            var domForDownload = '';
             var domPrint = '';
+            var domPrintForDownload = '';
             var domShowPrintImgs = '';
+            // let domShowPrintImgsForDownload = '';
 
             for (var prop in renderItems) {
-                var e = renderItems[prop];
+                var _e = renderItems[prop];
                 // regPicName.push(e)
-                console.log(prop, e);
+                console.log(prop, _e);
 
-                var hasChild = e.hasChild;
-                if (hasChild === false) {
-                    var isPrint = /p/ig.test(e.mainName);
+                var hasChild = _e.hasChild;
+
+                if (hasChild == false) {
+                    var isPrint = /p/ig.test(_e.originalname);
                     if (isPrint) {
-                        console.log('e.src:', e.src);
+                        // console.log('e.src:', e.src);
 
-                        domShowPrintImgs += '\n<li><a href="' + e.src + '" target="_blank" title="' + e.src + '">\n<img width="100%" src="' + e.src + '">\n</a>' + e.originalname + '</li>';
+                        domShowPrintImgs += '\n<li><a href="' + _e.src + '" target="_blank" title="' + _e.src + '">\n<img width="100%" src="' + _e.srcData + '">\n</a>' + _e.originalname + '</li>';
+
                         if (domPrint == '') {
                             domPrint = '\n<p align="center" class="heb-hide">';
+                            domPrintForDownload = '\n<p align="center" class="heb-hide">';
                         }
-                        domPrint += dom_isPrint(e.src, e.className);
+                        domPrint += dom_isPrint(_e.src, _e.className, _e);
+                        domPrintForDownload += dom_isPrint(_e.src, _e.className);
                     } else {
-                        dom += dom_is_p_a_img(e.src, e.className);
+                        dom += dom_is_p_a_img(_e.src, _e.className, _e);
+                        domForDownload += dom_is_p_a_img(_e.src, _e.className);
                     }
                 } else {
-                    dom += '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
+                    (function () {
+                        var div1 = '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
+                        dom += div1;
+                        domForDownload += div1;
 
-                    var _left$top = {
-                        left: 0,
-                        top: 0
-                    },
-                        left = _left$top.left,
-                        top = _left$top.top;
+                        var _left$top = {
+                            left: 0,
+                            top: 0
+                        },
+                            left = _left$top.left,
+                            top = _left$top.top;
 
+                        var _loop = function _loop(porp2) {
+                            var e2 = renderItems[prop][porp2];
+                            // console.log('e2.src:', e2.src);
 
-                    for (var porp2 in renderItems[prop]) {
-                        var e2 = renderItems[prop][porp2];
-                        console.log('e2.src:', e2.src);
+                            var on = false;
+                            if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
+                                on = true;
+                            }
 
-                        var on = false;
-                        if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
-                            on = true;
-                        }
+                            var div2 = function div2(imgSrc) {
+                                return '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + imgSrc + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
+                            };
 
-                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + e2.src + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
+                            dom += div2(e2.srcData);
+                            domForDownload += div2(e2.src);
 
-                        // 拼接定位 START / 注意！不支持3列 2018-06-13
-                        var isFullHeight = e2.height >= pageHeight - top;
-                        if (left == 0) {
-                            if (isFullHeight) {
-                                left += e2.width;
-                                top = 0;
+                            // 拼接定位 START / 注意！不支持3列 2018-06-13
+                            var isFullHeight = e2.height >= pageHeight - top;
+                            if (left == 0) {
+                                if (isFullHeight) {
+                                    left += e2.width;
+                                    top = 0;
+                                } else {
+                                    left = 0;
+                                    top += e2.height;
+                                }
                             } else {
-                                left = 0;
                                 top += e2.height;
                             }
-                        } else {
-                            top += e2.height;
+                            // 拼接定位 END
+                        };
+
+                        for (var porp2 in renderItems[prop]) {
+                            _loop(porp2);
                         }
-                        // 拼接定位 END
-                    }
-                    dom += '\n</div>';
+                        var div3 = '\n</div>';
+                        dom += div3;
+                        domForDownload += div3;
+                    })();
                 }
             }
 
@@ -200,9 +252,20 @@ $(function () {
                 dom = $.trim(dom);
                 dom = dom + '\n' + (domPrint ? domPrint + '\n</p>' : '');
 
+                domPrintForDownload = $.trim(domPrintForDownload);
+                domForDownload = $.trim(domForDownload);
+                domForDownload = domForDownload + '\n' + (domPrintForDownload ? domPrintForDownload + '\n</p>' : '');
+
                 // window.hebDom = dom;
+
+                // console.log('dom:', dom);
+
+
                 $hebPic.html(dom);
-                localStorageSet();
+
+                console.log('domForDownload:', domForDownload);
+
+                // localStorageSet();
 
                 addHref();
 
@@ -217,14 +280,19 @@ $(function () {
             }
         };
 
-        // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
+        console.log(finishTimer, renderItems);
+
+        // // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
         var setint = setInterval(function () {
-            if (finishTimer === 0) {
-                renderDom(renderItems);
+            if (window.finishTimer <= 0) {
                 clearInterval(setint);
                 setint = null;
+
+                renderDom(renderItems);
             }
         }, 1);
+
+        // renderDom(renderItems);
     };
 
     // import './uploadBoxFn.js'
@@ -249,37 +317,29 @@ $(function () {
         // console.log('formData: ', formData);
         var files = document.getElementById('fileId').files;
 
-        for (var key in files) {
+        /*
+        for (const key in files) {
             if (Object.hasOwnProperty.call(files, key)) {
-                var selectedFile;
-                var name;
-                var size;
-                var reader;
+                 //获取读取我文件的File对象
+                var selectedFile = files[key];
+                var name = selectedFile.name;//读取选中文件的文件名
+                 const imgName = 'img-' + name.split('.')[0];
+                 var size = selectedFile.size;//读取选中文件的大小
+                 console.log("文件名:" + name + "大小:" + size, imgName);
+                 var reader = new FileReader();//这是核心,读取操作就是由它完成.
+                //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
+                 reader.addEventListener("load", function (event) {
+                    $('.heb-pic').append(`<img src="${event.target.result}" class="${imgName}">`);
+                    // $('.' + imgName).attr('src', event.target.result);
+                }, false);
+                 reader.readAsDataURL(selectedFile);
+             }
+        } 
+        */
 
-                (function () {
-
-                    //获取读取我文件的File对象
-                    selectedFile = files[key];
-                    name = selectedFile.name; //读取选中文件的文件名
-
-                    var imgName = 'img-' + name.split('.')[0];
-
-                    size = selectedFile.size; //读取选中文件的大小
-
-                    console.log("文件名:" + name + "大小:" + size, imgName);
-
-                    reader = new FileReader(); //这是核心,读取操作就是由它完成.
-                    //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
-
-                    reader.addEventListener("load", function (event) {
-                        $('.heb-pic').append('<img src="' + event.target.result + '" class="' + imgName + '">');
-                        // $('.' + imgName).attr('src', event.target.result);
-                    }, false);
-
-                    reader.readAsDataURL(selectedFile);
-                })();
-            }
-        }
+        renderData({
+            files: files
+        });
 
         // $.ajax({
         //     url: '/upload-multi',
@@ -478,42 +538,33 @@ $(function () {
 
     // local
     var uploadTxt = function uploadTxt() {
-        var formData = new FormData($('#form-upload-txt')[0]);
-        $.ajax({
-            url: '/upload-txt',
-            type: 'POST',
-            data: formData,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function success(data) {
-                console.log('uploadTxt success data:', data);
-                if (data.hasData == 1) {
-                    $('#copy-btn').off('click').html('<a href="' + data.path + '" target="_blank" title="\u70B9\u51FB\u4E0B\u8F7D\uFF0C\u89E3\u538B\u7F29\u540E\u653E\u5165\u56FE\u7247\u76EE\u5F55">' + data.filename + '</a > ');
-                } else {
-                    $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
-                }
-            },
-            error: function error(jqXHR, textStatus, errorThrown) {
-                $('.upload-box').append('<span class="tips"> \u8FDE\u63A5\u4E0D\u5230\u670D\u52A1\u5668\uFF0C\u8BF7\u68C0\u67E5\u7F51\u7EDC\uFF01</span>');
-            }
-        });
+        // const formData = new FormData($('#form-upload-txt')[0]);
+        // $.ajax({
+        //     url: '/upload-txt',
+        //     type: 'POST',
+        //     data: formData,
+        //     cache: false,
+        //     contentType: false,
+        //     processData: false,
+        //     success: function (data) {
+        //         console.log('uploadTxt success data:', data);
+        //         if (data.hasData == 1) {
+        //             $('#copy-btn')
+        //                 .off('click')
+        //                 .html(`<a href="${data.path}" target="_blank" title="点击下载，解压缩后放入图片目录">${data.filename}</a > `);
+        //         } else {
+        //             $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
+        //         }
+        //     },
+        //     error: function (jqXHR, textStatus, errorThrown) {
+        //         $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
+        //     }
+        // });
+
+
     };
 
-    var localDataLoad = function localDataLoad() {
-        // console.log('mod > localDataLoad.js');
-        var $hebPic = $('.heb-pic');
-        var hebLocalData = localStorage.getItem('hebLocalData');
-        // console.log('hebLocalData: ', hebLocalData);
-        if (hebLocalData !== null) {
-            $hebPic.html(hebLocalData);
-            localStorageSet();
-            // $('.add-href').off('click');
-            addHref();
-        }
-    };
-
-    localDataLoad();
+    // import './localDataLoad.js'
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();

@@ -76,7 +76,6 @@ a {
 .clear-btn {
   top: 0;
   bottom: auto;
-  display: none;
   width: auto;
 }
 .is-dev .clear-btn {

@@ -3,6 +3,7 @@ const upload = (e) => {
     // console.log('formData: ', formData);
     const files = document.getElementById('fileId').files;
 
+    /*
     for (const key in files) {
         if (Object.hasOwnProperty.call(files, key)) {
 
@@ -27,9 +28,12 @@ const upload = (e) => {
             reader.readAsDataURL(selectedFile);
 
         }
-    }
+    } 
+    */
 
-
+    renderData({
+        files,
+    });
 
 
 
