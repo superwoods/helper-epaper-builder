@@ -48,6 +48,8 @@ const addHref = () => {
             $a.attr('href', heb1Val + val);
             $text.val(val);
 
+            window.stageNum = val;
+
             // localStorageSet();
             // setDownloadDom();
         } else {
@@ -71,5 +73,12 @@ const addHref = () => {
         // localStorageSet();
         setDownloadDom();
         copyBtnShow();
+
+        $('#copy-btn').click(function () {
+            const stage = $.trim($('.stage-i').text());
+            alert('请将' + stage + '.html 放入图片文件夹，然后打开复制到发糕器！！');
+            export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
+        });
+
     });
 };

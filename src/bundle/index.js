@@ -37,6 +37,8 @@ $(function () {
             console.log('downDomClean downdom:\n\n', downloadDom);
             $('#textarea-data').text(downloadDom);
         }
+
+        window.downloadDom = downloadDom;
     };
 
     var _pageWidth$pageHeight = {
@@ -465,15 +467,11 @@ $(function () {
 
     // import './copyBtn.js'
     var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn clear-btn" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
+        $body.append('\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
-        $('#copy-btn').on('click', function () {
-            uploadTxt();
-        });
-
-        $('#clear-btn').on('click', function () {
-            localStorage.clear();
-        });
+        // $('#clear-btn').on('click', () => {
+        //     localStorage.clear();
+        // });
     };
 
     copyBtn();
@@ -533,6 +531,8 @@ $(function () {
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
 
+                window.stageNum = val;
+
                 // localStorageSet();
                 // setDownloadDom();
             } else {
@@ -554,36 +554,59 @@ $(function () {
             // localStorageSet();
             setDownloadDom();
             copyBtnShow();
+
+            $('#copy-btn').click(function () {
+                var stage = $.trim($('.stage-i').text());
+                alert('请将' + stage + '.html 放入图片文件夹，然后打开复制到发糕器！！');
+                export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
+            });
         });
     };
 
     // local
-    var uploadTxt = function uploadTxt() {
-        // const formData = new FormData($('#form-upload-txt')[0]);
-        // $.ajax({
-        //     url: '/upload-txt',
-        //     type: 'POST',
-        //     data: formData,
-        //     cache: false,
-        //     contentType: false,
-        //     processData: false,
-        //     success: function (data) {
-        //         console.log('uploadTxt success data:', data);
-        //         if (data.hasData == 1) {
-        //             $('#copy-btn')
-        //                 .off('click')
-        //                 .html(`<a href="${data.path}" target="_blank" title="点击下载，解压缩后放入图片目录">${data.filename}</a > `);
-        //         } else {
-        //             $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-        //         }
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown) {
-        //         $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-        //     }
-        // });
+    function fake_click(obj) {
+        var ev = document.createEvent("MouseEvents");
+        ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        obj.dispatchEvent(ev);
+    }
+
+    function export_raw(name, data) {
+        var urlObject = window.URL || window.webkitURL || window;
+
+        var export_blob = new Blob([data]);
+
+        var save_link = document.createElementNS("http://www.w3.org/1999/xhtml", "a");
+        save_link.href = urlObject.createObjectURL(export_blob);
+        save_link.download = name;
+        fake_click(save_link);
+    }
+
+    // const uploadTxt = () => {
+    //     // const formData = new FormData($('#form-upload-txt')[0]);
+    //     // $.ajax({
+    //     //     url: '/upload-txt',
+    //     //     type: 'POST',
+    //     //     data: formData,
+    //     //     cache: false,
+    //     //     contentType: false,
+    //     //     processData: false,
+    //     //     success: function (data) {
+    //     //         console.log('uploadTxt success data:', data);
+    //     //         if (data.hasData == 1) {
+    //     //             $('#copy-btn')
+    //     //                 .off('click')
+    //     //                 .html(`<a href="${data.path}" target="_blank" title="点击下载，解压缩后放入图片目录">${data.filename}</a > `);
+    //     //         } else {
+    //     //             $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
+    //     //         }
+    //     //     },
+    //     //     error: function (jqXHR, textStatus, errorThrown) {
+    //     //         $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
+    //     //     }
+    //     // });
 
 
-    };
+    // };
 
     // import './localDataLoad.js'
 

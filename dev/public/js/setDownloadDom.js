@@ -14,4 +14,6 @@ const setDownloadDom = () => {
         console.log('downDomClean downdom:\n\n', downloadDom);
         $('#textarea-data').text(downloadDom);
     }
+
+    window.downloadDom = downloadDom;
 };
