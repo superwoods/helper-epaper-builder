@@ -318,8 +318,8 @@ $(function () {
     var iframeBg = function iframeBg() {
         // if (isDev == false) {
         var winWidth = $body.width();
-        var iframeSrc = 'http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm';
-        $body.append('<iframe class="heb-bg-iframe" src="' + iframeSrc + '" frameborder="0"></iframe>');
+        // const iframeSrc = `http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm`;
+        // $body.append(`<iframe class="heb-bg-iframe" src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm" frameborder="0"></iframe>`);
 
         // set postion
         $('.heb-bg-iframe').css({
@@ -329,7 +329,7 @@ $(function () {
         // }
     };
 
-    // iframeBg();
+    iframeBg();
     var upload = function upload(e) {
         // const formData = new FormData($('#form-upload-multi')[0]);
         // console.log('formData: ', formData);
