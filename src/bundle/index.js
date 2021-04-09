@@ -284,7 +284,7 @@ $(function () {
                     $('.heb-alert-tips').remove();
                     $('.heb-print-tips').append(domShowPrintImgs);
                 } else {
-                    var _tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
+                    var _tips = 'Oops :( 本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
                     $hebPic.before('<div class="heb-alert-tips">' + _tips + '</div>');
                     // alert(tips);
                 }
@@ -294,14 +294,16 @@ $(function () {
         console.log(finishTimer, renderItems);
 
         // // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
-        var setint = setInterval(function () {
-            if (window.finishTimer <= 0) {
-                clearInterval(setint);
-                setint = null;
+        // let setint = setInterval(() => {
+        //     if (window.finishTimer <= 0) {
+        //         clearInterval(setint);
+        //         setint = null;
 
-                renderDom(renderItems);
-            }
-        }, 1);
+        //         renderDom(renderItems);
+        //     }
+        // }, 1);
+
+        renderDom(renderItems);
 
         // renderDom(renderItems);
     };

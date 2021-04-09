@@ -235,7 +235,7 @@ const renderData = (data) => {
                 $('.heb-alert-tips').remove();
                 $('.heb-print-tips').append(domShowPrintImgs);
             } else {
-                const tips = '本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
+                const tips = 'Oops :( 本次上传似乎缺少打印图，发布后的页面可能无法正常打印！！！';
                 $hebPic.before(`<div class="heb-alert-tips">${tips}</div>`);
                 // alert(tips);
             }
@@ -246,16 +246,16 @@ const renderData = (data) => {
     console.log(finishTimer, renderItems);
 
     // // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
-    let setint = setInterval(() => {
-        if (window.finishTimer <= 0) {
-            clearInterval(setint);
-            setint = null;
+    // let setint = setInterval(() => {
+    //     if (window.finishTimer <= 0) {
+    //         clearInterval(setint);
+    //         setint = null;
 
-            renderDom(renderItems);
-        }
-    }, 1);
+    //         renderDom(renderItems);
+    //     }
+    // }, 1);
 
-
+    renderDom(renderItems);
 
     // renderDom(renderItems);
 };
