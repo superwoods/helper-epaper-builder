@@ -4,7 +4,7 @@
 $(function () {
     window.hebContentDom = '';
     window.imgIndex = 0;
-    window.isDev = false;
+    // window.isDev = false;
 
     // const $window = $(window);
     var $html = $('html');

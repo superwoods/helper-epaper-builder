@@ -31,10 +31,11 @@ const addHref = () => {
             if ($this.hasClass('add-href-text2')) {
                 $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
             }
-            localStorageSet();
+            // localStorageSet();
+            // setDownloadDom();
         });
 
-        console.log('isHeader:', isHeader);
+        // console.log('isHeader:', isHeader);
         if (isHeader) {
             let stageI = $.trim($('.stage-i').text());
             console.log('stageI:', stageI);
@@ -47,7 +48,10 @@ const addHref = () => {
             $a.attr('href', heb1Val + val);
             $text.val(val);
 
-            localStorageSet();
+            window.stageNum = val;
+
+            // localStorageSet();
+            // setDownloadDom();
         } else {
             $text.val($a.attr('href'));
         }
@@ -66,7 +70,15 @@ const addHref = () => {
                 $(this).remove();
             });
 
-        localStorageSet();
+        // localStorageSet();
+        setDownloadDom();
         copyBtnShow();
+
+        $('#copy-btn').click(function () {
+            const stage = $.trim($('.stage-i').text());
+            alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
+            export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
+        });
+
     });
 };

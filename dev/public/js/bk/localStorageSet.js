@@ -4,7 +4,7 @@ const localStorageSet = () => {
     let dom = $hebPic.html();
 
     if (dom) {
-        localStorage.setItem('hebLocalData', dom);
+        // localStorage.setItem('hebLocalData', dom);
         dom = downDomClean(dom);
         console.log('downDomClean:\n\n', dom);
         $('#textarea-data').text(dom);

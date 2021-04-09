@@ -4,7 +4,7 @@ const cleancss = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const babel = require('gulp-babel');
 // const concat = require('gulp-concat');
-const jsImport = require('gulp-js-import');
+const jsImport = require('gulp-js-import-moo');
 // const postcss = require('gulp-postcss');
 // const atImport = require('postcss-import');
 const header = require('gulp-header');
@@ -111,21 +111,21 @@ gulp.task('clean-dist-bundle', function (cb) {
 
 gulp.task('browsersync', function () {
     const baseFiles = [
-        'dev/public/*.html',
-        'dev/public/bundle/*.gif',
-        'dev/public/js/*.js',
-        'dev/public/pug/*.pug',
-        'dev/public/styl/*.styl',
-        'public/bundle/*.css',
-        'public/bundle/*.js',
-        'public/bundle/*.png',
-        'public/bundle/*.jpg',
+        'dev/src/*.html',
+        'dev/src/bundle/*.gif',
+        'dev/src/js/*.js',
+        'dev/src/pug/*.pug',
+        'dev/src/styl/*.styl',
+        'src/src/*.css',
+        'src/bundle/*.js',
+        'src/bundle/*.png',
+        'src/bundle/*.jpg',
     ];
     const _files = baseFiles.concat(jsCompiles, stylCompiles);
     browsersync
         .init(_files, {
             server: {
-                baseDir: 'public'
+                baseDir: 'src'
             },
             notify: true,
         });
@@ -163,7 +163,7 @@ jsCompiles.map((item, index) => {
             .pipe(babel({
                 presets: ['env']
             }))
-            .pipe(gulp.dest('public/bundle'));
+            .pipe(gulp.dest('src/bundle'));
     });
 });
 
@@ -176,12 +176,12 @@ gulp.task('styl', function () {
             errorHandler: notify.onError('Error: <%= error.message %>')
         }))
         .pipe(stylus())
-        .pipe(gulp.dest('public/bundle'));
+        .pipe(gulp.dest('src/bundle'));
 });
 
 // watch
 gulp.task('autowatch', function () {
-    // gulp.watch('dev/public/pug/*.pug', ['pug']);
+    // gulp.watch('dev/src/pug/*.pug', ['pug']);
     gulp.watch('dev/public/js/*.js', jsCompileTasks);
     gulp.watch('dev/public/styl/*.styl', ['styl']);
 });

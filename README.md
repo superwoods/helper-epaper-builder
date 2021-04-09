@@ -6,4 +6,4 @@
 
 ## docs
 
-https://github.com/xinhuaRadioLAB/helper-epaper-builder-doc/issues/1
+https://github.com/xRadioLAB/helper-epaper-builder-doc/issues/1
