@@ -76,7 +76,7 @@ const addHref = () => {
 
         $('#copy-btn').click(function () {
             const stage = $.trim($('.stage-i').text());
-            alert('请将' + stage + '.html 放入图片文件夹，然后打开复制到发糕器！！');
+            alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
             export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
         });
 
