@@ -18,9 +18,26 @@ $(function () {
     }
 
     var downDomClean = function downDomClean(dom) {
-        return dom.replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1').replace(/<span class="add-href-input[\s\S]*?<\/span>?[\s\S]*?<\/span>(<\/span>)?/gim, '');
+        var r = dom
+        // .replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1')
+        .replace(/<span class="add-href-input[\s\S]*?<\/span>?[\s\S]*?<\/span>(<\/span>)?/gim, '');
+        return r;
     };
-    // import './localStorageSet.js'
+    var setDownloadDom = function setDownloadDom() {
+        // console.log('mod > localStorageSet.js');
+        $('.heb-picHideDom').html($('#heb-picDomTarget').html()).find('img').each(function (i, e) {
+            // console.log(e, i);
+            $(e).attr('src', $(e).attr('data-src'));
+        });
+
+        var downloadDom = $('.heb-picHideDom').html();
+        if (downloadDom) {
+            // localStorage.setItem('hebLocalData', dom);
+            downloadDom = downDomClean(downloadDom);
+            console.log('downDomClean downdom:\n\n', downloadDom);
+            $('#textarea-data').text(downloadDom);
+        }
+    };
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -136,13 +153,12 @@ $(function () {
         }
 
         var dom_isPrint = function dom_isPrint(src, className, e) {
-            if (e) {
-                return '\n' + blank + '<img src="' + e.srcData + '" width="100%" height="auto" align="center" class="' + className + '">';
-            } else {
-                return '\n' + blank + '<img src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
-            }
+            // if (e) { // 页面显示的 dom
+            return '\n' + blank + '<img src="' + e.srcData + '" data-src="' + src + '" width="100%" height="auto" align="center" class="' + className + '">';
+            // } else {
+            //     return `\n${blank}<img  width="100%" height="auto" align="center" class="${className}">`;
+            // }
         };
-        // herfInput
 
         var dom_is_p_a_img = function dom_is_p_a_img(src, className, e) {
             // console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
@@ -150,11 +166,11 @@ $(function () {
             if ('heb-img-1' == className || 'heb-img-1-1' == className) {
                 on = true;
             }
-            if (e) {
-                return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + e.srcData + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
-            } else {
-                return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
-            }
+            // if (e) { // 页面显示的 dom
+            return '\n<p class="add-href ' + className + '">\n' + blank + '<a href="#" target="_blank">\n' + blank + blank + '<img src="' + e.srcData + '" data-src="' + src + '" width="100%" height="auto">\n' + blank + '</a>' + herfInput(on) + '\n</p>';
+            // } else {
+            //     return `\n<p class="${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${src}" width="100%" height="auto">\n${blank}</a>\n</p>`;
+            // }
         };
 
         var renderDom = function renderDom(renderItems) {
@@ -183,66 +199,60 @@ $(function () {
 
                         if (domPrint == '') {
                             domPrint = '\n<p align="center" class="heb-hide">';
-                            domPrintForDownload = '\n<p align="center" class="heb-hide">';
+                            // domPrintForDownload = `\n<p align="center" class="heb-hide">`;
                         }
                         domPrint += dom_isPrint(_e.src, _e.className, _e);
-                        domPrintForDownload += dom_isPrint(_e.src, _e.className);
+                        // domPrintForDownload += dom_isPrint(e.src, e.className);
                     } else {
                         dom += dom_is_p_a_img(_e.src, _e.className, _e);
-                        domForDownload += dom_is_p_a_img(_e.src, _e.className);
+                        // domForDownload += dom_is_p_a_img(e.src, e.className);
                     }
                 } else {
-                    (function () {
-                        var div1 = '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
-                        dom += div1;
-                        domForDownload += div1;
+                    // const div1 = `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
+                    dom += '\n<div style="width:' + pageWidth + 'px !important;height:' + pageHeight + 'px !important;position:relative;">';
+                    // domForDownload += div1;
 
-                        var _left$top = {
-                            left: 0,
-                            top: 0
-                        },
-                            left = _left$top.left,
-                            top = _left$top.top;
+                    var _left$top = {
+                        left: 0,
+                        top: 0
+                    },
+                        left = _left$top.left,
+                        top = _left$top.top;
 
-                        var _loop = function _loop(porp2) {
-                            var e2 = renderItems[prop][porp2];
-                            // console.log('e2.src:', e2.src);
 
-                            var on = false;
-                            if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
-                                on = true;
-                            }
+                    for (var porp2 in renderItems[prop]) {
+                        var e2 = renderItems[prop][porp2];
+                        // console.log('e2.src:', e2.src);
 
-                            var div2 = function div2(imgSrc) {
-                                return '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + imgSrc + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
-                            };
+                        var on = false;
+                        if ('heb-img-1' == e2.className || 'heb-img-1-1' == e2.className) {
+                            on = true;
+                        }
 
-                            dom += div2(e2.srcData);
-                            domForDownload += div2(e2.src);
+                        // const div2 = (imgSrc, isHerfInput) => (`\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<a href="#" target="_blank">\n${blank}${blank}${blank}<img src="${imgSrc}" width="100%" height="auto">\n${blank}${blank}</a>\n${isHerfInput ? herfInput(on) : ''}\n${blank}</p>`);
 
-                            // 拼接定位 START / 注意！不支持3列 2018-06-13
-                            var isFullHeight = e2.height >= pageHeight - top;
-                            if (left == 0) {
-                                if (isFullHeight) {
-                                    left += e2.width;
-                                    top = 0;
-                                } else {
-                                    left = 0;
-                                    top += e2.height;
-                                }
+                        dom += '\n' + blank + '<p class="add-href ' + e2.className + '" style="width:' + e2.width + 'px !important;height:' + e2.height + 'px !important;left:' + left + 'px;top:' + top + 'px;position: absolute;">\n' + blank + blank + '<a href="#" target="_blank">\n' + blank + blank + blank + '<img src="' + e2.srcData + '" data-src="' + e2.src + '" width="100%" height="auto">\n' + blank + blank + '</a>\n' + herfInput(on) + '\n' + blank + '</p>';
+
+                        // domForDownload += div2(e2.src, false);
+
+                        // 拼接定位 START / 注意！不支持3列 2018-06-13
+                        var isFullHeight = e2.height >= pageHeight - top;
+                        if (left == 0) {
+                            if (isFullHeight) {
+                                left += e2.width;
+                                top = 0;
                             } else {
+                                left = 0;
                                 top += e2.height;
                             }
-                            // 拼接定位 END
-                        };
-
-                        for (var porp2 in renderItems[prop]) {
-                            _loop(porp2);
+                        } else {
+                            top += e2.height;
                         }
-                        var div3 = '\n</div>';
-                        dom += div3;
-                        domForDownload += div3;
-                    })();
+                        // 拼接定位 END
+                    }
+                    // const div3 = '\n</div>';
+                    dom += '\n</div>';
+                    // domForDownload += div3;
                 }
             }
 
@@ -252,20 +262,21 @@ $(function () {
                 dom = $.trim(dom);
                 dom = dom + '\n' + (domPrint ? domPrint + '\n</p>' : '');
 
-                domPrintForDownload = $.trim(domPrintForDownload);
-                domForDownload = $.trim(domForDownload);
-                domForDownload = domForDownload + '\n' + (domPrintForDownload ? domPrintForDownload + '\n</p>' : '');
+                // domPrintForDownload = $.trim(domPrintForDownload);
+                // domForDownload = $.trim(domForDownload);
+                // domForDownload = `${domForDownload}\n${domPrintForDownload ? `${domPrintForDownload}\n</p>` : ''}`;
 
                 // window.hebDom = dom;
 
                 // console.log('dom:', dom);
 
-
                 $hebPic.html(dom);
 
-                console.log('domForDownload:', domForDownload);
+                setDownloadDom();
 
+                // console.log('domForDownload:', domForDownload);
                 // localStorageSet();
+                // $('#textarea-data').text(domForDownload);
 
                 addHref();
 
@@ -498,10 +509,11 @@ $(function () {
                 if ($this.hasClass('add-href-text2')) {
                     $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
                 }
-                localStorageSet();
+                // localStorageSet();
+                setDownloadDom();
             });
 
-            console.log('isHeader:', isHeader);
+            // console.log('isHeader:', isHeader);
             if (isHeader) {
                 var stageI = $.trim($('.stage-i').text());
                 console.log('stageI:', stageI);
@@ -514,7 +526,8 @@ $(function () {
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
 
-                localStorageSet();
+                // localStorageSet();
+                setDownloadDom();
             } else {
                 $text.val($a.attr('href'));
             }
@@ -531,7 +544,8 @@ $(function () {
                 $(this).remove();
             });
 
-            localStorageSet();
+            // localStorageSet();
+            setDownloadDom();
             copyBtnShow();
         });
     };

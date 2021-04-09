@@ -31,10 +31,11 @@ const addHref = () => {
             if ($this.hasClass('add-href-text2')) {
                 $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
             }
-            localStorageSet();
+            // localStorageSet();
+            setDownloadDom();
         });
 
-        console.log('isHeader:', isHeader);
+        // console.log('isHeader:', isHeader);
         if (isHeader) {
             let stageI = $.trim($('.stage-i').text());
             console.log('stageI:', stageI);
@@ -47,7 +48,8 @@ const addHref = () => {
             $a.attr('href', heb1Val + val);
             $text.val(val);
 
-            localStorageSet();
+            // localStorageSet();
+            setDownloadDom();
         } else {
             $text.val($a.attr('href'));
         }
@@ -66,7 +68,8 @@ const addHref = () => {
                 $(this).remove();
             });
 
-        localStorageSet();
+        // localStorageSet();
+        setDownloadDom();
         copyBtnShow();
     });
 };

@@ -95,7 +95,7 @@ a {
   min-width: 90%;
   position: absolute;
   z-index: 12;
-  top: 20px;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, 0);
   margin: 0 auto;
@@ -311,4 +311,7 @@ a {
   position: absolute;
   right: 0;
   top: 42px;
+}
+.heb-picHideDom {
+  display: none;
 }

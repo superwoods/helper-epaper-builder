@@ -16,7 +16,7 @@ $(() => {
     }
 
     @import './downDomClean.js'
-    // import './localStorageSet.js'
+    @import './setDownloadDom.js'
 
     @import './pageSizeConfig.js'
     @import './render-data.js'

@@ -104,13 +104,12 @@ const renderData = (data) => {
     }
 
     const dom_isPrint = (src, className, e) => {
-        if (e) {
-            return `\n${blank}<img src="${e.srcData}" width="100%" height="auto" align="center" class="${className}">`;
-        } else {
-            return `\n${blank}<img src="${src}" width="100%" height="auto" align="center" class="${className}">`;
-        }
+        // if (e) { // 页面显示的 dom
+        return `\n${blank}<img src="${e.srcData}" data-src="${src}" width="100%" height="auto" align="center" class="${className}">`;
+        // } else {
+        //     return `\n${blank}<img  width="100%" height="auto" align="center" class="${className}">`;
+        // }
     };
-    // herfInput
 
     const dom_is_p_a_img = (src, className, e) => {
         // console.log('dom_is_p_a_img:', /heb-img-1/ig.test(className));
@@ -118,13 +117,12 @@ const renderData = (data) => {
         if ('heb-img-1' == className || 'heb-img-1-1' == className) {
             on = true;
         }
-        if (e) {
-            return `\n<p class="add-href ${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${e.srcData}" width="100%" height="auto">\n${blank}</a>${herfInput(on)}\n</p>`;
-        } else {
-            return `\n<p class="add-href ${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${src}" width="100%" height="auto">\n${blank}</a>${herfInput(on)}\n</p>`;
-        }
+        // if (e) { // 页面显示的 dom
+        return `\n<p class="add-href ${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${e.srcData}" data-src="${src}" width="100%" height="auto">\n${blank}</a>${herfInput(on)}\n</p>`;
+        // } else {
+        //     return `\n<p class="${className}">\n${blank}<a href="#" target="_blank">\n${blank}${blank}<img src="${src}" width="100%" height="auto">\n${blank}</a>\n</p>`;
+        // }
     };
-
 
     const renderDom = (renderItems) => {
         console.log('---///--> renderDom:', renderItems);
@@ -154,19 +152,19 @@ const renderData = (data) => {
 
                     if (domPrint == '') {
                         domPrint = `\n<p align="center" class="heb-hide">`;
-                        domPrintForDownload = `\n<p align="center" class="heb-hide">`;
+                        // domPrintForDownload = `\n<p align="center" class="heb-hide">`;
                     }
                     domPrint += dom_isPrint(e.src, e.className, e);
-                    domPrintForDownload += dom_isPrint(e.src, e.className);
+                    // domPrintForDownload += dom_isPrint(e.src, e.className);
 
                 } else {
                     dom += dom_is_p_a_img(e.src, e.className, e);
-                    domForDownload += dom_is_p_a_img(e.src, e.className);
+                    // domForDownload += dom_is_p_a_img(e.src, e.className);
                 }
             } else {
-                const div1 = `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
-                dom += div1;
-                domForDownload += div1;
+                // const div1 = `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
+                dom += `\n<div style="width:${pageWidth}px !important;height:${pageHeight}px !important;position:relative;">`;
+                // domForDownload += div1;
 
                 let { left, top } = {
                     left: 0,
@@ -182,10 +180,11 @@ const renderData = (data) => {
                         on = true;
                     }
 
-                    const div2 = (imgSrc) => (`\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<a href="#" target="_blank">\n${blank}${blank}${blank}<img src="${imgSrc}" width="100%" height="auto">\n${blank}${blank}</a>\n${herfInput(on)}\n${blank}</p>`);
+                    // const div2 = (imgSrc, isHerfInput) => (`\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<a href="#" target="_blank">\n${blank}${blank}${blank}<img src="${imgSrc}" width="100%" height="auto">\n${blank}${blank}</a>\n${isHerfInput ? herfInput(on) : ''}\n${blank}</p>`);
 
-                    dom += div2(e2.srcData);
-                    domForDownload += div2(e2.src);
+                    dom += `\n${blank}<p class="add-href ${e2.className}" style="width:${e2.width}px !important;height:${e2.height}px !important;left:${left}px;top:${top}px;position: absolute;">\n${blank}${blank}<a href="#" target="_blank">\n${blank}${blank}${blank}<img src="${e2.srcData}" data-src="${e2.src}" width="100%" height="auto">\n${blank}${blank}</a>\n${herfInput(on)}\n${blank}</p>`;
+
+                    // domForDownload += div2(e2.src, false);
 
                     // 拼接定位 START / 注意！不支持3列 2018-06-13
                     const isFullHeight = e2.height >= (pageHeight - top);
@@ -202,9 +201,9 @@ const renderData = (data) => {
                     }
                     // 拼接定位 END
                 }
-                const div3 = '\n</div>';
-                dom += div3;
-                domForDownload += div3;
+                // const div3 = '\n</div>';
+                dom += '\n</div>';
+                // domForDownload += div3;
             }
         }
 
@@ -214,20 +213,21 @@ const renderData = (data) => {
             dom = $.trim(dom);
             dom = `${dom}\n${domPrint ? `${domPrint}\n</p>` : ''}`;
 
-            domPrintForDownload = $.trim(domPrintForDownload);
-            domForDownload = $.trim(domForDownload);
-            domForDownload = `${domForDownload}\n${domPrintForDownload ? `${domPrintForDownload}\n</p>` : ''}`;
+            // domPrintForDownload = $.trim(domPrintForDownload);
+            // domForDownload = $.trim(domForDownload);
+            // domForDownload = `${domForDownload}\n${domPrintForDownload ? `${domPrintForDownload}\n</p>` : ''}`;
 
             // window.hebDom = dom;
 
             // console.log('dom:', dom);
 
-
             $hebPic.html(dom);
 
-            console.log('domForDownload:', domForDownload);
+            setDownloadDom();
 
+            // console.log('domForDownload:', domForDownload);
             // localStorageSet();
+            // $('#textarea-data').text(domForDownload);
 
             addHref();
 
