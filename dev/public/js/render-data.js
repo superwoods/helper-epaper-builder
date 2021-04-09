@@ -47,11 +47,13 @@ const renderData = (data) => {
 
                 image.src = event.target.result;
 
+                const picName = originalname.split('.')[0];
+
                 image.onload = () => {
                     const renderItem = {
                         hasChild: false,
                         className: className,
-                        originalname: originalname,
+                        originalname: picName,
                         width: Math.round(image.naturalWidth * pageWidth / naturalWidth),
                         height: Math.round(image.naturalHeight * pageHeight / naturalHeight),
                         src: e.name,
@@ -127,18 +129,20 @@ const renderData = (data) => {
     const renderDom = (renderItems) => {
         console.log('---///--> renderDom:', renderItems);
 
-
         let dom = '';
-        let domForDownload = '';
         let domPrint = '';
-        let domPrintForDownload = '';
         let domShowPrintImgs = '';
+
+        // let domForDownload = '';
+        // let domPrintForDownload = '';
         // let domShowPrintImgsForDownload = '';
 
         for (let prop in renderItems) {
+
             const e = renderItems[prop];
             // regPicName.push(e)
-            console.log(prop, e);
+            console.log('      ---> renderDom for:', prop, e);
+
 
             const hasChild = e.hasChild;
 
@@ -148,7 +152,8 @@ const renderData = (data) => {
                 if (isPrint) {
                     // console.log('e.src:', e.src);
 
-                    domShowPrintImgs += `\n<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.srcData}">\n</a>${e.originalname}</li>`;
+                    // domShowPrintImgs += `\n<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.srcData}">\n</a>${e.originalname}</li>`;
+                    domShowPrintImgs += `\n<li>\n<img width="100%" src="${e.srcData}">\n${e.originalname}</li>`;
 
                     if (domPrint == '') {
                         domPrint = `\n<p align="center" class="heb-hide">`;
@@ -245,17 +250,17 @@ const renderData = (data) => {
 
     console.log(finishTimer, renderItems);
 
-    // // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
-    // let setint = setInterval(() => {
-    //     if (window.finishTimer <= 0) {
-    //         clearInterval(setint);
-    //         setint = null;
+    // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
+    let setint = setInterval(() => {
+        if (window.finishTimer == 0) {
+            clearInterval(setint);
+            setint = null;
 
-    //         renderDom(renderItems);
-    //     }
-    // }, 1);
+            renderDom(renderItems);
+        }
+    }, 1);
 
-    renderDom(renderItems);
+    // renderDom(renderItems);
 
     // renderDom(renderItems);
 };

@@ -99,11 +99,13 @@ $(function () {
 
                     image.src = event.target.result;
 
+                    var picName = originalname.split('.')[0];
+
                     image.onload = function () {
                         var renderItem = {
                             hasChild: false,
                             className: className,
-                            originalname: originalname,
+                            originalname: picName,
                             width: Math.round(image.naturalWidth * pageWidth / naturalWidth),
                             height: Math.round(image.naturalHeight * pageHeight / naturalHeight),
                             src: e.name,
@@ -177,16 +179,18 @@ $(function () {
             console.log('---///--> renderDom:', renderItems);
 
             var dom = '';
-            var domForDownload = '';
             var domPrint = '';
-            var domPrintForDownload = '';
             var domShowPrintImgs = '';
+
+            // let domForDownload = '';
+            // let domPrintForDownload = '';
             // let domShowPrintImgsForDownload = '';
 
             for (var prop in renderItems) {
+
                 var _e = renderItems[prop];
                 // regPicName.push(e)
-                console.log(prop, _e);
+                console.log('      ---> renderDom for:', prop, _e);
 
                 var hasChild = _e.hasChild;
 
@@ -195,7 +199,8 @@ $(function () {
                     if (isPrint) {
                         // console.log('e.src:', e.src);
 
-                        domShowPrintImgs += '\n<li><a href="' + _e.src + '" target="_blank" title="' + _e.src + '">\n<img width="100%" src="' + _e.srcData + '">\n</a>' + _e.originalname + '</li>';
+                        // domShowPrintImgs += `\n<li><a href="${e.src}" target="_blank" title="${e.src}">\n<img width="100%" src="${e.srcData}">\n</a>${e.originalname}</li>`;
+                        domShowPrintImgs += '\n<li>\n<img width="100%" src="' + _e.srcData + '">\n' + _e.originalname + '</li>';
 
                         if (domPrint == '') {
                             domPrint = '\n<p align="center" class="heb-hide">';
@@ -293,17 +298,17 @@ $(function () {
 
         console.log(finishTimer, renderItems);
 
-        // // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
-        // let setint = setInterval(() => {
-        //     if (window.finishTimer <= 0) {
-        //         clearInterval(setint);
-        //         setint = null;
+        // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
+        var setint = setInterval(function () {
+            if (window.finishTimer == 0) {
+                clearInterval(setint);
+                setint = null;
 
-        //         renderDom(renderItems);
-        //     }
-        // }, 1);
+                renderDom(renderItems);
+            }
+        }, 1);
 
-        renderDom(renderItems);
+        // renderDom(renderItems);
 
         // renderDom(renderItems);
     };
@@ -512,7 +517,7 @@ $(function () {
                     $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
                 }
                 // localStorageSet();
-                setDownloadDom();
+                // setDownloadDom();
             });
 
             // console.log('isHeader:', isHeader);
@@ -529,7 +534,7 @@ $(function () {
                 $text.val(val);
 
                 // localStorageSet();
-                setDownloadDom();
+                // setDownloadDom();
             } else {
                 $text.val($a.attr('href'));
             }
