@@ -1,7 +1,7 @@
 // console.log('mod > index.js');
 $(() => {
-    window.hebContentDom = '';
-    window.imgIndex = 0;
+    // window.hebContentDom = '';
+    // window.imgIndex = 0;
     // window.isDev = false;
 
     // const $window = $(window);
@@ -11,9 +11,9 @@ $(() => {
 
     $html.addClass('is-xa-today-print');
 
-    if (isDev) {
-        $html.addClass('is-dev');
-    }
+    // if (isDev) {
+    //     $html.addClass('is-dev');
+    // }
 
     @import './downDomClean.js'
     @import './setDownloadDom.js'

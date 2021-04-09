@@ -99,8 +99,8 @@ const renderData = (data) => {
     for (const key in files) {
         if (Object.hasOwnProperty.call(files, key)) {
             const e = files[key];
-            imgIndex++;
-            console.log('1:', imgIndex);
+            // imgIndex++;
+            // console.log('1:', imgIndex);
             filter(e);
         }
     }

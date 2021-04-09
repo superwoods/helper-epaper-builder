@@ -2,8 +2,8 @@
 
 // console.log('mod > index.js');
 $(function () {
-    window.hebContentDom = '';
-    window.imgIndex = 0;
+    // window.hebContentDom = '';
+    // window.imgIndex = 0;
     // window.isDev = false;
 
     // const $window = $(window);
@@ -13,9 +13,9 @@ $(function () {
 
     $html.addClass('is-xa-today-print');
 
-    if (isDev) {
-        $html.addClass('is-dev');
-    }
+    // if (isDev) {
+    //     $html.addClass('is-dev');
+    // }
 
     var downDomClean = function downDomClean(dom) {
         var r = dom
@@ -150,8 +150,8 @@ $(function () {
         for (var key in files) {
             if (Object.hasOwnProperty.call(files, key)) {
                 var e = files[key];
-                imgIndex++;
-                console.log('1:', imgIndex);
+                // imgIndex++;
+                // console.log('1:', imgIndex);
                 filter(e);
             }
         }
