@@ -25,7 +25,7 @@ const renderData = (data) => {
 
             let imgName = originalnameArray[0];
 
-            const isPrint = /p/ig.test(imgName);
+            const isPrint = /p[0-9][0-9]*/ig.test(imgName);
 
             if (isPrint == false) {
                 imgName -= 0;
@@ -89,19 +89,16 @@ const renderData = (data) => {
         }
     };
 
-    // console.log('files: ', files);
-
-    // files.map((e, i) => {
-    //     imgIndex++;
-    //     filter(e);
-    // });
+    console.log('files: ', files);
 
     for (const key in files) {
         if (Object.hasOwnProperty.call(files, key)) {
             const e = files[key];
-            // imgIndex++;
-            // console.log('1:', imgIndex);
-            filter(e);
+            if (/\.jpg|\.jpeg|\.png|\.gif/ig.test(e.name) &&
+                /标题图|标题图方/ig.test(e.name) == false) {
+                console.log(e.name);
+                filter(e);
+            }
         }
     }
 
@@ -146,9 +143,14 @@ const renderData = (data) => {
 
             const hasChild = e.hasChild;
 
+            // console.log('hasChild:', hasChild);
+
 
             if (hasChild == false) {
-                const isPrint = /p/ig.test(e.originalname);
+                const isPrint = /p[0-9][0-9]*/ig.test(e.originalname);
+
+                console.log('(hasChild == false) isPrint:', isPrint);
+
                 if (isPrint) {
                     // console.log('e.src:', e.src);
 
@@ -163,6 +165,9 @@ const renderData = (data) => {
                     // domPrintForDownload += dom_isPrint(e.src, e.className);
 
                 } else {
+                    console.log('isPrint == false', e.src, e.className, e);
+
+
                     dom += dom_is_p_a_img(e.src, e.className, e);
                     // domForDownload += dom_is_p_a_img(e.src, e.className);
                 }
@@ -212,6 +217,8 @@ const renderData = (data) => {
             }
         }
 
+
+
         if (dom) {
             // 写入 dom
             domPrint = $.trim(domPrint);
@@ -244,23 +251,36 @@ const renderData = (data) => {
                 $hebPic.before(`<div class="heb-alert-tips">${tips}</div>`);
                 // alert(tips);
             }
+
+            $('.loading').addClass('hide');
         }
     };
 
 
-    console.log(finishTimer, renderItems);
+    // console.log(finishTimer, renderItems);
 
     // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
+    let setintRuns = 0;
+
     let setint = setInterval(() => {
+        console.log('setintRuns:', setintRuns, finishTimer, renderItems);
+
+        setintRuns++;
+
+        if (setintRuns >= 500) {
+            clearInterval(setint);
+            setint = null;
+            renderDom(renderItems);
+        }
+
         if (window.finishTimer == 0) {
             clearInterval(setint);
             setint = null;
-
+            console.log('sss');
             renderDom(renderItems);
         }
-    }, 1);
 
-    // renderDom(renderItems);
+    }, 1);
 
     // renderDom(renderItems);
 };

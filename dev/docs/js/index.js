@@ -23,7 +23,7 @@ $(() => {
 
     // import './uploadBoxFn.js'
 
-    @import './iframeBg.js'
+    //import './iframeBg.js'
     @import './upload.js'
     @import './mask.js'
     @import './title.js'
@@ -41,4 +41,12 @@ $(() => {
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();
     // });
+
+    $('.heb-textarea-onOff').on('click', function () {
+        if ($('#textarea-data').hasClass('hide')) {
+            $('#textarea-data').removeClass('hide');
+        } else {
+            $('#textarea-data').addClass('hide');
+        }
+    });
 });

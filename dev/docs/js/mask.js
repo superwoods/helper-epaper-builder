@@ -4,7 +4,7 @@ const mask = () => {
     $addMask.on('click', (e) => {
         const $html = $('html');
         const className = 'is-mask';
-        const classNameBtnActive = 'btn-primary';
+        // const classNameBtnActive = 'btn-primary';
         const isMask = $html.hasClass(className);
         const $e = $(e.currentTarget);
         if (isMask === true) {

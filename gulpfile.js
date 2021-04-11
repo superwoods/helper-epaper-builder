@@ -34,10 +34,10 @@ const {
     stylCompiles
 } = {
     jsCompiles: [
-        'dev/public/js/index.js',
+        'dev/docs/js/index.js',
     ],
     stylCompiles: [
-        'dev/public/styl/index.styl',
+        'dev/docs/styl/index.styl',
     ],
 };
 
@@ -111,21 +111,21 @@ gulp.task('clean-dist-bundle', function (cb) {
 
 gulp.task('browsersync', function () {
     const baseFiles = [
-        'dev/src/*.html',
-        'dev/src/bundle/*.gif',
-        'dev/src/js/*.js',
-        'dev/src/pug/*.pug',
-        'dev/src/styl/*.styl',
-        'src/src/*.css',
-        'src/bundle/*.js',
-        'src/bundle/*.png',
-        'src/bundle/*.jpg',
+        'dev/docs/*.html',
+        'dev/docs/bundle/*.gif',
+        'dev/docs/js/*.js',
+        'dev/docs/pug/*.pug',
+        'dev/docs/styl/*.styl',
+        'docs/docs/*.css',
+        'docs/bundle/*.js',
+        'docs/bundle/*.png',
+        'docs/bundle/*.jpg',
     ];
     const _files = baseFiles.concat(jsCompiles, stylCompiles);
     browsersync
         .init(_files, {
             server: {
-                baseDir: 'src'
+                baseDir: 'docs'
             },
             notify: true,
         });
@@ -135,7 +135,7 @@ gulp.task('browsersync', function () {
 // gulp.task('pug', function () {
 //     gulp
 //         .src([
-//             'dev/public/pug/index.pug'
+//             'dev/docs/pug/index.pug'
 //         ])
 //         .pipe(plumber())
 //         .pipe(pug({
@@ -163,7 +163,7 @@ jsCompiles.map((item, index) => {
             .pipe(babel({
                 presets: ['env']
             }))
-            .pipe(gulp.dest('src/bundle'));
+            .pipe(gulp.dest('docs/bundle'));
     });
 });
 
@@ -176,14 +176,14 @@ gulp.task('styl', function () {
             errorHandler: notify.onError('Error: <%= error.message %>')
         }))
         .pipe(stylus())
-        .pipe(gulp.dest('src/bundle'));
+        .pipe(gulp.dest('docs/bundle'));
 });
 
 // watch
 gulp.task('autowatch', function () {
-    // gulp.watch('dev/src/pug/*.pug', ['pug']);
-    gulp.watch('dev/public/js/*.js', jsCompileTasks);
-    gulp.watch('dev/public/styl/*.styl', ['styl']);
+    // gulp.watch('dev/docs/pug/*.pug', ['pug']);
+    gulp.watch('dev/docs/js/*.js', jsCompileTasks);
+    gulp.watch('dev/docs/styl/*.styl', ['styl']);
 });
 
 // 新增添加单独 js 编译的方法
