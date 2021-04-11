@@ -28,18 +28,18 @@ const titleFn = () => {
         <div class="i add-title" contenteditable="true"></div>
     `);
 
-    $.ajax({
-        url: 'http://www.xiongan.gov.cn/bundle/xat-data.js',
-        dataType: "script",
-        success() {
-            const len = xatData.length;
-            const last = xatData[len - 1];
-            // console.log('mod > titleFn() data', last);
-            last.Title.replace(/第(\d*)期/igm, (...opt) => {
-                $('.stage-i').text(opt[1] - 0 + 1);
-            });
-        }
-    });
+    // $.ajax({
+    //     url: 'http://www.xiongan.gov.cn/bundle/xat-data.js',
+    //     dataType: "script",
+    //     success() {
+    //         const len = xatData.length;
+    //         const last = xatData[len - 1];
+    //         // console.log('mod > titleFn() data', last);
+    //         last.Title.replace(/第(\d*)期/igm, (...opt) => {
+    //             $('.stage-i').text(opt[1] - 0 + 1);
+    //         });
+    //     }
+    // });
 
     $('.stage-i').on('input', function () {
         const $hebImg1 = $('.heb-img-1-1, .heb-img-1');

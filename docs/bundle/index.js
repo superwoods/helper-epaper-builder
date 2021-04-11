@@ -403,18 +403,18 @@ $(function () {
 
         $('.title-box').html('\n        <div class="title">' + title + '</div>\n        <div class="year">\n            <div contenteditable="true" class="i year-i">' + year + '</div>\u5E74\n        </div>\n        <div class="month">\n            <div contenteditable="true" class="i month-i">' + month + '</div>\u6708\n        </div>\n        <div class="day">\n            <div contenteditable="true" class="i day-i">' + day + '</div>\u65E5\n        </div>\n        <div class="stage">\u7B2C<div contenteditable="true" class="i stage-i">' + stage + '</div>\u671F\n        </div>\n        <div class="i add-title" contenteditable="true"></div>\n    ');
 
-        $.ajax({
-            url: 'http://www.xiongan.gov.cn/bundle/xat-data.js',
-            dataType: "script",
-            success: function success() {
-                var len = xatData.length;
-                var last = xatData[len - 1];
-                // console.log('mod > titleFn() data', last);
-                last.Title.replace(/第(\d*)期/igm, function () {
-                    $('.stage-i').text((arguments.length <= 1 ? undefined : arguments[1]) - 0 + 1);
-                });
-            }
-        });
+        // $.ajax({
+        //     url: 'http://www.xiongan.gov.cn/bundle/xat-data.js',
+        //     dataType: "script",
+        //     success() {
+        //         const len = xatData.length;
+        //         const last = xatData[len - 1];
+        //         // console.log('mod > titleFn() data', last);
+        //         last.Title.replace(/第(\d*)期/igm, (...opt) => {
+        //             $('.stage-i').text(opt[1] - 0 + 1);
+        //         });
+        //     }
+        // });
 
         $('.stage-i').on('input', function () {
             var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
