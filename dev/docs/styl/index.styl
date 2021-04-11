@@ -1,13 +1,17 @@
-mainHeight = 18000px
+mainHeight = 1800px
 colorBlue = #0b4a80
 
 body
     // font-family: "微软雅黑"
-    background-color: #cccccc
+    background-color: #f7f7f7
     color: #333;
     min-width 1200px
+    min-height: mainHeight
     padding: 0
     margin: 0
+    background-image: url(bgTop.jpg)
+    background-position: center 0
+    background-repeat: no-repeat
 
 .ie
     body
@@ -144,7 +148,7 @@ body
 
     &-bg-iframe
         width: 100%
-        height mainHeight
+        min-height mainHeight
         margin: 0 auto
         position: absolute
         left: 50%
@@ -157,18 +161,24 @@ body
         top: 0
         left 0
         width: 100%
-        height mainHeight
+        min-height mainHeight
         // background-color: rgba(#000000, 0.1)
 
-    &-box-in
+    &-box-in // .heb-box-in
         position: absolute
         margin: 0 auto
         width: 1200px
+        height: auto
+        min-height: mainHeight - 300px
         top: 210px
         left: 50%
-        margin-left: -(@width / 2)
+        transform: translateX(-50%)
         // height 300px
         // background-color: rgba(#000000, 0.3)
+        background-position: center -210px
+        background-color: #fff
+        background-image: url(bgTop.jpg)
+        background-repeat: no-repeat
 
     &-main-box
         width: 951px
@@ -179,9 +189,9 @@ body
         // background-color: rgba(#000000, 0.3)
         // height 400px
 
-    &-main
+    &-main  // .heb-main
         background-color: #ffffff //rgba(#ffffff, 0.6)
-        // height 5503px
+        height mainHeight - 425px
         padding-bottom: 80px
 
         .title-box
@@ -305,44 +315,64 @@ body
 
 .upload-box2
     text-align: left
-    width 100%
+    width auto
+    height: auto
     margin: 0 auto
+    position: fixed
+    padding: 6px
+    z-index 9999
+
+    .title
+        color: #FFFF
+        font-size: 16px
+        line-height: 24px
 
 .heb-textarea
-    display: none
     margin: 0 auto
     border: 1px solid rgba(27,31,35,0.2);
     border-radius: 0.25em;
     background-color: #fafbfc;
-    width: 80%
-    min-height 800px
     margin: 30px auto 0
     font-size: 12px
     line-height:16px
     padding: 10px
-
-    .is-dev &
-        width: 260px
-        height 500px
-        min-height @height
-        display: block
-        position: fixed
-        top: 0
-        left: 0
-        margin-top: 0
-        z-index 99
+    width: 200px
+    height 200px
+    top: 0
+    left: 0
+    margin-top: 0
+    z-index 99
 
 .is-dev
     .heb-box-in
         right: 0
+
     .heb-main-box
         width: 951px;
         padding: 0;
         position: absolute;
-        right: 0;
+        right: 49px;
         top: 42px;
-   
-
 
 .heb-picHideDom
     display: none
+
+.heb-textarea-onOff
+    display: block
+    width 2em
+
+.loading
+    background-image: url(icon-blue-loading.gif)
+    background-size: 100% auto
+    background-position: center center
+    background-repeat: no-repeat
+    width: 30px
+    height:  @width
+    margin: 20px auto 30px
+
+.add-href
+    a:hover
+        display: block
+        background-color: #69bee5
+        img
+            opacity 0.5

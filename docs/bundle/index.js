@@ -25,14 +25,19 @@ $(function () {
     };
     var setDownloadDom = function setDownloadDom() {
         // console.log('mod > localStorageSet.js');
-        $('.heb-picHideDom').html($('#heb-picDomTarget').html()).find('img').each(function (i, e) {
+        var forShowDom = $('#heb-picDomTarget').html();
+
+        $('.heb-picHideDom').html(forShowDom).find('img').each(function (i, e) {
             // console.log(e, i);
             $(e).attr('src', $(e).attr('data-src'));
         });
 
         var downloadDom = $('.heb-picHideDom').html();
+
         if (downloadDom) {
-            // localStorage.setItem('hebLocalData', dom);
+
+            // localStorage.setItem('hebLocalData', forShowDom);
+
             downloadDom = downDomClean(downloadDom);
             console.log('downDomClean downdom:\n\n', downloadDom);
             $('#textarea-data').text(downloadDom);
@@ -54,7 +59,7 @@ $(function () {
 
     var renderData = function renderData(data) {
         console.log('renderData:', data);
-
+        var filesNum = 0;
         // window.hebDom = '';
 
         var $hebPic = $('.heb-pic');
@@ -79,7 +84,7 @@ $(function () {
 
                 var imgName = originalnameArray[0];
 
-                var isPrint = /p/ig.test(imgName);
+                var isPrint = /p[0-9][0-9]*/ig.test(imgName);
 
                 if (isPrint == false) {
                     imgName -= 0;
@@ -140,19 +145,16 @@ $(function () {
             }
         };
 
-        // console.log('files: ', files);
-
-        // files.map((e, i) => {
-        //     imgIndex++;
-        //     filter(e);
-        // });
+        console.log('files: ', files);
 
         for (var key in files) {
             if (Object.hasOwnProperty.call(files, key)) {
                 var e = files[key];
-                // imgIndex++;
-                // console.log('1:', imgIndex);
-                filter(e);
+                if (/\.jpg|\.jpeg|\.png|\.gif/ig.test(e.name) && /标题图|标题图方/ig.test(e.name) == false) {
+                    console.log(e.name);
+                    filesNum++;
+                    filter(e);
+                }
             }
         }
 
@@ -196,8 +198,14 @@ $(function () {
 
                 var hasChild = _e.hasChild;
 
+                // console.log('hasChild:', hasChild);
+
+
                 if (hasChild == false) {
-                    var isPrint = /p/ig.test(_e.originalname);
+                    var isPrint = /p[0-9][0-9]*/ig.test(_e.originalname);
+
+                    console.log('(hasChild == false) isPrint:', isPrint);
+
                     if (isPrint) {
                         // console.log('e.src:', e.src);
 
@@ -211,6 +219,8 @@ $(function () {
                         domPrint += dom_isPrint(_e.src, _e.className, _e);
                         // domPrintForDownload += dom_isPrint(e.src, e.className);
                     } else {
+                        console.log('isPrint == false', _e.src, _e.className, _e);
+
                         dom += dom_is_p_a_img(_e.src, _e.className, _e);
                         // domForDownload += dom_is_p_a_img(e.src, e.className);
                     }
@@ -295,94 +305,59 @@ $(function () {
                     $hebPic.before('<div class="heb-alert-tips">' + _tips + '</div>');
                     // alert(tips);
                 }
+
+                $('.loading').addClass('hide');
+
+                setTimeout(function () {
+                    console.log('filesNum:', filesNum);
+                    var h = $('#heb-picDomTarget').outerHeight();
+                    h += filesNum >= 5 ? 2000 : 1000;
+                    $('.heb-box-in').height(h);
+                    $('.heb-box').height(h + 400);
+                }, 400);
             }
         };
 
-        console.log(finishTimer, renderItems);
+        // console.log(finishTimer, renderItems);
 
         // 异步上传队列，上传计数，循环验证是否为全部上传完成，之后生成页面
+        var setintRuns = 0;
+
         var setint = setInterval(function () {
+            console.log('setintRuns:', setintRuns, finishTimer, renderItems);
+
+            setintRuns++;
+
+            if (setintRuns >= 500) {
+                clearInterval(setint);
+                setint = null;
+                renderDom(renderItems);
+            }
+
             if (window.finishTimer == 0) {
                 clearInterval(setint);
                 setint = null;
-
+                console.log('sss');
                 renderDom(renderItems);
             }
         }, 1);
-
-        // renderDom(renderItems);
 
         // renderDom(renderItems);
     };
 
     // import './uploadBoxFn.js'
 
-    var iframeBg = function iframeBg() {
-        // if (isDev == false) {
-        var winWidth = $body.width();
-        // const iframeSrc = `http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm`;
-        // $body.append(`<iframe class="heb-bg-iframe" src="http://www.xiongan.gov.cn/2018-04/16/c_129851439.htm" frameborder="0"></iframe>`);
-
-        // set postion
-        $('.heb-bg-iframe').css({
-            width: winWidth,
-            'margin-left': -(winWidth / 2) + 'px'
-        });
-        // }
-    };
-
-    iframeBg();
-    var upload = function upload(e) {
-        // const formData = new FormData($('#form-upload-multi')[0]);
-        // console.log('formData: ', formData);
+    //import './iframeBg.js'
+    $('#form-submit').on('click', function () {
         var files = document.getElementById('fileId').files;
-
-        /*
-        for (const key in files) {
-            if (Object.hasOwnProperty.call(files, key)) {
-                 //获取读取我文件的File对象
-                var selectedFile = files[key];
-                var name = selectedFile.name;//读取选中文件的文件名
-                 const imgName = 'img-' + name.split('.')[0];
-                 var size = selectedFile.size;//读取选中文件的大小
-                 console.log("文件名:" + name + "大小:" + size, imgName);
-                 var reader = new FileReader();//这是核心,读取操作就是由它完成.
-                //reader.readAsText(selectedFile);//读取文件的内容,也可以读取文件的URL
-                 reader.addEventListener("load", function (event) {
-                    $('.heb-pic').append(`<img src="${event.target.result}" class="${imgName}">`);
-                    // $('.' + imgName).attr('src', event.target.result);
-                }, false);
-                 reader.readAsDataURL(selectedFile);
-             }
-        } 
-        */
-
         renderData({
             files: files
         });
 
-        // $.ajax({
-        //     url: '/upload-multi',
-        //     type: 'POST',
-        //     data: formData,
-        //     cache: false,
-        //     contentType: false,
-        //     processData: false,
-        //     success: function (data) {
-        //         renderData(data);
-        //         if (data.length) {
-        //             $('.upload-box').hide();
-        //         }
-        //     },
-        //     error: function (jqXHR, textStatus, errorThrown) {
-        //         $('.upload-box').append(`
-        //             <span class="tips">连接不到服务器，请检查网络！</span>
-        //         `);
-        //     }
-        // });
-    };
-
-    $('#form-submit').on('click', upload);
+        if ($('.loading').hasClass('hide')) {
+            $('.loading').removeClass('hide');
+        }
+    });
 
     var mask = function mask() {
         $body.append('<div class="btn add-mask">\u7A81\u51FA</div>'); //btn-primary 
@@ -390,7 +365,7 @@ $(function () {
         $addMask.on('click', function (e) {
             var $html = $('html');
             var className = 'is-mask';
-            var classNameBtnActive = 'btn-primary';
+            // const classNameBtnActive = 'btn-primary';
             var isMask = $html.hasClass(className);
             var $e = $(e.currentTarget);
             if (isMask === true) {
@@ -608,9 +583,31 @@ $(function () {
 
     // };
 
-    // import './localDataLoad.js'
+    var localDataLoad = function localDataLoad() {
+        // console.log('mod > localDataLoad.js');
+        var $hebPic = $('.heb-pic');
+        var hebLocalData = localStorage.getItem('hebLocalData');
+        // console.log('hebLocalData: ', hebLocalData);
+        if (hebLocalData !== null) {
+            $hebPic.html(hebLocalData);
+            localStorageSet();
+            // $('.add-href').off('click');
+            addHref();
+        }
+    };
+
+    // localDataLoad();
+
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();
     // });
+
+    $('.heb-textarea-onOff').on('click', function () {
+        if ($('#textarea-data').hasClass('hide')) {
+            $('#textarea-data').removeClass('hide');
+        } else {
+            $('#textarea-data').addClass('hide');
+        }
+    });
 });

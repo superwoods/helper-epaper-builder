@@ -1,9 +1,13 @@
 body {
-  background-color: #ccc;
+  background-color: #f7f7f7;
   color: #333;
   min-width: 1200px;
+  min-height: 1800px;
   padding: 0;
   margin: 0;
+  background-image: url("bgTop.jpg");
+  background-position: center 0;
+  background-repeat: no-repeat;
 }
 .ie body {
   font-family: "微软雅黑";
@@ -127,7 +131,7 @@ a {
 }
 .heb-bg-iframe {
   width: 100%;
-  height: 18000px;
+  min-height: 1800px;
   margin: 0 auto;
   position: absolute;
   left: 50%;
@@ -140,15 +144,21 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  height: 18000px;
+  min-height: 1800px;
 }
 .heb-box-in {
   position: absolute;
   margin: 0 auto;
   width: 1200px;
+  height: auto;
+  min-height: 1500px;
   top: 210px;
   left: 50%;
-  margin-left: -600px;
+  transform: translateX(-50%);
+  background-position: center -210px;
+  background-color: #fff;
+  background-image: url("bgTop.jpg");
+  background-repeat: no-repeat;
 }
 .heb-main-box {
   width: 951px;
@@ -159,6 +169,7 @@ a {
 }
 .heb-main {
   background-color: #fff;
+  height: 1375px;
   padding-bottom: 80px;
 }
 .heb-main .title-box {
@@ -275,28 +286,29 @@ a {
 }
 .upload-box2 {
   text-align: left;
-  width: 100%;
+  width: auto;
+  height: auto;
   margin: 0 auto;
+  position: fixed;
+  padding: 6px;
+  z-index: 9999;
+}
+.upload-box2 .title {
+  color: #fff;
+  font-size: 16px;
+  line-height: 24px;
 }
 .heb-textarea {
-  display: none;
   margin: 0 auto;
   border: 1px solid rgba(27,31,35,0.2);
   border-radius: 0.25em;
   background-color: #fafbfc;
-  width: 80%;
-  min-height: 800px;
   margin: 30px auto 0;
   font-size: 12px;
   line-height: 16px;
   padding: 10px;
-}
-.is-dev .heb-textarea {
-  width: 260px;
-  height: 500px;
-  min-height: 500px;
-  display: block;
-  position: fixed;
+  width: 200px;
+  height: 200px;
   top: 0;
   left: 0;
   margin-top: 0;
@@ -309,9 +321,29 @@ a {
   width: 951px;
   padding: 0;
   position: absolute;
-  right: 0;
+  right: 49px;
   top: 42px;
 }
 .heb-picHideDom {
   display: none;
+}
+.heb-textarea-onOff {
+  display: block;
+  width: 2em;
+}
+.loading {
+  background-image: url("icon-blue-loading.gif");
+  background-size: 100% auto;
+  background-position: center center;
+  background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
+  margin: 20px auto 30px;
+}
+.add-href a:hover {
+  display: block;
+  background-color: #69bee5;
+}
+.add-href a:hover img {
+  opacity: 0.5;
 }
