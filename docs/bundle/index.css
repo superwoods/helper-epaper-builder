@@ -1,7 +1,8 @@
 body {
-  background-color: #ccc;
+  background-color: #f7f7f7;
   color: #333;
   min-width: 1200px;
+  min-height: 1800px;
   padding: 0;
   margin: 0;
   background-image: url("bgTop.jpg");
@@ -130,7 +131,7 @@ a {
 }
 .heb-bg-iframe {
   width: 100%;
-  height: 10000px;
+  min-height: 1800px;
   margin: 0 auto;
   position: absolute;
   left: 50%;
@@ -143,16 +144,21 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  height: 10000px;
+  min-height: 1800px;
 }
 .heb-box-in {
   position: absolute;
   margin: 0 auto;
   width: 1200px;
   height: auto;
+  min-height: 1500px;
   top: 210px;
   left: 50%;
   transform: translateX(-50%);
+  background-position: center -210px;
+  background-color: #fff;
+  background-image: url("bgTop.jpg");
+  background-repeat: no-repeat;
 }
 .heb-main-box {
   width: 951px;
@@ -163,6 +169,7 @@ a {
 }
 .heb-main {
   background-color: #fff;
+  height: 1375px;
   padding-bottom: 80px;
 }
 .heb-main .title-box {
@@ -332,4 +339,11 @@ a {
   width: 30px;
   height: 30px;
   margin: 20px auto 30px;
+}
+.add-href a:hover {
+  display: block;
+  background-color: #69bee5;
+}
+.add-href a:hover img {
+  opacity: 0.5;
 }

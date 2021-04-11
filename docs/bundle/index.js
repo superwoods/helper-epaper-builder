@@ -25,14 +25,19 @@ $(function () {
     };
     var setDownloadDom = function setDownloadDom() {
         // console.log('mod > localStorageSet.js');
-        $('.heb-picHideDom').html($('#heb-picDomTarget').html()).find('img').each(function (i, e) {
+        var forShowDom = $('#heb-picDomTarget').html();
+
+        $('.heb-picHideDom').html(forShowDom).find('img').each(function (i, e) {
             // console.log(e, i);
             $(e).attr('src', $(e).attr('data-src'));
         });
 
         var downloadDom = $('.heb-picHideDom').html();
+
         if (downloadDom) {
-            // localStorage.setItem('hebLocalData', dom);
+
+            // localStorage.setItem('hebLocalData', forShowDom);
+
             downloadDom = downDomClean(downloadDom);
             console.log('downDomClean downdom:\n\n', downloadDom);
             $('#textarea-data').text(downloadDom);
@@ -54,7 +59,7 @@ $(function () {
 
     var renderData = function renderData(data) {
         console.log('renderData:', data);
-
+        var filesNum = 0;
         // window.hebDom = '';
 
         var $hebPic = $('.heb-pic');
@@ -147,6 +152,7 @@ $(function () {
                 var e = files[key];
                 if (/\.jpg|\.jpeg|\.png|\.gif/ig.test(e.name) && /标题图|标题图方/ig.test(e.name) == false) {
                     console.log(e.name);
+                    filesNum++;
                     filter(e);
                 }
             }
@@ -301,6 +307,14 @@ $(function () {
                 }
 
                 $('.loading').addClass('hide');
+
+                setTimeout(function () {
+                    console.log('filesNum:', filesNum);
+                    var h = $('#heb-picDomTarget').outerHeight();
+                    h += filesNum >= 5 ? 2000 : 1000;
+                    $('.heb-box-in').height(h);
+                    $('.heb-box').height(h + 400);
+                }, 400);
             }
         };
 
@@ -569,7 +583,21 @@ $(function () {
 
     // };
 
-    // import './localDataLoad.js'
+    var localDataLoad = function localDataLoad() {
+        // console.log('mod > localDataLoad.js');
+        var $hebPic = $('.heb-pic');
+        var hebLocalData = localStorage.getItem('hebLocalData');
+        // console.log('hebLocalData: ', hebLocalData);
+        if (hebLocalData !== null) {
+            $hebPic.html(hebLocalData);
+            localStorageSet();
+            // $('.add-href').off('click');
+            addHref();
+        }
+    };
+
+    // localDataLoad();
+
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();

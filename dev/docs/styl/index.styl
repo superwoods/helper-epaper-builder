@@ -1,11 +1,12 @@
-mainHeight = 10000px
+mainHeight = 1800px
 colorBlue = #0b4a80
 
 body
     // font-family: "微软雅黑"
-    background-color: #cccccc
+    background-color: #f7f7f7
     color: #333;
     min-width 1200px
+    min-height: mainHeight
     padding: 0
     margin: 0
     background-image: url(bgTop.jpg)
@@ -147,7 +148,7 @@ body
 
     &-bg-iframe
         width: 100%
-        height mainHeight
+        min-height mainHeight
         margin: 0 auto
         position: absolute
         left: 50%
@@ -160,7 +161,7 @@ body
         top: 0
         left 0
         width: 100%
-        height mainHeight
+        min-height mainHeight
         // background-color: rgba(#000000, 0.1)
 
     &-box-in // .heb-box-in
@@ -168,11 +169,16 @@ body
         margin: 0 auto
         width: 1200px
         height: auto
+        min-height: mainHeight - 300px
         top: 210px
         left: 50%
         transform: translateX(-50%)
         // height 300px
         // background-color: rgba(#000000, 0.3)
+        background-position: center -210px
+        background-color: #fff
+        background-image: url(bgTop.jpg)
+        background-repeat: no-repeat
 
     &-main-box
         width: 951px
@@ -183,9 +189,9 @@ body
         // background-color: rgba(#000000, 0.3)
         // height 400px
 
-    &-main
+    &-main  // .heb-main
         background-color: #ffffff //rgba(#ffffff, 0.6)
-        // height 5503px
+        height mainHeight - 425px
         padding-bottom: 80px
 
         .title-box
@@ -363,3 +369,10 @@ body
     width: 30px
     height:  @width
     margin: 20px auto 30px
+
+.add-href
+    a:hover
+        display: block
+        background-color: #69bee5
+        img
+            opacity 0.5

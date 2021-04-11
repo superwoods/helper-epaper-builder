@@ -1,6 +1,6 @@
 const renderData = (data) => {
     console.log('renderData:', data);
-
+    let filesNum = 0;
     // window.hebDom = '';
 
     const $hebPic = $('.heb-pic');
@@ -97,6 +97,7 @@ const renderData = (data) => {
             if (/\.jpg|\.jpeg|\.png|\.gif/ig.test(e.name) &&
                 /标题图|标题图方/ig.test(e.name) == false) {
                 console.log(e.name);
+                filesNum++;
                 filter(e);
             }
         }
@@ -253,6 +254,15 @@ const renderData = (data) => {
             }
 
             $('.loading').addClass('hide');
+
+            setTimeout(() => {
+                console.log('filesNum:', filesNum);
+                let h = $('#heb-picDomTarget').outerHeight();
+                h += (filesNum >= 5 ? 2000 : 1000);
+                $('.heb-box-in').height(h);
+                $('.heb-box').height(h + 400);
+            }, 400);
+
         }
     };
 
@@ -281,6 +291,7 @@ const renderData = (data) => {
         }
 
     }, 1);
+
 
     // renderDom(renderItems);
 };
