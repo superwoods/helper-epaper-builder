@@ -2,21 +2,27 @@
 
 // console.log('mod > index.js');
 $(function () {
-    // window.hebContentDom = '';
-    // window.imgIndex = 0;
-    // window.isDev = false;
-
-    // const $window = $(window);
     var $html = $('html');
     var $body = $('body');
     var $hebPic = $('.heb-pic');
 
-    $html.addClass('is-xa-today-print');
+    var setAllHeight_settimeout = void 0;
+    function setAllHeight(filesNum) {
+        clearTimeout(setAllHeight_settimeout);
+        setAllHeight_settimeout = null;
+        setAllHeight_settimeout = setTimeout(function () {
+            console.log('filesNum:', filesNum);
 
-    // if (isDev) {
-    //     $html.addClass('is-dev');
-    // }
+            if (filesNum == undefined) {
+                filesNum = $('#heb-picDomTarget').find('img').length;
+            }
 
+            var h = $('#heb-picDomTarget').outerHeight();
+            h += filesNum >= 5 ? 2000 : 1000;
+            $('.heb-box-in').height(h);
+            $('.heb-box').height(h + 400);
+        }, 400);
+    }
     var downDomClean = function downDomClean(dom) {
         var r = dom
         // .replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1')
@@ -24,7 +30,7 @@ $(function () {
         return r;
     };
     var setDownloadDom = function setDownloadDom() {
-        // console.log('mod > localStorageSet.js');
+        // console.log('mod > setDownloadDom.js');
         var forShowDom = $('#heb-picDomTarget').html();
 
         $('.heb-picHideDom').html(forShowDom).find('img').each(function (i, e) {
@@ -33,18 +39,234 @@ $(function () {
         });
 
         var downloadDom = $('.heb-picHideDom').html();
-
-        if (downloadDom) {
-
-            // localStorage.setItem('hebLocalData', forShowDom);
-
-            downloadDom = downDomClean(downloadDom);
-            console.log('downDomClean downdom:\n\n', downloadDom);
-            $('#textarea-data').text(downloadDom);
-        }
+        // localStorage.setItem('hebLocalData', forShowDom);
+        downloadDom = downDomClean(downloadDom);
+        console.log('downDomClean downdom:\n\n', downloadDom);
+        $('#textarea-data').text(downloadDom);
 
         window.downloadDom = downloadDom;
     };
+
+    function indexedBDSet() {
+        // console.log('mod > indexedBDSet.js');
+        var $hebPic = $('#heb-picDomTarget'); // $('.heb-pic');
+        var dom = $hebPic.html();
+        if (dom) {
+            // localStorage.setItem('hebLocalData', dom);
+            // dom = downDomClean(dom);
+            // console.log('downDomClean:\n\n', dom);
+            // $('#textarea-data').text(dom);
+            dbObj.put({
+                name: $.trim($('.stage-i').text()),
+                dom: dom
+            }, 1);
+        }
+    }
+
+    function addHref() {
+        var copyBtnShow = function copyBtnShow() {
+            $('#copy-btn').show();
+            $('#finish-btn').hide();
+        };
+
+        var copyBtnHide = function copyBtnHide() {
+            $('#copy-btn').hide();
+            $('#finish-btn').show();
+        };
+
+        copyBtnHide();
+
+        $('.add-href').each(function (i, e) {
+            var $e = $(e);
+            var $a = $e.find('a');
+            var $text = $e.find('.add-href-text');
+            var val = $text.val();
+            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
+
+            if (isHeader == false) {
+                heb1Val = '';
+            }
+            // $a.attr('href', heb1Val + val);
+
+            $text.on('input', function () {
+                var $this = $(this);
+                val = $this.val();
+                $a.attr('href', heb1Val + val);
+                if ($this.hasClass('add-href-text2')) {
+                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                }
+
+                // indexedBDSet();
+                // setDownloadDom();
+            });
+
+            // console.log('isHeader:', isHeader);
+            if (isHeader) {
+                var stageI = $.trim($('.stage-i').text());
+                // console.log('stageI:', stageI);
+                // if (stageI == '-') {
+                //     stageI = localStorage.getItem('hebSageI');
+                // } else {
+                //     localStorage.setItem('hebSageI', stageI);
+                // }
+                val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
+
+                window.stageNum = val;
+
+                // indexedBDSet();
+                // setDownloadDom();
+            } else {
+                $text.val($a.attr('href'));
+            }
+        });
+
+        // // 防止读取本地数据后点击图片出现页面跳转
+        // $('.add-href a').on('click', (e) => {
+        //     e.preventDefault();
+        // });
+        $('#finish-btn').show();
+
+        $('#finish-btn').on('click', function () {
+            // $('.add-href-btn').trigger('click');
+            $('.add-href').find('.add-href-input').fadeOut(function () {
+                $(this).remove();
+            });
+
+            indexedBDSet();
+            setDownloadDom();
+            copyBtnShow();
+
+            $('#copy-btn').click(function () {
+                var stage = $.trim($('.stage-i').text());
+                alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
+                export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
+            });
+        });
+    };
+
+    (function () {
+        var dbObj = {};
+        /**
+         * 打开数据库
+         */
+        dbObj.init = function (param) {
+            this.dbName = param.dbName;
+            this.dbVersion = param.dbVersion;
+            this.dbStoreName = param.dbStoreName;
+            if (!window.indexedDB) {
+                alert('浏览器不支持indexedDB');
+            }
+            var request = indexedDB.open(this.dbName, this.dbVersion);
+            // 打开数据库失败5
+            request.onerror = function (event) {
+                console.log('数据库打开失败,错误码：', event);
+            };
+            // 打开数据库成功
+            request.onsuccess = function (event) {
+                // 获取数据对象
+                dbObj.db = event.target.result;
+                console.log('连接数据库成功');
+                dbObj.select(1, 'showBtn');
+            };
+
+            // if (this.db.objectStoreNames.contains(dbObj.dbStoreName)) {
+            //     console.log('数据仓库已存在');
+            // }
+            // 创建数据库
+            request.onupgradeneeded = function (event) {
+                dbObj.db = event.target.result;
+                dbObj.db.createObjectStore(dbObj.dbStoreName, {
+                    //  keyPath: "id", //设置主键 设置了内联主键就不可以使用put的第二个参数(这里是个坑)
+                    autoIncrement: true // 自增
+                });
+            };
+        };
+
+        dbObj.getStore = function (dbStoreName, mode) {
+            // 获取事务对象 
+            var ts = dbObj.db.transaction(dbStoreName, mode);
+            // 通过事务对象去获取对象仓库
+            return ts.objectStore(dbStoreName);
+        };
+        /**
+         * 添加和修改数据
+         */
+        dbObj.put = function (msg, key) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.put(msg, key);
+            request.onsuccess = function () {
+                if (key) console.log('修改成功');else console.log('添加成功');
+            };
+            request.onerror = function (event) {
+                console.log(event);
+            };
+        };
+
+        /**
+         * 删除数据
+         */
+        dbObj.delete = function (id) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.delete(id);
+            request.onsuccess = function () {
+                alert('删除成功');
+            };
+        };
+
+        /**
+         * 查询数据
+         */
+        dbObj.select = function (key, showBtn) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+
+            if (key) var request = store.get(key);else var request = store.getAll();
+
+            request.onsuccess = function () {
+                console.log('查询数据 request.result:', request.result);
+
+                if (request.result) {
+                    if (showBtn) {
+                        console.log('查询数据 showBtn:', showBtn);
+                        $('#load-btn').show();
+                    } else {
+                        $('#load-btn').hide();
+                        $('#clear-btn').show();
+                        $('.stage-i').text(request.result.name);
+                        $('.heb-pic').html('').html(request.result.dom);
+                        addHref();
+                        setAllHeight();
+                    }
+                }
+            };
+        };
+
+        /**
+         * 删除表
+         */
+        dbObj.clear = function () {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.clear();
+            request.onsuccess = function () {
+                alert('清除成功');
+            };
+        };
+        window.dbObj = dbObj;
+    })();
+
+    // ————————————————
+    // 版权声明：本文为CSDN博主「罪无囚」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+    // 原文链接：https://blog.csdn.net/QQ972618478/article/details/98528707
+
+    dbObj.init({
+        dbName: 'HEB_project',
+        dbVersion: '1.0',
+        dbStoreName: 'data'
+    });
+
+    console.log(dbObj);
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -292,10 +514,11 @@ $(function () {
                 setDownloadDom();
 
                 // console.log('domForDownload:', domForDownload);
-                // localStorageSet();
+                // indexedBDSet();
                 // $('#textarea-data').text(domForDownload);
 
                 addHref();
+                indexedBDSet();
 
                 if (domShowPrintImgs) {
                     $('.heb-alert-tips').remove();
@@ -308,13 +531,7 @@ $(function () {
 
                 $('.loading').addClass('hide');
 
-                setTimeout(function () {
-                    console.log('filesNum:', filesNum);
-                    var h = $('#heb-picDomTarget').outerHeight();
-                    h += filesNum >= 5 ? 2000 : 1000;
-                    $('.heb-box-in').height(h);
-                    $('.heb-box').height(h + 400);
-                }, 400);
+                setAllHeight(filesNum);
             }
         };
 
@@ -345,11 +562,9 @@ $(function () {
         // renderDom(renderItems);
     };
 
-    // import './uploadBoxFn.js'
-
-    //import './iframeBg.js'
     $('#form-submit').on('click', function () {
         var files = document.getElementById('fileId').files;
+
         renderData({
             files: files
         });
@@ -416,7 +631,11 @@ $(function () {
         //     }
         // });
 
+
         $('.stage-i').on('input', function () {
+            var stageI = $.trim($('.stage-i').text());
+            localStorage.setItem('hebSageI', stageI);
+
             var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
             var isHeader = $hebImg1.length > 0;
             if (isHeader) {
@@ -425,28 +644,34 @@ $(function () {
                 var $a = $hebImg1.find('a');
                 var $text = $hebImg1.find('.add-href-text');
 
-                var stageI = $.trim($(this).text());
-                if (stageI == '-') {
-                    stageI = localStorage.getItem('hebSageI');
-                } else {
-                    localStorage.setItem('hebSageI', stageI);
-                }
                 var val = '' + (stageI || '');
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
-                localStorageSet();
+
+                // indexedBDSet();
             }
         });
     };
+
     titleFn();
 
     // import './copyBtn.js'
     var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
+        $body.append('\n        <div class="btn clear-btn hide" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn clear-btn hide" id="load-btn">\u8BFB\u53D6</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
-        // $('#clear-btn').on('click', () => {
-        //     localStorage.clear();
-        // });
+        $('#clear-btn').on('click', function () {
+            var mymessage = confirm("☠️\n \n即将清除页面内容和存储，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
+            if (mymessage == true) {
+                dbObj.clear();
+                window.location.reload();
+            }
+            $('#load-btn').hide();
+        });
+
+        $('#load-btn').on('click', function () {
+            $('.openTips').show();
+            dbObj.select(1);
+        });
     };
 
     copyBtn();
@@ -456,89 +681,6 @@ $(function () {
             $(this).hide().stop();
         });
     };
-    var addHref = function addHref() {
-        var copyBtnShow = function copyBtnShow() {
-            $('#copy-btn').show();
-            $('#finish-btn').hide();
-        };
-
-        var copyBtnHide = function copyBtnHide() {
-            $('#copy-btn').hide();
-            $('#finish-btn').show();
-        };
-
-        copyBtnHide();
-
-        $('.add-href').each(function (i, e) {
-            var $e = $(e);
-            var $a = $e.find('a');
-            var $text = $e.find('.add-href-text');
-            var val = $text.val();
-            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
-            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
-
-            if (isHeader == false) {
-                heb1Val = '';
-            }
-            // $a.attr('href', heb1Val + val);
-
-            $text.on('input', function () {
-                var $this = $(this);
-                val = $this.val();
-                $a.attr('href', heb1Val + val);
-                if ($this.hasClass('add-href-text2')) {
-                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
-                }
-                // localStorageSet();
-                // setDownloadDom();
-            });
-
-            // console.log('isHeader:', isHeader);
-            if (isHeader) {
-                var stageI = $.trim($('.stage-i').text());
-                console.log('stageI:', stageI);
-                if (stageI == '-') {
-                    stageI = localStorage.getItem('hebSageI');
-                } else {
-                    localStorage.setItem('hebSageI', stageI);
-                }
-                val = '' + (stageI || '');
-                $a.attr('href', heb1Val + val);
-                $text.val(val);
-
-                window.stageNum = val;
-
-                // localStorageSet();
-                // setDownloadDom();
-            } else {
-                $text.val($a.attr('href'));
-            }
-        });
-
-        // // 防止读取本地数据后点击图片出现页面跳转
-        // $('.add-href a').on('click', (e) => {
-        //     e.preventDefault();
-        // });
-
-        $('#finish-btn').on('click', function () {
-            // $('.add-href-btn').trigger('click');
-            $('.add-href').find('.add-href-input').fadeOut(function () {
-                $(this).remove();
-            });
-
-            // localStorageSet();
-            setDownloadDom();
-            copyBtnShow();
-
-            $('#copy-btn').click(function () {
-                var stage = $.trim($('.stage-i').text());
-                alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
-                export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
-            });
-        });
-    };
-
-    // local
     function fake_click(obj) {
         var ev = document.createEvent("MouseEvents");
         ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -556,58 +698,22 @@ $(function () {
         fake_click(save_link);
     }
 
-    // const uploadTxt = () => {
-    //     // const formData = new FormData($('#form-upload-txt')[0]);
-    //     // $.ajax({
-    //     //     url: '/upload-txt',
-    //     //     type: 'POST',
-    //     //     data: formData,
-    //     //     cache: false,
-    //     //     contentType: false,
-    //     //     processData: false,
-    //     //     success: function (data) {
-    //     //         console.log('uploadTxt success data:', data);
-    //     //         if (data.hasData == 1) {
-    //     //             $('#copy-btn')
-    //     //                 .off('click')
-    //     //                 .html(`<a href="${data.path}" target="_blank" title="点击下载，解压缩后放入图片目录">${data.filename}</a > `);
-    //     //         } else {
-    //     //             $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-    //     //         }
-    //     //     },
-    //     //     error: function (jqXHR, textStatus, errorThrown) {
-    //     //         $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-    //     //     }
-    //     // });
-
-
-    // };
-
-    var localDataLoad = function localDataLoad() {
-        // console.log('mod > localDataLoad.js');
-        var $hebPic = $('.heb-pic');
-        var hebLocalData = localStorage.getItem('hebLocalData');
-        // console.log('hebLocalData: ', hebLocalData);
-        if (hebLocalData !== null) {
-            $hebPic.html(hebLocalData);
-            localStorageSet();
-            // $('.add-href').off('click');
-            addHref();
-        }
-    };
-
-    // localDataLoad();
-
-
-    // $('#textarea-data').on('input', () => {
-    //     localStorageSet();
-    // });
+    // import './localDataLoad.js'
+    if (localStorage.getItem('heb-textarea-data') == 'show') {
+        $('#textarea-data').removeClass('hide');
+    } else {
+        $('#textarea-data').addClass('hide');
+    }
 
     $('.heb-textarea-onOff').on('click', function () {
         if ($('#textarea-data').hasClass('hide')) {
             $('#textarea-data').removeClass('hide');
+            localStorage.setItem('heb-textarea-data', 'show');
         } else {
             $('#textarea-data').addClass('hide');
+            localStorage.setItem('heb-textarea-data', 'hide');
         }
     });
+
+    $('#finish-btn').hide();
 });

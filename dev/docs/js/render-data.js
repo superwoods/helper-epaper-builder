@@ -239,10 +239,11 @@ const renderData = (data) => {
             setDownloadDom();
 
             // console.log('domForDownload:', domForDownload);
-            // localStorageSet();
+            // indexedBDSet();
             // $('#textarea-data').text(domForDownload);
 
             addHref();
+            indexedBDSet();
 
             if (domShowPrintImgs) {
                 $('.heb-alert-tips').remove();
@@ -255,13 +256,7 @@ const renderData = (data) => {
 
             $('.loading').addClass('hide');
 
-            setTimeout(() => {
-                console.log('filesNum:', filesNum);
-                let h = $('#heb-picDomTarget').outerHeight();
-                h += (filesNum >= 5 ? 2000 : 1000);
-                $('.heb-box-in').height(h);
-                $('.heb-box').height(h + 400);
-            }, 400);
+            setAllHeight(filesNum);
 
         }
     };

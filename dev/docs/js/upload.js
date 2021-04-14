@@ -1,5 +1,6 @@
 $('#form-submit').on('click', function () {
     const files = document.getElementById('fileId').files;
+
     renderData({
         files,
     });

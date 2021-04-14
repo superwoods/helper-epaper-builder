@@ -5,7 +5,7 @@ const localDataLoad = () => {
     // console.log('hebLocalData: ', hebLocalData);
     if (hebLocalData !== null) {
         $hebPic.html(hebLocalData);
-        localStorageSet();
+        // localStorageSet();
         // $('.add-href').off('click');
         addHref();
     }

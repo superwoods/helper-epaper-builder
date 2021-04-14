@@ -1,4 +1,4 @@
-const addHref = () => {
+function addHref() {
     const copyBtnShow = () => {
         $('#copy-btn').show();
         $('#finish-btn').hide();
@@ -31,26 +31,27 @@ const addHref = () => {
             if ($this.hasClass('add-href-text2')) {
                 $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
             }
-            // localStorageSet();
+
+            // indexedBDSet();
             // setDownloadDom();
         });
 
         // console.log('isHeader:', isHeader);
         if (isHeader) {
             let stageI = $.trim($('.stage-i').text());
-            console.log('stageI:', stageI);
-            if (stageI == '-') {
-                stageI = localStorage.getItem('hebSageI');
-            } else {
-                localStorage.setItem('hebSageI', stageI);
-            }
+            // console.log('stageI:', stageI);
+            // if (stageI == '-') {
+            //     stageI = localStorage.getItem('hebSageI');
+            // } else {
+            //     localStorage.setItem('hebSageI', stageI);
+            // }
             val = `${stageI || ''}`;
             $a.attr('href', heb1Val + val);
             $text.val(val);
 
             window.stageNum = val;
 
-            // localStorageSet();
+            // indexedBDSet();
             // setDownloadDom();
         } else {
             $text.val($a.attr('href'));
@@ -61,6 +62,7 @@ const addHref = () => {
     // $('.add-href a').on('click', (e) => {
     //     e.preventDefault();
     // });
+    $('#finish-btn').show();
 
     $('#finish-btn').on('click', () => {
         // $('.add-href-btn').trigger('click');
@@ -70,7 +72,7 @@ const addHref = () => {
                 $(this).remove();
             });
 
-        // localStorageSet();
+        indexedBDSet();
         setDownloadDom();
         copyBtnShow();
 
