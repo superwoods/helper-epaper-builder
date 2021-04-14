@@ -2,8 +2,11 @@
 
 // console.log('mod > index.js');
 $(function () {
-    var setAllHeight_settimeout = void 0;
+    var $html = $('html');
+    var $body = $('body');
+    var $hebPic = $('.heb-pic');
 
+    var setAllHeight_settimeout = void 0;
     function setAllHeight(filesNum) {
         clearTimeout(setAllHeight_settimeout);
         setAllHeight_settimeout = null;
@@ -20,7 +23,6 @@ $(function () {
             $('.heb-box').height(h + 400);
         }, 400);
     }
-
     var downDomClean = function downDomClean(dom) {
         var r = dom
         // .replace(/\/upload\/pic\-\d*\-([\s\S]*?)/gi, '$1')
@@ -28,7 +30,7 @@ $(function () {
         return r;
     };
     var setDownloadDom = function setDownloadDom() {
-        // console.log('mod > localStorageSet.js');
+        // console.log('mod > setDownloadDom.js');
         var forShowDom = $('#heb-picDomTarget').html();
 
         $('.heb-picHideDom').html(forShowDom).find('img').each(function (i, e) {
@@ -37,21 +39,16 @@ $(function () {
         });
 
         var downloadDom = $('.heb-picHideDom').html();
-
-        if (downloadDom) {
-
-            // localStorage.setItem('hebLocalData', forShowDom);
-
-            downloadDom = downDomClean(downloadDom);
-            console.log('downDomClean downdom:\n\n', downloadDom);
-            $('#textarea-data').text(downloadDom);
-        }
+        // localStorage.setItem('hebLocalData', forShowDom);
+        downloadDom = downDomClean(downloadDom);
+        console.log('downDomClean downdom:\n\n', downloadDom);
+        $('#textarea-data').text(downloadDom);
 
         window.downloadDom = downloadDom;
     };
 
-    function localStorageSet() {
-        // console.log('mod > localStorageSet.js');
+    function indexedBDSet() {
+        // console.log('mod > indexedBDSet.js');
         var $hebPic = $('#heb-picDomTarget'); // $('.heb-pic');
         var dom = $hebPic.html();
         if (dom) {
@@ -64,7 +61,7 @@ $(function () {
                 dom: dom
             }, 1);
         }
-    };
+    }
 
     function addHref() {
         var copyBtnShow = function copyBtnShow() {
@@ -100,7 +97,7 @@ $(function () {
                     $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
                 }
 
-                // localStorageSet();
+                // indexedBDSet();
                 // setDownloadDom();
             });
 
@@ -119,7 +116,7 @@ $(function () {
 
                 window.stageNum = val;
 
-                // localStorageSet();
+                // indexedBDSet();
                 // setDownloadDom();
             } else {
                 $text.val($a.attr('href'));
@@ -130,6 +127,7 @@ $(function () {
         // $('.add-href a').on('click', (e) => {
         //     e.preventDefault();
         // });
+        $('#finish-btn').show();
 
         $('#finish-btn').on('click', function () {
             // $('.add-href-btn').trigger('click');
@@ -137,7 +135,7 @@ $(function () {
                 $(this).remove();
             });
 
-            localStorageSet();
+            indexedBDSet();
             setDownloadDom();
             copyBtnShow();
 
@@ -227,23 +225,17 @@ $(function () {
             if (key) var request = store.get(key);else var request = store.getAll();
 
             request.onsuccess = function () {
-                console.log('request.onsuccess1:', request.result);
+                console.log('查询数据 request.result:', request.result);
 
                 if (request.result) {
-
                     if (showBtn) {
-
-                        console.log('request.onsuccess2: showBtn', showBtn);
-
-                        $('.openTips').hide();
+                        console.log('查询数据 showBtn:', showBtn);
                         $('#load-btn').show();
                     } else {
-
-                        $('.openTips').show();
                         $('#load-btn').hide();
-
+                        $('#clear-btn').show();
                         $('.stage-i').text(request.result.name);
-                        $('.heb-pic').html(request.result.dom);
+                        $('.heb-pic').html('').html(request.result.dom);
                         addHref();
                         setAllHeight();
                     }
@@ -275,17 +267,6 @@ $(function () {
     });
 
     console.log(dbObj);
-
-    var $html = $('html');
-    var $body = $('body');
-    var $hebPic = $('.heb-pic');
-
-    $html.addClass('is-xa-today-print');
-
-    // if (isDev) {
-    //     $html.addClass('is-dev');
-    // }
-
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -533,11 +514,11 @@ $(function () {
                 setDownloadDom();
 
                 // console.log('domForDownload:', domForDownload);
-                // localStorageSet();
+                // indexedBDSet();
                 // $('#textarea-data').text(domForDownload);
 
                 addHref();
-                localStorageSet();
+                indexedBDSet();
 
                 if (domShowPrintImgs) {
                     $('.heb-alert-tips').remove();
@@ -581,11 +562,9 @@ $(function () {
         // renderDom(renderItems);
     };
 
-    // import './uploadBoxFn.js'
-
-    //import './iframeBg.js'
     $('#form-submit').on('click', function () {
         var files = document.getElementById('fileId').files;
+
         renderData({
             files: files
         });
@@ -669,7 +648,7 @@ $(function () {
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
 
-                // localStorageSet();
+                // indexedBDSet();
             }
         });
     };
@@ -690,9 +669,8 @@ $(function () {
         });
 
         $('#load-btn').on('click', function () {
-            $('.heb-pic').html();
+            $('.openTips').show();
             dbObj.select(1);
-            $('#clear-btn').show();
         });
     };
 
@@ -703,8 +681,6 @@ $(function () {
             $(this).hide().stop();
         });
     };
-
-    // local
     function fake_click(obj) {
         var ev = document.createEvent("MouseEvents");
         ev.initMouseEvent("click", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
@@ -722,45 +698,22 @@ $(function () {
         fake_click(save_link);
     }
 
-    // const uploadTxt = () => {
-    //     // const formData = new FormData($('#form-upload-txt')[0]);
-    //     // $.ajax({
-    //     //     url: '/upload-txt',
-    //     //     type: 'POST',
-    //     //     data: formData,
-    //     //     cache: false,
-    //     //     contentType: false,
-    //     //     processData: false,
-    //     //     success: function (data) {
-    //     //         console.log('uploadTxt success data:', data);
-    //     //         if (data.hasData == 1) {
-    //     //             $('#copy-btn')
-    //     //                 .off('click')
-    //     //                 .html(`<a href="${data.path}" target="_blank" title="点击下载，解压缩后放入图片目录">${data.filename}</a > `);
-    //     //         } else {
-    //     //             $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-    //     //         }
-    //     //     },
-    //     //     error: function (jqXHR, textStatus, errorThrown) {
-    //     //         $('.upload-box').append(`<span class="tips"> 连接不到服务器，请检查网络！</span>`);
-    //     //     }
-    //     // });
-
-
-    // };
-
-
     // import './localDataLoad.js'
-
-    // $('#textarea-data').on('input', () => {
-    //     localStorageSet();
-    // });
+    if (localStorage.getItem('heb-textarea-data') == 'show') {
+        $('#textarea-data').removeClass('hide');
+    } else {
+        $('#textarea-data').addClass('hide');
+    }
 
     $('.heb-textarea-onOff').on('click', function () {
         if ($('#textarea-data').hasClass('hide')) {
             $('#textarea-data').removeClass('hide');
+            localStorage.setItem('heb-textarea-data', 'show');
         } else {
             $('#textarea-data').addClass('hide');
+            localStorage.setItem('heb-textarea-data', 'hide');
         }
     });
+
+    $('#finish-btn').hide();
 });

@@ -32,7 +32,7 @@ function addHref() {
                 $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
             }
 
-            // localStorageSet();
+            // indexedBDSet();
             // setDownloadDom();
         });
 
@@ -51,7 +51,7 @@ function addHref() {
 
             window.stageNum = val;
 
-            // localStorageSet();
+            // indexedBDSet();
             // setDownloadDom();
         } else {
             $text.val($a.attr('href'));
@@ -62,6 +62,7 @@ function addHref() {
     // $('.add-href a').on('click', (e) => {
     //     e.preventDefault();
     // });
+    $('#finish-btn').show();
 
     $('#finish-btn').on('click', () => {
         // $('.add-href-btn').trigger('click');
@@ -71,7 +72,7 @@ function addHref() {
                 $(this).remove();
             });
 
-        localStorageSet();
+        indexedBDSet();
         setDownloadDom();
         copyBtnShow();
 

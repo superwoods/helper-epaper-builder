@@ -60,7 +60,7 @@ const titleFn = () => {
             $a.attr('href', heb1Val + val);
             $text.val(val);
 
-            // localStorageSet();
+            // indexedBDSet();
         }
     });
 };

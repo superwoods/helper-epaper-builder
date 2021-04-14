@@ -239,11 +239,11 @@ const renderData = (data) => {
             setDownloadDom();
 
             // console.log('domForDownload:', domForDownload);
-            // localStorageSet();
+            // indexedBDSet();
             // $('#textarea-data').text(domForDownload);
 
             addHref();
-            localStorageSet();
+            indexedBDSet();
 
             if (domShowPrintImgs) {
                 $('.heb-alert-tips').remove();

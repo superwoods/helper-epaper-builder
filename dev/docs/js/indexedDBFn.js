@@ -82,31 +82,20 @@
             var request = store.getAll();
 
         request.onsuccess = function () {
-            console.log('request.onsuccess1:', request.result);
+            console.log('查询数据 request.result:', request.result);
 
             if (request.result) {
-
                 if (showBtn) {
-
-                    console.log('request.onsuccess2: showBtn', showBtn);
-
-                    $('.openTips').hide();
+                    console.log('查询数据 showBtn:', showBtn);
                     $('#load-btn').show();
-
                 } else {
-
-                    $('.openTips').show();
                     $('#load-btn').hide();
-
+                    $('#clear-btn').show();
                     $('.stage-i').text(request.result.name);
-                    $('.heb-pic').html(request.result.dom);
+                    $('.heb-pic').html('').html(request.result.dom);
                     addHref();
                     setAllHeight();
-
-
                 }
-
-
             }
         };
     };

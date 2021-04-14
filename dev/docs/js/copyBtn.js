@@ -16,9 +16,8 @@ const copyBtn = () => {
     });
 
     $('#load-btn').on('click', () => {
-        $('.heb-pic').html();
+        $('.openTips').show();
         dbObj.select(1);
-        $('#clear-btn').show();
     });
 };
 

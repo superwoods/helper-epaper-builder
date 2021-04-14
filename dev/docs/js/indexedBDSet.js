@@ -1,5 +1,5 @@
-function localStorageSet() {
-    // console.log('mod > localStorageSet.js');
+function indexedBDSet() {
+    // console.log('mod > indexedBDSet.js');
     const $hebPic = $('#heb-picDomTarget'); // $('.heb-pic');
     let dom = $hebPic.html();
     if (dom) {
@@ -12,4 +12,4 @@ function localStorageSet() {
             dom: dom
         }, 1);
     }
-};
+}
