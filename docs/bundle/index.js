@@ -162,7 +162,7 @@ $(function () {
                 alert('浏览器不支持indexedDB');
             }
             var request = indexedDB.open(this.dbName, this.dbVersion);
-            // 打开数据库失败
+            // 打开数据库失败5
             request.onerror = function (event) {
                 console.log('数据库打开失败,错误码：', event);
             };
@@ -171,8 +171,7 @@ $(function () {
                 // 获取数据对象
                 dbObj.db = event.target.result;
                 console.log('连接数据库成功');
-
-                dbObj.select(1);
+                dbObj.select(1, 'showBtn');
             };
 
             // if (this.db.objectStoreNames.contains(dbObj.dbStoreName)) {
@@ -222,16 +221,32 @@ $(function () {
         /**
          * 查询数据
          */
-        dbObj.select = function (key) {
+        dbObj.select = function (key, showBtn) {
             var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+
             if (key) var request = store.get(key);else var request = store.getAll();
+
             request.onsuccess = function () {
-                console.log(request.result);
+                console.log('request.onsuccess1:', request.result);
+
                 if (request.result) {
-                    $('.stage-i').text(request.result.name);
-                    $('.heb-pic').html(request.result.dom);
-                    addHref();
-                    setAllHeight();
+
+                    if (showBtn) {
+
+                        console.log('request.onsuccess2: showBtn', showBtn);
+
+                        $('.openTips').hide();
+                        $('#load-btn').show();
+                    } else {
+
+                        $('.openTips').show();
+                        $('#load-btn').hide();
+
+                        $('.stage-i').text(request.result.name);
+                        $('.heb-pic').html(request.result.dom);
+                        addHref();
+                        setAllHeight();
+                    }
                 }
             };
         };
@@ -613,7 +628,7 @@ $(function () {
             year: myDate.getFullYear(),
             month: myDate.getMonth() + 1,
             day: myDate.getDate() + 1,
-            stage: window.stageI || '-'
+            stage: '-'
         },
             title = _title$year$month$day.title,
             year = _title$year$month$day.year,
@@ -663,17 +678,21 @@ $(function () {
 
     // import './copyBtn.js'
     var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn clear-btn" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
+        $body.append('\n        <div class="btn clear-btn hide" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn clear-btn hide" id="load-btn">\u8BFB\u53D6</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
         $('#clear-btn').on('click', function () {
-            var mymessage = confirm("☠️\n \n即将清除页面内容，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
+            var mymessage = confirm("☠️\n \n即将清除页面内容和存储，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
             if (mymessage == true) {
                 dbObj.clear();
                 window.location.reload();
             }
-            // else if (mymessage == false) {
-            //     // document.write("要学javascript，而且必须学");
-            // }
+            $('#load-btn').hide();
+        });
+
+        $('#load-btn').on('click', function () {
+            $('.heb-pic').html();
+            dbObj.select(1);
+            $('#clear-btn').show();
         });
     };
 
@@ -730,21 +749,8 @@ $(function () {
 
     // };
 
-    var localDataLoad = function localDataLoad() {
-        // console.log('mod > localDataLoad.js');
-        var $hebPic = $('.heb-pic');
-        var hebLocalData = localStorage.getItem('hebLocalData');
-        // console.log('hebLocalData: ', hebLocalData);
-        if (hebLocalData !== null) {
-            $hebPic.html(hebLocalData);
-            // localStorageSet();
-            // $('.add-href').off('click');
-            addHref();
-        }
-    };
 
-    // localDataLoad();
-
+    // import './localDataLoad.js'
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();

@@ -11,7 +11,7 @@ const titleFn = () => {
         year: myDate.getFullYear(),
         month: myDate.getMonth() + 1,
         day: myDate.getDate() + 1,
-        stage: window.stageI || '-',
+        stage: '-',
     };
 
     $('.title-box').html(`

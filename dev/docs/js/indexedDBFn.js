@@ -11,7 +11,7 @@
             alert('浏览器不支持indexedDB');
         }
         var request = indexedDB.open(this.dbName, this.dbVersion);
-        // 打开数据库失败
+        // 打开数据库失败5
         request.onerror = function (event) {
             console.log('数据库打开失败,错误码：', event);
         }
@@ -20,8 +20,7 @@
             // 获取数据对象
             dbObj.db = event.target.result;
             console.log('连接数据库成功');
-
-            dbObj.select(1);
+            dbObj.select(1, 'showBtn');
         };
 
         // if (this.db.objectStoreNames.contains(dbObj.dbStoreName)) {
@@ -74,19 +73,40 @@
     /**
      * 查询数据
      */
-    dbObj.select = function (key) {
+    dbObj.select = function (key, showBtn) {
         var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+
         if (key)
             var request = store.get(key);
         else
             var request = store.getAll();
+
         request.onsuccess = function () {
-            console.log(request.result);
+            console.log('request.onsuccess1:', request.result);
+
             if (request.result) {
-                $('.stage-i').text(request.result.name);
-                $('.heb-pic').html(request.result.dom);
-                addHref();
-                setAllHeight();
+
+                if (showBtn) {
+
+                    console.log('request.onsuccess2: showBtn', showBtn);
+
+                    $('.openTips').hide();
+                    $('#load-btn').show();
+
+                } else {
+
+                    $('.openTips').show();
+                    $('#load-btn').hide();
+
+                    $('.stage-i').text(request.result.name);
+                    $('.heb-pic').html(request.result.dom);
+                    addHref();
+                    setAllHeight();
+
+
+                }
+
+
             }
         };
     };

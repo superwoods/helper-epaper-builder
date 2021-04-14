@@ -66,7 +66,8 @@ $(() => {
 
     // local
     @import './uploadTxt.js'
-    @import './localDataLoad.js'
+
+    // import './localDataLoad.js'
 
     // $('#textarea-data').on('input', () => {
     //     localStorageSet();

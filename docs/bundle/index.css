@@ -47,7 +47,6 @@ body {
 a {
   color: #fff;
 }
-.hide,
 .heb-hide {
   display: none;
 }
@@ -81,9 +80,6 @@ a {
   top: 0;
   bottom: auto;
   width: auto;
-}
-.is-dev .clear-btn {
-  display: block;
 }
 .add-href-input,
 .add-href-btn {
@@ -346,4 +342,12 @@ a {
 }
 .add-href a:hover img {
   opacity: 0.5;
+}
+.openTips {
+  text-align: center;
+  line-height: 36px;
+  font-size: 18px;
+}
+.hide {
+  display: none;
 }
