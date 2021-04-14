@@ -11,7 +11,7 @@ const titleFn = () => {
         year: myDate.getFullYear(),
         month: myDate.getMonth() + 1,
         day: myDate.getDate() + 1,
-        stage: '-',
+        stage: localStorage.getItem('hebSageI') || '-',
     };
 
     $('.title-box').html(`
@@ -50,6 +50,7 @@ const titleFn = () => {
 
         const $hebImg1 = $('.heb-img-1-1, .heb-img-1');
         const isHeader = $hebImg1.length > 0;
+
         if (isHeader) {
             console.log('isHeader: ', isHeader);
 
