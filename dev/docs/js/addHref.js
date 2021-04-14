@@ -1,4 +1,4 @@
-const addHref = () => {
+function addHref() {
     const copyBtnShow = () => {
         $('#copy-btn').show();
         $('#finish-btn').hide();
@@ -31,6 +31,7 @@ const addHref = () => {
             if ($this.hasClass('add-href-text2')) {
                 $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
             }
+
             // localStorageSet();
             // setDownloadDom();
         });
@@ -38,12 +39,12 @@ const addHref = () => {
         // console.log('isHeader:', isHeader);
         if (isHeader) {
             let stageI = $.trim($('.stage-i').text());
-            console.log('stageI:', stageI);
-            if (stageI == '-') {
-                stageI = localStorage.getItem('hebSageI');
-            } else {
-                localStorage.setItem('hebSageI', stageI);
-            }
+            // console.log('stageI:', stageI);
+            // if (stageI == '-') {
+            //     stageI = localStorage.getItem('hebSageI');
+            // } else {
+            //     localStorage.setItem('hebSageI', stageI);
+            // }
             val = `${stageI || ''}`;
             $a.attr('href', heb1Val + val);
             $text.val(val);
@@ -70,7 +71,7 @@ const addHref = () => {
                 $(this).remove();
             });
 
-        // localStorageSet();
+        localStorageSet();
         setDownloadDom();
         copyBtnShow();
 

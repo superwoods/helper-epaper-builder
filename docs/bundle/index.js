@@ -2,20 +2,24 @@
 
 // console.log('mod > index.js');
 $(function () {
-    // window.hebContentDom = '';
-    // window.imgIndex = 0;
-    // window.isDev = false;
+    var setAllHeight_settimeout = void 0;
 
-    // const $window = $(window);
-    var $html = $('html');
-    var $body = $('body');
-    var $hebPic = $('.heb-pic');
+    function setAllHeight(filesNum) {
+        clearTimeout(setAllHeight_settimeout);
+        setAllHeight_settimeout = null;
+        setAllHeight_settimeout = setTimeout(function () {
+            console.log('filesNum:', filesNum);
 
-    $html.addClass('is-xa-today-print');
+            if (filesNum == undefined) {
+                filesNum = $('#heb-picDomTarget').find('img').length;
+            }
 
-    // if (isDev) {
-    //     $html.addClass('is-dev');
-    // }
+            var h = $('#heb-picDomTarget').outerHeight();
+            h += filesNum >= 5 ? 2000 : 1000;
+            $('.heb-box-in').height(h);
+            $('.heb-box').height(h + 400);
+        }, 400);
+    }
 
     var downDomClean = function downDomClean(dom) {
         var r = dom
@@ -45,6 +49,228 @@ $(function () {
 
         window.downloadDom = downloadDom;
     };
+
+    function localStorageSet() {
+        // console.log('mod > localStorageSet.js');
+        var $hebPic = $('#heb-picDomTarget'); // $('.heb-pic');
+        var dom = $hebPic.html();
+        if (dom) {
+            // localStorage.setItem('hebLocalData', dom);
+            // dom = downDomClean(dom);
+            // console.log('downDomClean:\n\n', dom);
+            // $('#textarea-data').text(dom);
+            dbObj.put({
+                name: $.trim($('.stage-i').text()),
+                dom: dom
+            }, 1);
+        }
+    };
+
+    function addHref() {
+        var copyBtnShow = function copyBtnShow() {
+            $('#copy-btn').show();
+            $('#finish-btn').hide();
+        };
+
+        var copyBtnHide = function copyBtnHide() {
+            $('#copy-btn').hide();
+            $('#finish-btn').show();
+        };
+
+        copyBtnHide();
+
+        $('.add-href').each(function (i, e) {
+            var $e = $(e);
+            var $a = $e.find('a');
+            var $text = $e.find('.add-href-text');
+            var val = $text.val();
+            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
+            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
+
+            if (isHeader == false) {
+                heb1Val = '';
+            }
+            // $a.attr('href', heb1Val + val);
+
+            $text.on('input', function () {
+                var $this = $(this);
+                val = $this.val();
+                $a.attr('href', heb1Val + val);
+                if ($this.hasClass('add-href-text2')) {
+                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
+                }
+
+                // localStorageSet();
+                // setDownloadDom();
+            });
+
+            // console.log('isHeader:', isHeader);
+            if (isHeader) {
+                var stageI = $.trim($('.stage-i').text());
+                // console.log('stageI:', stageI);
+                // if (stageI == '-') {
+                //     stageI = localStorage.getItem('hebSageI');
+                // } else {
+                //     localStorage.setItem('hebSageI', stageI);
+                // }
+                val = '' + (stageI || '');
+                $a.attr('href', heb1Val + val);
+                $text.val(val);
+
+                window.stageNum = val;
+
+                // localStorageSet();
+                // setDownloadDom();
+            } else {
+                $text.val($a.attr('href'));
+            }
+        });
+
+        // // 防止读取本地数据后点击图片出现页面跳转
+        // $('.add-href a').on('click', (e) => {
+        //     e.preventDefault();
+        // });
+
+        $('#finish-btn').on('click', function () {
+            // $('.add-href-btn').trigger('click');
+            $('.add-href').find('.add-href-input').fadeOut(function () {
+                $(this).remove();
+            });
+
+            localStorageSet();
+            setDownloadDom();
+            copyBtnShow();
+
+            $('#copy-btn').click(function () {
+                var stage = $.trim($('.stage-i').text());
+                alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
+                export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
+            });
+        });
+    };
+
+    (function () {
+        var dbObj = {};
+        /**
+         * 打开数据库
+         */
+        dbObj.init = function (param) {
+            this.dbName = param.dbName;
+            this.dbVersion = param.dbVersion;
+            this.dbStoreName = param.dbStoreName;
+            if (!window.indexedDB) {
+                alert('浏览器不支持indexedDB');
+            }
+            var request = indexedDB.open(this.dbName, this.dbVersion);
+            // 打开数据库失败
+            request.onerror = function (event) {
+                console.log('数据库打开失败,错误码：', event);
+            };
+            // 打开数据库成功
+            request.onsuccess = function (event) {
+                // 获取数据对象
+                dbObj.db = event.target.result;
+                console.log('连接数据库成功');
+
+                dbObj.select(1);
+            };
+
+            // if (this.db.objectStoreNames.contains(dbObj.dbStoreName)) {
+            //     console.log('数据仓库已存在');
+            // }
+            // 创建数据库
+            request.onupgradeneeded = function (event) {
+                dbObj.db = event.target.result;
+                dbObj.db.createObjectStore(dbObj.dbStoreName, {
+                    //  keyPath: "id", //设置主键 设置了内联主键就不可以使用put的第二个参数(这里是个坑)
+                    autoIncrement: true // 自增
+                });
+            };
+        };
+
+        dbObj.getStore = function (dbStoreName, mode) {
+            // 获取事务对象 
+            var ts = dbObj.db.transaction(dbStoreName, mode);
+            // 通过事务对象去获取对象仓库
+            return ts.objectStore(dbStoreName);
+        };
+        /**
+         * 添加和修改数据
+         */
+        dbObj.put = function (msg, key) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.put(msg, key);
+            request.onsuccess = function () {
+                if (key) console.log('修改成功');else console.log('添加成功');
+            };
+            request.onerror = function (event) {
+                console.log(event);
+            };
+        };
+
+        /**
+         * 删除数据
+         */
+        dbObj.delete = function (id) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.delete(id);
+            request.onsuccess = function () {
+                alert('删除成功');
+            };
+        };
+
+        /**
+         * 查询数据
+         */
+        dbObj.select = function (key) {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            if (key) var request = store.get(key);else var request = store.getAll();
+            request.onsuccess = function () {
+                console.log(request.result);
+                if (request.result) {
+                    $('.stage-i').text(request.result.name);
+                    $('.heb-pic').html(request.result.dom);
+                    addHref();
+                    setAllHeight();
+                }
+            };
+        };
+
+        /**
+         * 删除表
+         */
+        dbObj.clear = function () {
+            var store = this.getStore(dbObj.dbStoreName, 'readwrite');
+            var request = store.clear();
+            request.onsuccess = function () {
+                alert('清除成功');
+            };
+        };
+        window.dbObj = dbObj;
+    })();
+
+    // ————————————————
+    // 版权声明：本文为CSDN博主「罪无囚」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。
+    // 原文链接：https://blog.csdn.net/QQ972618478/article/details/98528707
+
+    dbObj.init({
+        dbName: 'HEB_project',
+        dbVersion: '1.0',
+        dbStoreName: 'data'
+    });
+
+    console.log(dbObj);
+
+    var $html = $('html');
+    var $body = $('body');
+    var $hebPic = $('.heb-pic');
+
+    $html.addClass('is-xa-today-print');
+
+    // if (isDev) {
+    //     $html.addClass('is-dev');
+    // }
+
 
     var _pageWidth$pageHeight = {
         pageWidth: 951,
@@ -296,6 +522,7 @@ $(function () {
                 // $('#textarea-data').text(domForDownload);
 
                 addHref();
+                localStorageSet();
 
                 if (domShowPrintImgs) {
                     $('.heb-alert-tips').remove();
@@ -308,13 +535,7 @@ $(function () {
 
                 $('.loading').addClass('hide');
 
-                setTimeout(function () {
-                    console.log('filesNum:', filesNum);
-                    var h = $('#heb-picDomTarget').outerHeight();
-                    h += filesNum >= 5 ? 2000 : 1000;
-                    $('.heb-box-in').height(h);
-                    $('.heb-box').height(h + 400);
-                }, 400);
+                setAllHeight(filesNum);
             }
         };
 
@@ -392,7 +613,7 @@ $(function () {
             year: myDate.getFullYear(),
             month: myDate.getMonth() + 1,
             day: myDate.getDate() + 1,
-            stage: '-'
+            stage: window.stageI || '-'
         },
             title = _title$year$month$day.title,
             year = _title$year$month$day.year,
@@ -416,7 +637,11 @@ $(function () {
         //     }
         // });
 
+
         $('.stage-i').on('input', function () {
+            var stageI = $.trim($('.stage-i').text());
+            localStorage.setItem('hebSageI', stageI);
+
             var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
             var isHeader = $hebImg1.length > 0;
             if (isHeader) {
@@ -425,28 +650,31 @@ $(function () {
                 var $a = $hebImg1.find('a');
                 var $text = $hebImg1.find('.add-href-text');
 
-                var stageI = $.trim($(this).text());
-                if (stageI == '-') {
-                    stageI = localStorage.getItem('hebSageI');
-                } else {
-                    localStorage.setItem('hebSageI', stageI);
-                }
                 var val = '' + (stageI || '');
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
-                localStorageSet();
+
+                // localStorageSet();
             }
         });
     };
+
     titleFn();
 
     // import './copyBtn.js'
     var copyBtn = function copyBtn() {
-        $body.append('\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
+        $body.append('\n        <div class="btn clear-btn" id="clear-btn">\u6E05\u9664</div>\n        <div class="btn copy-btn" id="finish-btn">\u5B8C\u6210</div>\n        <div class="btn btn-primary copy-btn hide" id="copy-btn">\u4E0B\u8F7D</div>\n    ');
 
-        // $('#clear-btn').on('click', () => {
-        //     localStorage.clear();
-        // });
+        $('#clear-btn').on('click', function () {
+            var mymessage = confirm("☠️\n \n即将清除页面内容，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
+            if (mymessage == true) {
+                dbObj.clear();
+                window.location.reload();
+            }
+            // else if (mymessage == false) {
+            //     // document.write("要学javascript，而且必须学");
+            // }
+        });
     };
 
     copyBtn();
@@ -454,87 +682,6 @@ $(function () {
     var tips = function tips(text) {
         $('.heb-tips').html(text).show().delay(2000).fadeOut(function () {
             $(this).hide().stop();
-        });
-    };
-    var addHref = function addHref() {
-        var copyBtnShow = function copyBtnShow() {
-            $('#copy-btn').show();
-            $('#finish-btn').hide();
-        };
-
-        var copyBtnHide = function copyBtnHide() {
-            $('#copy-btn').hide();
-            $('#finish-btn').show();
-        };
-
-        copyBtnHide();
-
-        $('.add-href').each(function (i, e) {
-            var $e = $(e);
-            var $a = $e.find('a');
-            var $text = $e.find('.add-href-text');
-            var val = $text.val();
-            var isHeader = $e.hasClass('heb-img-1-1') || $e.hasClass('heb-img-1');
-            var heb1Val = 'http://www.xiongan.gov.cn/xiongan-today/?xats';
-
-            if (isHeader == false) {
-                heb1Val = '';
-            }
-            // $a.attr('href', heb1Val + val);
-
-            $text.on('input', function () {
-                var $this = $(this);
-                val = $this.val();
-                $a.attr('href', heb1Val + val);
-                if ($this.hasClass('add-href-text2')) {
-                    $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
-                }
-                // localStorageSet();
-                // setDownloadDom();
-            });
-
-            // console.log('isHeader:', isHeader);
-            if (isHeader) {
-                var stageI = $.trim($('.stage-i').text());
-                console.log('stageI:', stageI);
-                if (stageI == '-') {
-                    stageI = localStorage.getItem('hebSageI');
-                } else {
-                    localStorage.setItem('hebSageI', stageI);
-                }
-                val = '' + (stageI || '');
-                $a.attr('href', heb1Val + val);
-                $text.val(val);
-
-                window.stageNum = val;
-
-                // localStorageSet();
-                // setDownloadDom();
-            } else {
-                $text.val($a.attr('href'));
-            }
-        });
-
-        // // 防止读取本地数据后点击图片出现页面跳转
-        // $('.add-href a').on('click', (e) => {
-        //     e.preventDefault();
-        // });
-
-        $('#finish-btn').on('click', function () {
-            // $('.add-href-btn').trigger('click');
-            $('.add-href').find('.add-href-input').fadeOut(function () {
-                $(this).remove();
-            });
-
-            // localStorageSet();
-            setDownloadDom();
-            copyBtnShow();
-
-            $('#copy-btn').click(function () {
-                var stage = $.trim($('.stage-i').text());
-                alert(':) 马上开始下载 ' + stage + '.html\n 请把下载的文件放入图片文件夹，打开后全选复制到发糕器！！😊');
-                export_raw($.trim($('.stage-i').text()) + '.html', window.downloadDom);
-            });
         });
     };
 
@@ -590,7 +737,7 @@ $(function () {
         // console.log('hebLocalData: ', hebLocalData);
         if (hebLocalData !== null) {
             $hebPic.html(hebLocalData);
-            localStorageSet();
+            // localStorageSet();
             // $('.add-href').off('click');
             addHref();
         }

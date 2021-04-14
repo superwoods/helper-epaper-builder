@@ -1,22 +1,53 @@
 // console.log('mod > index.js');
 $(() => {
-    // window.hebContentDom = '';
-    // window.imgIndex = 0;
-    // window.isDev = false;
+    let setAllHeight_settimeout;
 
-    // const $window = $(window);
+    function setAllHeight(filesNum) {
+        clearTimeout(setAllHeight_settimeout);
+        setAllHeight_settimeout = null;
+        setAllHeight_settimeout = setTimeout(() => {
+            console.log('filesNum:', filesNum);
+
+            if (filesNum == undefined) {
+                filesNum = $('#heb-picDomTarget').find('img').length;
+            }
+
+            let h = $('#heb-picDomTarget').outerHeight();
+            h += (filesNum >= 5 ? 2000 : 1000);
+            $('.heb-box-in').height(h);
+            $('.heb-box').height(h + 400);
+        }, 400);
+    }
+
+    @import './downDomClean.js'
+    @import './setDownloadDom.js'
+    @import './localStorageSet.js'
+    @import './addHref.js'
+    @import './indexedDBFn.js'
+
+    dbObj.init({
+        dbName: 'HEB_project',
+        dbVersion: '1.0',
+        dbStoreName: 'data'
+    });
+
+    console.log(dbObj);
+
+
+
+
     const $html = $('html');
     const $body = $('body');
     const $hebPic = $('.heb-pic');
 
     $html.addClass('is-xa-today-print');
 
+
+
     // if (isDev) {
     //     $html.addClass('is-dev');
     // }
 
-    @import './downDomClean.js'
-    @import './setDownloadDom.js'
 
     @import './pageSizeConfig.js'
     @import './render-data.js'
@@ -32,7 +63,6 @@ $(() => {
     @import './copyBtn.js'
 
     @import './tips.js'
-    @import './addHref.js'
 
     // local
     @import './uploadTxt.js'
