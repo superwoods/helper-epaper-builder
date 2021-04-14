@@ -97,6 +97,8 @@ $(function () {
                     $('.stage-i').text(val.replace('http://www.xiongan.gov.cn/xiongan-today/?xats', ''));
                 }
 
+                var stageI = $.trim($('.stage-i').text());
+                localStorage.setItem('hebSageI', stageI);
                 // indexedBDSet();
                 // setDownloadDom();
             });
@@ -110,6 +112,8 @@ $(function () {
                 // } else {
                 //     localStorage.setItem('hebSageI', stageI);
                 // }
+                localStorage.setItem('hebSageI', stageI);
+
                 val = '' + (stageI || '');
                 $a.attr('href', heb1Val + val);
                 $text.val(val);
@@ -607,7 +611,7 @@ $(function () {
             year: myDate.getFullYear(),
             month: myDate.getMonth() + 1,
             day: myDate.getDate() + 1,
-            stage: '-'
+            stage: localStorage.getItem('hebSageI') || '-'
         },
             title = _title$year$month$day.title,
             year = _title$year$month$day.year,
@@ -638,6 +642,7 @@ $(function () {
 
             var $hebImg1 = $('.heb-img-1-1, .heb-img-1');
             var isHeader = $hebImg1.length > 0;
+
             if (isHeader) {
                 console.log('isHeader: ', isHeader);
 
@@ -663,6 +668,7 @@ $(function () {
             var mymessage = confirm("☠️\n \n即将清除页面内容和存储，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
             if (mymessage == true) {
                 dbObj.clear();
+                localStorage.removeItem('hebSageI');
                 window.location.reload();
             }
             $('#load-btn').hide();

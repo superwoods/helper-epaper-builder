@@ -1,7 +1,7 @@
 {
     "name": "helper-epaper-builder",
     "description": "helper epaper builder",
-    "version": "0.2.10",
+    "version": "0.2.11",
     "main": "app.js",
     "repository": "https://github.com/xinhuaRadioLAB/helper-epaper-builder.git",
     "author": "SuperMoo <st_sister@me.com>",

@@ -10,6 +10,7 @@ const copyBtn = () => {
         var mymessage = confirm("☠️\n \n即将清除页面内容和存储，\n请注意这个操作无法撤销！！\n点击确认开始清除。");
         if (mymessage == true) {
             dbObj.clear();
+            localStorage.removeItem('hebSageI');
             window.location.reload();
         }
         $('#load-btn').hide();
